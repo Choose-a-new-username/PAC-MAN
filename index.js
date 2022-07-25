@@ -147,7 +147,7 @@ function pacmanBehavior() {
         case 3:
             if (!tilemap[Math.round(pacman.y/pacman.h)].at(Math.ceil(pacman.x/pacman.w)-1)) {
                 pacman.x-=pacman.speed;
-                if(pacman.x < 0)pacman.x = canvas.height - pacman.h;
+                if(pacman.x < 0)pacman.x = canvas.width - pacman.w;
             }
             if(pacman.x === Math.floor(pacman.x / pacman.h)*pacman.h) {
                 switch (queued) {

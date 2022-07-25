@@ -160,7 +160,7 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for(let i = 0; i < Math.round(canvas.width / pacman.w);i++) {
         for(let j = 0; j < Math.round(canvas.height / pacman.h);j++) {
-            ctx.strokeRect(i*pacman.w,j*pacman.h,pacman.w,pacman.h)
+            ctx.fillRect(i*pacman.w,j*pacman.h,pacman.w,pacman.h)
         }
     }
     drawImage(ctx,document.getElementById("pacman"),pacman.x,pacman.y,pacman.w,pacman.h,((pacman.dir - 1) * 90)*(Math.PI/180));

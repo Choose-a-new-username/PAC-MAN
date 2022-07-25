@@ -169,7 +169,6 @@ function draw() {
 async function update() {
     render();
     draw();
-    await wait(10);
     requestAnimationFrame(update);
 }
 update();

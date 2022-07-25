@@ -5,11 +5,24 @@ let keys = {};
 addEventListener("keydown",e=>{keys[e.key]=true;});
 addEventListener("keyup",e=>{keys[e.key]=false;});
 
+const boardsize = [10,10];
+const tilemap = [
+    [1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,1,0,0,1],
+    [0,0,0,0,0,1,1,0,0,0],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,1,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1],        
+]
 let pacman = {
-    x: 0,
-    y: 0,
-    w: 20,
-    h: 20,
+    x: canvas.width/boardsize[0],
+    y: canvas.height/boardsize[1],
+    w: canvas.width/boardsize[0],
+    h: canvas.height/boardsize[1],
     dir: 1,
     speed: 2.5,
 }
@@ -59,8 +72,9 @@ function pacmanBehavior() {
     }
     switch (pacman.dir) {
         case 0:
-            pacman.y-=pacman.speed;
-            if(pacman.y < 0)pacman.y = (canvas.height - pacman.h);
+            if (!tilemap[Math.ceil(pacman.y/pacman.h)-1].at(Math.round(pacman.x/pacman.w))) {
+                pacman.y-=pacman.speed;
+            }
             if(pacman.y === Math.floor(pacman.y / pacman.h)*pacman.h) {
                 switch (queued) {
                     case "up":
@@ -82,8 +96,10 @@ function pacmanBehavior() {
             }
             break;
         case 1:
-            pacman.x+=pacman.speed;
-            if(pacman.x > (canvas.width - pacman.w))pacman.x = 0;
+            if (!tilemap[Math.round(pacman.y/pacman.h)].at(Math.floor(pacman.x/pacman.w)+1)) {
+                pacman.x+=pacman.speed;
+                if(pacman.x > (canvas.width - pacman.w))pacman.x = 0;
+            }
             if(pacman.x === Math.floor(pacman.x / pacman.w)*pacman.w) {
                 switch (queued) {
                     case "up":
@@ -105,8 +121,9 @@ function pacmanBehavior() {
             }
             break;
         case 2:
-            pacman.y+=pacman.speed;
-            if(pacman.y > (canvas.height - pacman.h))pacman.y = 0;
+            if (!tilemap[Math.floor(pacman.y/pacman.h)+1].at(Math.round(pacman.x/pacman.w))) {
+                pacman.y+=pacman.speed;
+            }
             if(pacman.y === Math.floor(pacman.y / pacman.h)*pacman.h) {
                 switch (queued) {
                     case "up":
@@ -128,8 +145,10 @@ function pacmanBehavior() {
             }
             break;    
         case 3:
-            pacman.x-=pacman.speed;
-            if(pacman.x < 0)pacman.x = canvas.height - pacman.h;
+            if (!tilemap[Math.round(pacman.y/pacman.h)].at(Math.ceil(pacman.x/pacman.w)-1)) {
+                pacman.x-=pacman.speed;
+                if(pacman.x < 0)pacman.x = canvas.height - pacman.h;
+            }
             if(pacman.x === Math.floor(pacman.x / pacman.h)*pacman.h) {
                 switch (queued) {
                     case "up":
@@ -160,6 +179,7 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for(let i = 0; i < Math.round(canvas.width / pacman.w);i++) {
         for(let j = 0; j < Math.round(canvas.height / pacman.h);j++) {
+            ctx.fillStyle = tilemap[j][i]?"blue":"black";
             ctx.fillRect(i*pacman.w,j*pacman.h,pacman.w,pacman.h)
         }
     }

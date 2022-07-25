@@ -11,7 +11,7 @@ let pacman = {
     w: 20,
     h: 20,
     dir: 1,
-    speed: 2,
+    speed: 2.5,
 }
 let queued = "";
 

@@ -64,28 +64,28 @@ const pellet = (x,y) => pellets.push({x,y});
 function pacmanBehavior() {
     if(pacman.anim === pacman.animframes)pacman.anim = 0;
     if(keys["ArrowUp"] && pacman.dir !== 0){
-        if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize) {
+        if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))) {
             pacman.dir = 0;
         } else {
             queued = "up";
         }
     }
     if(keys["ArrowRight"] && pacman.dir !== 1){
-        if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize) {
+        if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)) {
             pacman.dir = 1;
         } else {
             queued = "right";
         }
     }
     if(keys["ArrowDown"] && pacman.dir !== 2){
-        if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize) {
+        if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))) {
             pacman.dir = 2;
         } else {
             queued = "down";
         }
     }
     if(keys["ArrowLeft"] && pacman.dir !== 3){
-        if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize) {
+        if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)) {
             pacman.dir = 3;
         } else {
             queued = "left";
@@ -101,20 +101,23 @@ function pacmanBehavior() {
                 switch (queued) {
                     case "up":
                         pacman.dir = 0;
+                        queued = "";
                         break;
                     case "right":
                         pacman.dir = 1;
+                        queued = "";
                         break;
                     case "down":
                         pacman.dir = 2;
+                        queued = "";
                         break;
                     case "left":
                         pacman.dir = 3;
+                        queued = "";
                         break;
                     default:
                         break;
                 }
-                queued = "";
             }
             break;
         case 1:
@@ -127,20 +130,23 @@ function pacmanBehavior() {
                 switch (queued) {
                     case "up":
                         pacman.dir = 0;
+                        queued = "";
                         break;
                     case "right":
                         pacman.dir = 1;
+                        queued = "";
                         break;
                     case "down":
                         pacman.dir = 2;
+                        queued = "";
                         break;
                     case "left":
                         pacman.dir = 3;
+                        queued = "";
                         break;
                     default:
                         break;
                 }
-                queued = "";
             }
             break;
         case 2:
@@ -152,20 +158,23 @@ function pacmanBehavior() {
                 switch (queued) {
                     case "up":
                         pacman.dir = 0;
+                        queued = "";
                         break;
                     case "right":
                         pacman.dir = 1;
+                        queued = "";
                         break;
                     case "down":
                         pacman.dir = 2;
+                        queued = "";
                         break;
                     case "left":
                         pacman.dir = 3;
+                        queued = "";
                         break;
                     default:
                         break;
                 }
-                queued = "";
             }
             break;    
         case 3:
@@ -178,20 +187,24 @@ function pacmanBehavior() {
                 switch (queued) {
                     case "up":
                         pacman.dir = 0;
+                        queued = "";
                         break;
                     case "right":
                         pacman.dir = 1;
+                        queued = "";
                         break;
                     case "down":
                         pacman.dir = 2;
+                        queued = "";
                         break;
                     case "left":
                         pacman.dir = 3;
+                        queued = "";
                         break;
                     default:
                         break;
                 }
-                queued = "";
+            
             }
             break;
     }

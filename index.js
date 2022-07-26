@@ -260,6 +260,8 @@ function draw() {
         ctx.fillRect(pellets[i].x,pellets[i].y,pellets[i].w,pellets[i].h);
     }
     drawImage(ctx,document.getElementById("pacman"),offset[1]+pacman.x,offset[0]+pacman.y,pacman.w,pacman.h,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
+    ctx.font = "20px pixel-face";
+    ctx.fillText("hello, world!",0,0)
 }
 
 async function update() {

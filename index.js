@@ -7,25 +7,25 @@ addEventListener("keydown",e=>{if(!keys[e.key]===true){
     keys[e.key]=true;
     switch(e.key) {
         case "ArrowUp":
-            if(pacman.dir !== 0)queued = "up";
+            queued = "up";
             if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))) {
                 pacman.dir = 0;
             }
             break;
         case "ArrowRight":
-            if(pacman.dir !== 1)queued = "right";
+            queued = "right";
             if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)) {
                 pacman.dir = 1;
             }
             break;
         case "ArrowDown":
-            if(pacman.dir !== 2)queued = "down";
+            queued = "down";
             if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))) {
                 pacman.dir = 2;
             }
             break;
         case "ArrowLeft":
-            if(pacman.dir !== 3)queued = "left";
+            queued = "left";
             if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)) {
                 pacman.dir = 3;
             }
@@ -42,32 +42,31 @@ const pelletsize = 5;
 const offset = [40,0];
 const tilemap = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1],
-    [1,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,2,0,0,1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,2,0,0,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,1],
-    [1,2,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,1],
-    [1,2,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,1],
-    [1,2,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1],
-    [1,2,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1],
-    [1,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-    [1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
-    [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,0,1],
-    [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ]
 let pellets = [];
 const pellet = (x,y,w,h) => pellets.push({x,y,w,h});
 for(i in tilemap) {
     for(j in tilemap[i]) {
-        if(tilemap[i][j] === 2) {
-            tilemap[i][j] = 0;
+        if(tilemap[i][j] === 0) {
             pellet(j*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);
         }
     }
@@ -80,7 +79,7 @@ let pacman = {
     h: cellsize,
     dir: 1,
     // cellsize must be divisible by pacman.speed
-    speed: cellsize/10,
+    speed: cellsize/5,
     anim: 0,
     animframes: 4,
     animwidth: 16,
@@ -98,7 +97,13 @@ function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.wi
     context.drawImage(img, dx, dy, dw, dh, x, y, width, height);
     context.restore();
 }
-
+function pelletBehaivor() {
+    for(i in pellets) {
+        if(pellets[i].x > pacman.x && pellets[i].x < pacman.x+pacman.w && pellets[i].y >= pacman.y+pacman.h && pellets[i].y <= pacman.y+pacman.h+pacman.h) {
+            pellets.splice(i, 1);
+        }
+    }
+}
 function pacmanBehavior() {
     switch (pacman.dir) {
         case 0:
@@ -237,6 +242,7 @@ function pacmanBehavior() {
 }
 function render() {
     pacmanBehavior();
+    pelletBehaivor();
     tick++;
 }
 function draw() {

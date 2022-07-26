@@ -37,7 +37,8 @@ let pacman = {
     w: cellsize,
     h: cellsize,
     dir: 1,
-    speed: 1,
+    // cellsize must be divisible by pacman.speed
+    speed: cellsize/5,
     anim: 0,
     animframes: 2,
     animwidth: 16,

@@ -9,8 +9,8 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
 * ~~Make pacman remember your moves and not bump into walls~~
 * ~~Further optimise pacman's movement~~
 * ~~Add coins~~ 
-* Score
-* Death/death screen
+* ~~Score~~
+* __Death/death screen__
 * Ghost AI
 * Map
 * Better textures

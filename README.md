@@ -17,4 +17,3 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
 * Levels
 * Multiple lives
 * High-scores/scoreboard
-# PAC-MAN

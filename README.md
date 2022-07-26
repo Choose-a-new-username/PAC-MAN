@@ -1,7 +1,19 @@
 # PAC-MAN
-The classic 1980s arcade game now reimagined wth HTML and javascript!*
-
-
-
-
-*because i'm too stupid to learn assembly
+The classic 1980s arcade game now reimagined wth HTML and javascript!
+## CONTROLS
+Arrow keys to move.
+## INFO
+Game is still a work-in-progress, more features will be added in the future.
+CREATED BY (yours truly) FOR A SCHOOL PROJECT.
+============================================================================
+## TODO LIST:
+* ~~Make pacman remember your moves and not bump into walls~~
+* __Add coins__ 
+* Score
+* Death/death screen
+* Ghost AI
+* Map
+* Better textures
+* Levels
+* Multiple lives
+* High-scores/scoreboard

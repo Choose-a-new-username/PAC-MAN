@@ -7,6 +7,7 @@ Game is still a work-in-progress, more features will be added in the future.<br/
 CREATED BY (yours truly) FOR A SCHOOL PROJECT.
 ## TODO LIST:
 * ~~Make pacman remember your moves and not bump into walls~~
+* ~~Further optimise pacman's movement~~
 * __Add coins__ 
 * Score
 * Death/death screen

@@ -38,29 +38,40 @@ addEventListener("keyup",e=>{keys[e.key]=false;});
 
 const boardsize = [20,20];
 const cellsize = 40;
+const pelletsize = 5;
 const offset = [40,0];
 const tilemap = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
+    [1,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1],
+    [1,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,2,0,0,1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,2,0,0,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,1],
+    [1,2,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,1],
+    [1,2,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,1],
+    [1,2,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1],
+    [1,2,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1],
+    [1,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+    [1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+    [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,0,1],
+    [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,0,1],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ]
+let pellets = [];
+const pellet = (x,y,w,h) => pellets.push({x,y,w,h});
+for(i in tilemap) {
+    for(j in tilemap[i]) {
+        if(tilemap[i][j] === 2) {
+            tilemap[i][j] = 0;
+            pellet(j*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);
+        }
+    }
+}
 let score = 0;
 let pacman = {
     x: cellsize,
@@ -75,7 +86,6 @@ let pacman = {
     animwidth: 16,
     animspeed: 5,
 }
-let pellets = {};
 let tick = 0;
 
 const wait = (secs) => {return new Promise(resolve => setTimeout(resolve,secs));}
@@ -88,8 +98,6 @@ function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.wi
     context.drawImage(img, dx, dy, dw, dh, x, y, width, height);
     context.restore();
 }
-
-const pellet = (x,y) => pellets.push({x,y});
 
 function pacmanBehavior() {
     switch (pacman.dir) {
@@ -227,7 +235,6 @@ function pacmanBehavior() {
     }
     if(pacman.anim === pacman.animframes)pacman.anim = 0;
 }
-
 function render() {
     pacmanBehavior();
     tick++;
@@ -241,6 +248,10 @@ function draw() {
             ctx.fillStyle = tilemap[j][i]?"blue":"black";
             ctx.fillRect(offset[1]+i*cellsize,offset[0]+j*cellsize,cellsize,cellsize)
         }
+    }
+    ctx.fillStyle = "yellow";
+    for(i in pellets) {
+        ctx.fillRect(pellets[i].x,pellets[i].y,pellets[i].w,pellets[i].h);
     }
     drawImage(ctx,document.getElementById("pacman"),offset[1]+pacman.x,offset[0]+pacman.y,pacman.w,pacman.h,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
 }

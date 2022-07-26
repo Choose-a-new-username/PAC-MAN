@@ -7,29 +7,28 @@ addEventListener("keydown",e=>{if(!keys[e.key]===true){
     keys[e.key]=true;
     switch(e.key) {
         case "ArrowUp":
-            if(pacman.dir !== 0)queued = "up";
             if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))) {
                 pacman.dir = 0;
             }
+            if(pacman.dir !== 0)queued = "up";
             break;
         case "ArrowRight":
-            if(pacman.dir !== 1)queued = "right";
             if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)) {
                 pacman.dir = 1;
             }
+            if(pacman.dir !== 1)queued = "right";
             break;
         case "ArrowDown":
-            if(pacman.dir !== 0)queued = "down";
             if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))) {
                 pacman.dir = 2;
             }
+            if(pacman.dir !== 2)queued = "down";
             break;
         case "ArrowLeft":
-            if(pacman.dir !== 0)queued = "left";
             if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)) {
                 pacman.dir = 3;
             }
-            queued = "left";
+            if(pacman.dir !== 3)queued = "left";
             break;
         default:
             break;

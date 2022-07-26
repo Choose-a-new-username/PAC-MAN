@@ -1,6 +1,7 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
+ctx.font = "bold 20px pixel-face";
 
 let keys = {};
 let queued = "";
@@ -69,8 +70,7 @@ const clamp = (va,mi,ma) => va>ma?ma:va<mi?mi:va;
 for(i in tilemap) {
     for(j in tilemap[i]) {
         if(tilemap[i][j] === 0) {
-            pellet(j*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);
-            
+            pellet(j*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);            
         }
     }
 }
@@ -249,7 +249,6 @@ function render() {
     pelletBehaivor();
     tick++;
 }
-ctx.font = "bold 20px pixel-face";
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";

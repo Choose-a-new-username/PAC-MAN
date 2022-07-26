@@ -8,7 +8,7 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
 ## TODO LIST:
 * ~~Make pacman remember your moves and not bump into walls~~
 * ~~Further optimise pacman's movement~~
-* __Add coins__ 
+* ~~Add coins~~ 
 * Score
 * Death/death screen
 * Ghost AI

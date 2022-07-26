@@ -42,6 +42,7 @@ let pacman = {
     anim: 0,
     animframes: 2,
     animwidth: 16,
+    animspeed: 5,
 }
 let tick = 0;
 
@@ -92,7 +93,7 @@ function pacmanBehavior() {
         case 0:
             if (!tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))) {
                 pacman.y-=pacman.speed;
-                if(tick%10==0)pacman.anim++;
+                if(tick%pacman.animspeed===0)pacman.anim++;
             }
             if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize) {
                 switch (queued) {
@@ -118,7 +119,7 @@ function pacmanBehavior() {
             if (!tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)) {
                 pacman.x+=pacman.speed;
                 if(pacman.x > (canvas.width - cellsize))pacman.x = 0;
-                if(tick%10==0)pacman.anim++;
+                if(tick%pacman.animspeed===0)pacman.anim++;
             }
             if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize) {
                 switch (queued) {
@@ -143,7 +144,7 @@ function pacmanBehavior() {
         case 2:
             if (!tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))) {
                 pacman.y+=pacman.speed;
-                if(tick%10==0)pacman.anim++;
+                if(tick%pacman.animspeed===0)pacman.anim++;
             }
             if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize) {
                 switch (queued) {
@@ -169,7 +170,7 @@ function pacmanBehavior() {
             if (!tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)) {
                 pacman.x-=pacman.speed;
                 if(pacman.x < 0)pacman.x = canvas.width - cellsize;
-                if(tick%10==0)pacman.anim++;
+                if(tick%pacman.animspeed===0)pacman.anim++;
             }
             if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize) {
                 switch (queued) {

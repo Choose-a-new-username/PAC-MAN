@@ -7,8 +7,8 @@ addEventListener("keydown",e=>{keys[e.key]=true;});
 addEventListener("keyup",e=>{keys[e.key]=false;});
 
 const boardsize = [20,20];
-const cellsize = 20;
-const offset = [10,0];
+const cellsize = 40;
+const offset = [40,0];
 const tilemap = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1],
@@ -200,6 +200,8 @@ function render() {
 }
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     for(let i = 0; i < boardsize[0];i++) {
         for(let j = 0; j < boardsize[1];j++) {
             ctx.fillStyle = tilemap[j][i]?"blue":"black";

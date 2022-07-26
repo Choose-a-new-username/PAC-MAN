@@ -101,6 +101,7 @@ function pelletBehaivor() {
     for(i in pellets) {
         if(pellets[i].x > pacman.x && pellets[i].x < pacman.x+pacman.w && pellets[i].y >= pacman.y+pacman.h && pellets[i].y <= pacman.y+pacman.h+pacman.h) {
             pellets.splice(i, 1);
+            score += 1;
         }
     }
 }
@@ -245,10 +246,13 @@ function render() {
     pelletBehaivor();
     tick++;
 }
+ctx.font = "bold 20px pixel-face";
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    ctx.fillText(score,0,25);
     for(let i = 0; i < boardsize[0];i++) {
         for(let j = 0; j < boardsize[1];j++) {
             ctx.fillStyle = tilemap[j][i]?"blue":"black";
@@ -260,8 +264,6 @@ function draw() {
         ctx.fillRect(pellets[i].x,pellets[i].y,pellets[i].w,pellets[i].h);
     }
     drawImage(ctx,document.getElementById("pacman"),offset[1]+pacman.x,offset[0]+pacman.y,pacman.w,pacman.h,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
-    ctx.font = "20px pixel-face";
-    ctx.fillText("hello, world!",0,0)
 }
 
 async function update() {

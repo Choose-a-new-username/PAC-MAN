@@ -45,11 +45,10 @@ let pacman = {
     animwidth: 16,
     animspeed: 5,
 }
+let pellets = {};
 let tick = 0;
 
-function wait(secs) {
-    return new Promise(resolve => setTimeout(resolve,secs));
-}
+const wait = (secs) => {return new Promise(resolve => setTimeout(resolve,secs));}
 
 function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.width,dh=img.height) {
     context.save();
@@ -59,6 +58,8 @@ function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.wi
     context.drawImage(img, dx, dy, dw, dh, x, y, width, height);
     context.restore();
 }
+
+const pellet = (x,y) => pellets.push({x,y});
 
 function pacmanBehavior() {
     if(pacman.anim === pacman.animframes)pacman.anim = 0;

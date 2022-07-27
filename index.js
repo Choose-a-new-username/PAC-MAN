@@ -15,11 +15,8 @@ function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.wi
 //assets/images
 const pacsprite = document.getElementById("pacman");
 const intro = document.getElementById("intro");
-const chomp = document.getElementById("chomp");
-chomp.loop = true;
-intro.addEventListener("ended",()=>{
-    chomp.play();
-});
+const munch_1 = document.getElementById("munch_1");
+const munch_2 = document.getElementById("munch_2");
 
 //key events
 let keys = {};
@@ -29,25 +26,25 @@ addEventListener("keydown",e=>{if(!keys[e.key]===true){
     switch(e.key) {
         case "ArrowUp":
             queued = "up";
-            if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))) {
+            if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.dir = 0;
             }
             break;
         case "ArrowRight":
             queued = "right";
-            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)) {
+            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1)) {
                 pacman.dir = 1;
             }
             break;
         case "ArrowDown":
             queued = "down";
-            if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))) {
+            if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.dir = 2;
             }
             break;
         case "ArrowLeft":
             queued = "left";
-            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)) {
+            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1))===1) {
                 pacman.dir = 3;
             }
             break;
@@ -75,26 +72,26 @@ const cellsize = 40;
 const pelletsize = 5;
 const offset = [40,0];
 const tilemap = [
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ]
 
 //pellet behaivior
@@ -117,7 +114,7 @@ let pacman = {
     h: cellsize,
     dir: 1,
     //cellsize must be divisible by pacman.speed
-    speed: cellsize/5,
+    speed: cellsize/10,
     anim: 0,
     animframes: 4,
     animwidth: 16,
@@ -134,35 +131,37 @@ function pelletBehaivor() {
         if(pellets[i].x > pacman.x && pellets[i].x < pacman.x+pacman.w && pellets[i].y >= pacman.y+pacman.h && pellets[i].y <= pacman.y+pacman.h+pacman.h) {
             pellets.splice(i, 1);
             score += 1;
+            munch_b = !munch_b;
+            if(munch_b){munch_1.currentTime = 0;munch_1.play();munch_2.pause();munch_2.currentTime = 0;}else{munch_2.currentTime = 0;munch_2.play();munch_1.pause();munch_1.currentTime = 0;}
         }
     }
 }
 function pacmanBehavior() {
     switch (pacman.dir) {
         case 0:
-            if (!tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))) {
+            if (!(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.y-=pacman.speed;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             }
             if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize) {
                 switch (queued) {
                     case "up":
-                        if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))){break;}    
+                        if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1){break;}    
                         pacman.dir = 0;
                         queued = "";
                         break;
                     case "right":
-                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)){break;}
+                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1){break;}
                         pacman.dir = 1;
                         queued = "";
                         break;
                     case "down":
-                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))){break;}
+                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;
                     case "left":
-                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)){break;}
+                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1){break;}
                         pacman.dir = 3;
                         queued = "";
                         break;
@@ -172,7 +171,7 @@ function pacmanBehavior() {
             }
             break;
         case 1:
-            if (!tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)) {
+            if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1)) {
                 pacman.x+=pacman.speed;
                 if(pacman.x > (canvas.width - cellsize))pacman.x = 0;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
@@ -180,22 +179,22 @@ function pacmanBehavior() {
             if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize) {
                 switch (queued) {
                     case "up":
-                        if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))){break;}
+                        if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 0;
                         queued = "";
                         break;
                     case "right":
-                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)){break;}
+                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1){break;}
                         pacman.dir = 1;
                         queued = "";
                         break;
                     case "down":
-                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))){break;}
+                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;
                     case "left":
-                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)){break;}
+                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1){break;}
                         pacman.dir = 3;
                         queued = "";
                         break;
@@ -205,29 +204,29 @@ function pacmanBehavior() {
             }
             break;
         case 2:
-            if (!tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))) {
+            if (!(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.y+=pacman.speed;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             }
             if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize) {
                 switch (queued) {
                     case "up":
-                        if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))){break;}
+                        if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 0;
                         queued = "";
                         break;
                     case "right":
-                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)){break;}
+                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1){break;}
                         pacman.dir = 1;
                         queued = "";
                         break;
                     case "down":
-                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))){break;}
+                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;
                     case "left":
-                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)){break;}
+                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1){break;}
                         pacman.dir = 3;
                         queued = "";
                         break;
@@ -237,7 +236,7 @@ function pacmanBehavior() {
             }
             break;    
         case 3:
-            if (!tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)) {
+            if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1)) {
                 pacman.x-=pacman.speed;
                 if(pacman.x < 0)pacman.x = canvas.width - cellsize;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
@@ -245,22 +244,22 @@ function pacmanBehavior() {
             if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize) {
                 switch (queued) {
                     case "up":
-                        if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))){break;}
+                        if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 0;
                         queued = "";
                         break;
                     case "right":
-                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)){break;}
+                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1){break;}
                         pacman.dir = 1;
                         queued = "";
                         break;
                     case "down":
-                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))){break;}
+                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;
                     case "left":
-                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)){break;}
+                        if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1){break;}
                         pacman.dir = 3;
                         queued = "";
                         break;
@@ -303,21 +302,26 @@ function draw() {
 
 //main loop
 async function update() {
-    render();
+    if(begun)render();
     draw();
     requestAnimationFrame(update);
 }
 
 //setup
-requestAnimationFrame(()=>{
-requestAnimationFrame(()=>{
-ctx.fillRect(0,0,canvas.width,canvas.height);
-ctx.fillStyle = "white";
-ctx.fillText("PRESS ENTER TO START",canvas.width/2-("PRESS ENTER TO START".length*10), canvas.height/2);
-})
-});
+requestAnimationFrame(()=>
+    requestAnimationFrame(()=>{
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "white";
+        ctx.fillText("PRESS ENTER TO START",canvas.width/2-("PRESS ENTER TO START".length*10), canvas.height/2);
+    })
+);
+//when the round begins, is set to true
+let begun = false;
+//which munch sound to play
+let munch_b = false;
 (async function(){
     await getKey("Enter");
     intro.play();
     update();
+    intro.addEventListener("ended",()=>begun=true);
 })();

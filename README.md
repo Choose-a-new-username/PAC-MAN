@@ -16,6 +16,6 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
 * Better textures
 * Levels
 * Multiple lives
-* Cherrys
+* Cherries
 * Large pelletes and ghost eating
 * High-scores/scoreboard

@@ -5,14 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PAC-MAN</title>
-    <script defer src="index.js"></script>
     <link rel="stylesheet" href="style.css">
+    <script defer src="index.js"></script>
 </head>
 <body>
-    <div style="font-family: pixel-face; display:none;">.</div>
+    <!-- assets -->
     <div style="display:none;">
         <img id="pacman" src="./assets/pacman.png">
+        <audio id="intro">
+            <source src="assets/Intro.mp3" type="audio/mpeg" />
+            <source src="assets/Intro.wav" type="audio/wav" />
+        </audio>
+        <audio id="chomp">
+            <source src="assets/Chomp.mp3" type="audio/mpeg" />
+            <source src="assets/Chomp.wav" type="audio/wav" />
+        </audio>
     </div>
+    <div style="font-family: pixel-face;"></div>
     <div class="canvascontainer"><canvas id="canvas" width="800" height="840"></canvas></div>
 </body>
 </html>

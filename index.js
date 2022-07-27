@@ -1,8 +1,27 @@
+//canvas/ctx settings
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-ctx.imageSmoothingEnabled = false;
 ctx.font = "bold 20px pixel-face";
+ctx.imageSmoothingEnabled = false; //this is to fix the "blur" effect. 
+function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.width,dh=img.height) {
+    context.save();
+    context.translate(x + width / 2, y + height / 2);
+    context.rotate(angle);
+    context.translate(- x - width / 2, - y - height / 2);
+    context.drawImage(img, dx, dy, dw, dh, x, y, width, height);
+    context.restore();
+}
 
+//assets/images
+const pacsprite = document.getElementById("pacman");
+const intro = document.getElementById("intro");
+const chomp = document.getElementById("chomp");
+chomp.loop = true;
+intro.addEventListener("ended",()=>{
+    chomp.play();
+});
+
+//key events
 let keys = {};
 let queued = "";
 addEventListener("keydown",e=>{if(!keys[e.key]===true){
@@ -37,7 +56,20 @@ addEventListener("keydown",e=>{if(!keys[e.key]===true){
     }
 }});
 addEventListener("keyup",e=>{keys[e.key]=false;});
+function getKey(k) {
+    return new Promise(r=>{
+        const keypressed=()=>{
+            if(keys[k]){
+                r();
+            } else {
+                requestAnimationFrame(keypressed);
+            }
+        }
+        keypressed();
+    });
+}
 
+//constants
 const boardsize = [20,20];
 const cellsize = 40;
 const pelletsize = 5;
@@ -59,14 +91,16 @@ const tilemap = [
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ]
+
+//pellet behaivior
 let pellets = [];
+let score = 0;
 const pellet = (x,y,w,h) => pellets.push({x,y,w,h});
-const clamp = (va,mi,ma) => va>ma?ma:va<mi?mi:va;
 for(i in tilemap) {
     for(j in tilemap[i]) {
         if(tilemap[i][j] === 0) {
@@ -74,32 +108,27 @@ for(i in tilemap) {
         }
     }
 }
-let score = 0;
+
+//pacman object
 let pacman = {
     x: cellsize,
     y: cellsize,
     w: cellsize,
     h: cellsize,
     dir: 1,
-    // cellsize must be divisible by pacman.speed
+    //cellsize must be divisible by pacman.speed
     speed: cellsize/5,
     anim: 0,
     animframes: 4,
     animwidth: 16,
     animspeed: 5,
 }
-let tick = 0;
 
+//time/time functions
+let tick = 0;
 const wait = (secs) => {return new Promise(resolve => setTimeout(resolve,secs));}
 
-function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.width,dh=img.height) {
-    context.save();
-    context.translate(x + width / 2, y + height / 2);
-    context.rotate(angle);
-    context.translate(- x - width / 2, - y - height / 2);
-    context.drawImage(img, dx, dy, dw, dh, x, y, width, height);
-    context.restore();
-}
+//behavior functions (movement, pellets, etc...)
 function pelletBehaivor() {
     for(i in pellets) {
         if(pellets[i].x > pacman.x && pellets[i].x < pacman.x+pacman.w && pellets[i].y >= pacman.y+pacman.h && pellets[i].y <= pacman.y+pacman.h+pacman.h) {
@@ -244,11 +273,15 @@ function pacmanBehavior() {
     }
     if(pacman.anim === pacman.animframes)pacman.anim = 0;
 }
+
+//run the behavior functions
 function render() {
     pacmanBehavior();
     pelletBehaivor();
     tick++;
 }
+
+//draw loop
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
@@ -265,12 +298,26 @@ function draw() {
     for(i in pellets) {
         ctx.fillRect(pellets[i].x,pellets[i].y,pellets[i].w,pellets[i].h);
     }
-    drawImage(ctx,document.getElementById("pacman"),offset[1]+pacman.x,offset[0]+pacman.y,pacman.w,pacman.h,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
+    drawImage(ctx,pacsprite,offset[1]+pacman.x,offset[0]+pacman.y,pacman.w,pacman.h,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
 }
 
+//main loop
 async function update() {
     render();
     draw();
     requestAnimationFrame(update);
 }
-update();
+
+//setup
+requestAnimationFrame(()=>{
+requestAnimationFrame(()=>{
+ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle = "white";
+ctx.fillText("PRESS ENTER TO START",canvas.width/2-("PRESS ENTER TO START".length*10), canvas.height/2);
+})
+});
+(async function(){
+    await getKey("Enter");
+    intro.play();
+    update();
+})();

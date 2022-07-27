@@ -17,5 +17,5 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
 * Levels
 * Multiple lives
 * Cherries
-* Large pelletes and ghost eating
+* Large pellets and ghost eating
 * High-scores/scoreboard

@@ -67,31 +67,16 @@ function getKey(k) {
 }
 
 //constants
-const boardsize = [20,20];
+const boardsize = [5,5];
 const cellsize = 40;
 const pelletsize = 5;
 const offset = [40,0];
 const tilemap = [
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,1,1,1,1],
+[1,0,0,0,1],
+[1,0,0,0,1],
+[1,0,0,0,1],
+[1,1,1,1,1],
 ]
 
 //pellet behaivior
@@ -127,12 +112,11 @@ const wait = (secs) => {return new Promise(resolve => setTimeout(resolve,secs));
 
 //behavior functions (movement, pellets, etc...)
 function pelletBehaivor() {
-    for(i in pellets) {
-        if(pellets[i].x > pacman.x && pellets[i].x < pacman.x+pacman.w && pellets[i].y >= pacman.y+pacman.h && pellets[i].y <= pacman.y+pacman.h+pacman.h) {
-            pellets.splice(i, 1);
+    for(let i = 0; i < pellets.length-1; i++) {
+        if(pellets[i].x+(pellets[1].w/2) > pacman.x && pellets[i].x < pacman.x+pacman.w && pellets[i].y+(pellets[1].h/2) >= pacman.y+pacman.h && pellets[i].y <= pacman.y+pacman.h+pacman.h) {            
             score += 1;
-            munch_b = !munch_b;
-            if(munch_b){munch_1.currentTime = 0;munch_1.play();munch_2.pause();munch_2.currentTime = 0;}else{munch_2.currentTime = 0;munch_2.play();munch_1.pause();munch_1.currentTime = 0;}
+            if(munch_b){munch_1.play();munch_b=false;}else{munch_2.play();munch_b=true;}
+            pellets.splice(i, 1);
         }
     }
 }

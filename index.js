@@ -79,11 +79,11 @@ const tilemap = [
 [1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
 [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
 [1,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,1],
-[2,2,2,1,0,1,0,0,0,0,0,0,0,1,0,1,2,2,2],
-[1,1,1,1,0,1,0,1,1,2,1,1,0,1,0,1,1,1,1],
-[0,0,0,0,0,0,0,1,2,2,2,1,0,0,0,0,0,0,0],
-[1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1],
-[2,2,2,1,0,1,0,0,0,0,0,0,0,1,0,1,2,2,2],
+[2,2,2,1,0,1,2,2,2,2,2,2,2,1,0,1,2,2,2],
+[1,1,1,1,0,1,2,1,1,2,1,1,2,1,0,1,1,1,1],
+[0,0,0,0,0,0,2,1,2,2,2,1,2,0,0,0,0,0,0],
+[1,1,1,1,0,1,2,1,1,1,1,1,2,1,0,1,1,1,1],
+[2,2,2,1,0,1,2,2,2,2,2,2,2,1,0,1,2,2,2],
 [1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1],
 [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
 [1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1],
@@ -94,20 +94,6 @@ const tilemap = [
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
-
-//pellets
-let pellets = [];
-let score = 0;
-const pellet = (x,y,w,h) => pellets.push({x,y,w,h});
-for(i in tilemap) {
-    for(j in tilemap[i]) {
-        if(tilemap[i][j] === 0) {
-            pellet(j*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);       
-            if(tilemap[i].at(j-1)===0)pellet((j-0.5)*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);
-            if(tilemap.at(i-1)[j]===0)pellet(j*cellsize+(cellsize/2)-(pelletsize/2),(i-0.5)*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);     
-        }
-    }
-}
 
 //ghosts
 let ghosts = {
@@ -120,7 +106,7 @@ let ghosts = {
     }
 };
 
-//pacman object
+//pacman
 let pacman = {
     x: cellsize*9,
     y: cellsize*15,
@@ -130,9 +116,26 @@ let pacman = {
     //cellsize must be divisible by pacman.speed
     speed: cellsize/20,
     anim: 0,
-    animframes: 4,
+    animframes: 3,
     animwidth: 16,
     animspeed: 5,
+}
+
+//pellets
+let pellets = [];
+let score = 0;
+const pellet = (x,y,w,h) => pellets.push({x,y,w,h});
+for(i in tilemap) {
+    for(j in tilemap[i]) {
+        if(tilemap[i][j] === 0) {
+            pellet(j*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);       
+            if(tilemap[i].at(j-1)===0){pellet((j-0.5)*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);}
+            if(tilemap.at(i-1)[j]===0){pellet(j*cellsize+(cellsize/2)-(pelletsize/2),(i-0.5)*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);}
+            if(j>1){
+                pellet(j+0.25*cellsize+(cellsize/2)-(pelletsize/2),(i)*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);     
+            }
+        }
+    }
 }
 
 //time/time functions
@@ -166,7 +169,7 @@ function ghostBehaivor() {
 function pelletBehaivor() {
         for(let i = 0; i < pellets.length; i++) {
             //pellet collision detection is WEIRD
-            if(pellets[i].x+(pellets[i].w/2) > pacman.x && pellets[i].x < pacman.x+pacman.w && pellets[i].y+(pellets[i].h/2) >= pacman.y+pacman.h && pellets[i].y <= pacman.y+pacman.h+pacman.h) {            
+            if(collision2(pellets[i].x+(pellets[i].w/2),pellets[i].y+(pellets[i].w/2),1,1,pacman.x+4,pacman.y+pacman.h+4,pacman.w-5,pacman.h-5)) {            
                 score += 1;
                 if(munch_b){munch_1.currentTime = 0;munch_1.play();munch_b=false;}else{munch_2.currentTime = 0;munch_2.play();munch_b=true;}
                 pellets.splice(i, 1);
@@ -339,11 +342,11 @@ function draw() {
             ctx.fillRect(offset[1]+i*cellsize,offset[0]+j*cellsize,cellsize,cellsize)
         }
     }
-    ctx.fillStyle = "yellow";
+    drawImage(ctx,pacsprite,offset[1]+pacman.x,offset[0]+pacman.y,pacman.w,pacman.h,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
+    ctx.fillStyle = "#db851c";
     for(i in pellets) {
         ctx.fillRect(pellets[i].x,pellets[i].y,pellets[i].w,pellets[i].h);
     }
-    drawImage(ctx,pacsprite,offset[1]+pacman.x,offset[0]+pacman.y,pacman.w,pacman.h,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
     ctx.fillStyle = "red";
     ctx.fillRect(ghosts["INKY"].x,ghosts["INKY"].y,cellsize,cellsize);
 }

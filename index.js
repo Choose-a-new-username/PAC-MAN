@@ -102,7 +102,9 @@ const pellet = (x,y,w,h) => pellets.push({x,y,w,h});
 for(i in tilemap) {
     for(j in tilemap[i]) {
         if(tilemap[i][j] === 0) {
-            pellet(j*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);            
+            pellet(j*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);       
+            if(tilemap[i].at(j-1)===0)pellet((j-0.5)*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);
+            if(tilemap.at(i-1)[j]===0)pellet(j*cellsize+(cellsize/2)-(pelletsize/2),(i-0.5)*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);     
         }
     }
 }
@@ -126,7 +128,7 @@ let pacman = {
     h: cellsize,
     dir: 3,
     //cellsize must be divisible by pacman.speed
-    speed: cellsize/10,
+    speed: cellsize/20,
     anim: 0,
     animframes: 4,
     animwidth: 16,

@@ -87,7 +87,7 @@ const tilemap = [
 [1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1],
 [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
 [1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1],
-[1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
+[1,0,0,1,0,0,0,0,0,2,0,0,0,0,0,1,0,0,1],
 [1,1,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,1],
 [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
 [1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,1],
@@ -120,11 +120,11 @@ let ghosts = {
 
 //pacman object
 let pacman = {
-    x: cellsize,
-    y: cellsize,
+    x: cellsize*9,
+    y: cellsize*15,
     w: cellsize,
     h: cellsize,
-    dir: 1,
+    dir: 3,
     //cellsize must be divisible by pacman.speed
     speed: cellsize/10,
     anim: 0,
@@ -180,24 +180,27 @@ function pacmanBehavior() {
                 pacman.y-=pacman.speed;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             }
-            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize) {
                 switch (queued) {
                     case "up":
+                        if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
                         if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1){break;}    
                         pacman.dir = 0;
                         queued = "";
                         break;
                     case "right":
+                        if(pacman.y !== Math.floor(pacman.y / cellsize)*cellsize){break;}
                         if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1){break;}
                         pacman.dir = 1;
                         queued = "";
                         break;
                     case "down":
+                        if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
                         if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;
                     case "left":
+                        if(pacman.y !== Math.floor(pacman.y / cellsize)*cellsize){break;}
                         if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1){break;}
                         pacman.dir = 3;
                         queued = "";
@@ -205,32 +208,34 @@ function pacmanBehavior() {
                     default:
                         break;
                 }
-            }
             break;
         case 1:
             if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1)) {
                 pacman.x+=pacman.speed;
-                if(pacman.x > (canvas.width - cellsize))pacman.x = 0;
+                if(pacman.x > (canvas.width-pacman.speed))pacman.x = -cellsize;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             }
-            if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize) {
                 switch (queued) {
                     case "up":
+                        if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
                         if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 0;
                         queued = "";
                         break;
                     case "right":
+                        if(pacman.y !== Math.floor(pacman.y / cellsize)*cellsize){break;}
                         if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1){break;}
                         pacman.dir = 1;
                         queued = "";
                         break;
                     case "down":
+                        if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
                         if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;
                     case "left":
+                        if(pacman.y !== Math.floor(pacman.y / cellsize)*cellsize){break;}
                         if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1){break;}
                         pacman.dir = 3;
                         queued = "";
@@ -238,31 +243,33 @@ function pacmanBehavior() {
                     default:
                         break;
                 }
-            }
             break;
         case 2:
             if (!(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.y+=pacman.speed;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             }
-            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize) {
                 switch (queued) {
                     case "up":
+                        if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
                         if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 0;
                         queued = "";
                         break;
                     case "right":
+                        if(pacman.y !== Math.floor(pacman.y / cellsize)*cellsize){break;}
                         if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1){break;}
                         pacman.dir = 1;
                         queued = "";
                         break;
                     case "down":
+                        if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
                         if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;
                     case "left":
+                        if(pacman.y !== Math.floor(pacman.y / cellsize)*cellsize){break;}
                         if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1){break;}
                         pacman.dir = 3;
                         queued = "";
@@ -270,32 +277,34 @@ function pacmanBehavior() {
                     default:
                         break;
                 }
-            }
             break;    
         case 3:
             if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1)) {
                 pacman.x-=pacman.speed;
-                if(pacman.x < 0)pacman.x = canvas.width - cellsize;
+                if(pacman.x < -cellsize)pacman.x = canvas.width - pacman.speed;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
-            }
-            if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize) {
+            } 
                 switch (queued) {
                     case "up":
+                        if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
                         if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 0;
                         queued = "";
                         break;
                     case "right":
+                        if(pacman.y !== Math.floor(pacman.y / cellsize)*cellsize){break;}
                         if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1){break;}
                         pacman.dir = 1;
                         queued = "";
                         break;
                     case "down":
+                        if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
                         if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;
                     case "left":
+                        if(pacman.y !== Math.floor(pacman.y / cellsize)*cellsize){break;}
                         if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1){break;}
                         pacman.dir = 3;
                         queued = "";
@@ -303,8 +312,6 @@ function pacmanBehavior() {
                     default:
                         break;
                 }
-            
-            }
             break;
     }
     if(pacman.anim === pacman.animframes)pacman.anim = 0;

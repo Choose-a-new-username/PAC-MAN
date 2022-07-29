@@ -113,7 +113,7 @@ let ghosts = {
         x: cellsize*10+0.5,
         y: cellsize*10,
         w: cellsize,
-        h: cellsize/4,
+        h: cellsize,
         state: "none"
     }
 };
@@ -147,15 +147,14 @@ function corner4(a,b,c,d,e,f,g,h) {
 function collision2(a,b,c,d,e,f,g,h) {
     return corner4(a,b,c,d,e,f,g,h) || corner4(e,f,g,h,a,b,c,d);
 }
-function collision(a,b) {
-    return collision2(a.x,a.y,a.w,a.h,b.x,b.y,b.w,b.h);
-}
 
 //behavior functions (movement, pellets, etc...)
 function ghostBehaivor() {
     //INKY
-        if (collision(ghosts["INKY"],pacman)){
+        if (collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x,pacman.y+pacman.h,pacman.w,pacman.h)){
             console.log("COLLISION")
+            draw();
+            throw '';
         }
     //PINKY
     //BLINKY

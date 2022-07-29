@@ -110,7 +110,7 @@ for(i in tilemap) {
 //ghosts
 let ghosts = {
     INKY: {
-        x: cellsize*10.5+0.5,
+        x: cellsize*10+0.5,
         y: cellsize*10,
         w: cellsize,
         h: cellsize/4,

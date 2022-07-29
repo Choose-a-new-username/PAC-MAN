@@ -110,10 +110,10 @@ for(i in tilemap) {
 //ghosts
 let ghosts = {
     INKY: {
-        x: cellsize*10+0.5,
+        x: cellsize*10.5+0.5,
         y: cellsize*10,
         w: cellsize,
-        h: cellsize,
+        h: cellsize/4,
         state: "none"
     }
 };
@@ -337,7 +337,7 @@ function draw() {
     }
     drawImage(ctx,pacsprite,offset[1]+pacman.x,offset[0]+pacman.y,pacman.w,pacman.h,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
     ctx.fillStyle = "red";
-    ctx.fillRect(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h);
+    ctx.fillRect(ghosts["INKY"].x,ghosts["INKY"].y,cellsize,cellsize);
 }
 
 //main loop

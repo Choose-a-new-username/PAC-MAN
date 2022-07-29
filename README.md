@@ -11,7 +11,7 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
 * ~~Add coins~~ 
 * ~~Score~~
 * ~~Map~~
-* ~~Collision detection~~
+* ~~Collision detection w ghosts~~
 * __Death/death screen__
 * Ghost AI
 * Better textures

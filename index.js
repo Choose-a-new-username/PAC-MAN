@@ -78,13 +78,13 @@ const tilemap = [
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
 [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
-[1,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,1],
+[1,1,1,1,0,1,1,1,2,1,2,1,1,1,0,1,1,1,1],
 [2,2,2,1,0,1,2,2,2,2,2,2,2,1,0,1,2,2,2],
 [1,1,1,1,0,1,2,1,1,2,1,1,2,1,0,1,1,1,1],
-[0,0,0,0,0,0,2,1,2,2,2,1,2,0,0,0,0,0,0],
+[2,2,2,2,0,2,2,1,2,2,2,1,2,2,0,2,2,2,2],
 [1,1,1,1,0,1,2,1,1,1,1,1,2,1,0,1,1,1,1],
 [2,2,2,1,0,1,2,2,2,2,2,2,2,1,0,1,2,2,2],
-[1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1],
+[1,1,1,1,0,1,2,1,1,1,1,1,2,1,0,1,1,1,1],
 [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
 [1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1],
 [1,0,0,1,0,0,0,0,0,2,0,0,0,0,0,1,0,0,1],
@@ -115,9 +115,9 @@ let pacman = {
     dir: 3,
     //cellsize must be divisible by pacman.speed
     speed: cellsize/20,
-    anim: 0,
+    anim: 2,
     animframes: 3,
-    animwidth: 16,
+    animwidth: 13,
     animspeed: 5,
 }
 
@@ -342,7 +342,7 @@ function draw() {
             ctx.fillRect(offset[1]+i*cellsize,offset[0]+j*cellsize,cellsize,cellsize)
         }
     }
-    drawImage(ctx,pacsprite,offset[1]+pacman.x,offset[0]+pacman.y,pacman.w,pacman.h,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
+    drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth),offset[0]+pacman.y+(cellsize/pacman.animwidth),pacman.w-((cellsize/pacman.animwidth)*2),pacman.h-((cellsize/pacman.animwidth)*2),((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
     ctx.fillStyle = "#db851c";
     for(i in pellets) {
         ctx.fillRect(pellets[i].x,pellets[i].y,pellets[i].w,pellets[i].h);

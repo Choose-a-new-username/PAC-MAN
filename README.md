@@ -10,9 +10,10 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
 * ~~Further optimise pacman's movement~~
 * ~~Add coins~~ 
 * ~~Score~~
+* ~~Map~~
+* ~~Collision detection~~
 * __Death/death screen__
 * Ghost AI
-* Map
 * Better textures
 * Levels
 * Multiple lives

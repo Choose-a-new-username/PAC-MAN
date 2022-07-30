@@ -78,9 +78,9 @@ const tilemap = [
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
 [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
-[1,1,1,1,0,1,1,1,2,1,2,1,1,1,0,1,1,1,1],
+[1,1,1,1,0,1,1,1,2,2,2,1,1,1,0,1,1,1,1],
 [2,2,2,1,0,1,2,2,2,2,2,2,2,1,0,1,2,2,2],
-[1,1,1,1,0,1,2,1,1,2,1,1,2,1,0,1,1,1,1],
+[1,1,1,1,0,1,2,1,2,2,1,1,2,1,0,1,1,1,1],
 [2,2,2,2,0,2,2,1,2,2,2,1,2,2,0,2,2,2,2],
 [1,1,1,1,0,1,2,1,1,1,1,1,2,1,0,1,1,1,1],
 [2,2,2,1,0,1,2,2,2,2,2,2,2,1,0,1,2,2,2],
@@ -95,16 +95,60 @@ const tilemap = [
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
 
+//math
+const getMin = object => {
+    return Object.keys(object).filter(x => {
+         return object[x] == Math.min.apply(null, 
+         Object.values(object));
+   });
+};
+
 //ghosts
 let ghosts = {
     INKY: {
-        x: cellsize*10+0.5,
-        y: cellsize*10,
+        x: cellsize*9,
+        y: cellsize*8,
         w: cellsize,
         h: cellsize,
+        dir: 3,
         state: "none"
     }
 };
+function normAI(tx,ty,curdir,x,y) {
+    let dirs = [0,1,2,3];
+    let dists = {0:0,1:0,2:0,3:0};
+    delete dists[dirs[dirs.indexOf(dirs.at(curdir-2))]];
+    dirs.splice(dirs.indexOf(dirs.at(curdir-2)),1);
+    for(i in dirs) {
+        switch(dirs[i]){
+            case 0: 
+                dists[0]=Math.abs(x-tx)+Math.abs(y-cellsize-ty);
+                break;
+            case 1: 
+                dists[1]=Math.abs(x+cellsize-tx)+Math.abs(y-ty);
+                break;
+            case 2: 
+                dists[2]=Math.abs(x-tx)+Math.abs(y+cellsize-ty);
+                break;
+            case 3: 
+                dists[3]=Math.abs(x-cellsize-tx)+Math.abs(y-ty);
+                console.log(tx===x);
+                break;
+        }
+    }
+    let min = getMin(dists);
+    if(min.includes("0")){
+        return 0;
+    }else if(min.includes("3")){
+        return 3;
+    }else if(min.includes("2")){
+        return 2;
+    }else if(min.includes("1")){
+        return 1;
+    }else{
+        throw 'help help help i cant movement'
+    }
+}
 
 //pacman
 let pacman = {
@@ -156,10 +200,25 @@ function collision2(a,b,c,d,e,f,g,h) {
 //behavior functions (movement, pellets, etc...)
 function ghostBehaivor() {
     //INKY
-        if (collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x,pacman.y+pacman.h,pacman.w,pacman.h)){
-            console.log("COLLISION")
-            draw();
-            throw '';
+        switch (ghosts["INKY"].dir) {
+            case 0:
+                ghosts["INKY"].y-=pacman.speed;
+                break;
+            case 1:
+                ghosts["INKY"].x+=pacman.speed;
+                break;
+            case 2:
+                ghosts["INKY"].y+=pacman.speed;
+                break;
+            case 3:
+                ghosts["INKY"].x-=pacman.speed;
+                break;
+        }
+        if(Math.round(ghosts["INKY"].x/cellsize)*cellsize==ghosts["INKY"].x && Math.round(ghosts["INKY"].y/cellsize)*cellsize==ghosts["INKY"].y){
+            ghosts["INKY"].dir = normAI(pacman.x,pacman.y+pacman.h,ghosts["INKY"].dir,ghosts["INKY"].x,ghosts["INKY"].y);
+        }
+        if (collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)){
+            console.log("COLLISION");
         }
     //PINKY
     //BLINKY
@@ -322,7 +381,7 @@ function pacmanBehavior() {
 }
 
 //run the behavior functions
-function render() {
+async function render() {
     pacmanBehavior();
     pelletBehaivor();
     ghostBehaivor();
@@ -330,7 +389,7 @@ function render() {
 }
 
 //draw loop
-function draw() {
+async function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);

@@ -78,9 +78,9 @@ const tilemap = [
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
 [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
-[1,1,1,1,0,1,1,1,2,2,2,1,1,1,0,1,1,1,1],
+[1,1,1,1,0,1,1,1,2,1,2,1,1,1,0,1,1,1,1],
 [2,2,2,1,0,1,2,2,2,2,2,2,2,1,0,1,2,2,2],
-[1,1,1,1,0,1,2,1,2,2,1,1,2,1,0,1,1,1,1],
+[1,1,1,1,0,1,2,1,1,3,1,1,2,1,0,1,1,1,1],
 [2,2,2,2,0,2,2,1,2,2,2,1,2,2,0,2,2,2,2],
 [1,1,1,1,0,1,2,1,1,1,1,1,2,1,0,1,1,1,1],
 [2,2,2,1,0,1,2,2,2,2,2,2,2,1,0,1,2,2,2],
@@ -107,7 +107,7 @@ const getMin = object => {
 let ghosts = {
     INKY: {
         x: cellsize*9,
-        y: cellsize*8,
+        y: cellsize*10,
         w: cellsize,
         h: cellsize,
         dir: 3,
@@ -119,20 +119,23 @@ function normAI(tx,ty,curdir,x,y) {
     let dists = {0:0,1:0,2:0,3:0};
     delete dists[dirs[dirs.indexOf(dirs.at(curdir-2))]];
     dirs.splice(dirs.indexOf(dirs.at(curdir-2)),1);
+    if((tilemap[y/cellsize-2].at(x/cellsize)===1)){delete dists["0"];dirs.splice(dirs.indexOf(0),1);}
+    if((tilemap[y/cellsize].at(x/cellsize)===1)){delete dists["2"];dirs.splice(dirs.indexOf(2),1);}
+    if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){delete dists["3"];dirs.splice(dirs.indexOf(3),1);}
+    if((tilemap[y/cellsize-1].at(x/cellsize+1)===1)){delete dists["1"];dirs.splice(dirs.indexOf(1),1);}
     for(i in dirs) {
         switch(dirs[i]){
             case 0: 
-                dists[0]=Math.abs(x-tx)+Math.abs(y-cellsize-ty);
+                dists["0"]=Math.abs(x-tx)+Math.abs(y-cellsize-ty);
                 break;
             case 1: 
-                dists[1]=Math.abs(x+cellsize-tx)+Math.abs(y-ty);
+                dists["1"]=Math.abs(x+cellsize-tx)+Math.abs(y-ty);
                 break;
             case 2: 
-                dists[2]=Math.abs(x-tx)+Math.abs(y+cellsize-ty);
+                dists["2"]=Math.abs(x-tx)+Math.abs(y+cellsize-ty);
                 break;
             case 3: 
-                dists[3]=Math.abs(x-cellsize-tx)+Math.abs(y-ty);
-                console.log(tx===x);
+                dists["3"]=Math.abs(x-cellsize-tx)+Math.abs(y-ty);
                 break;
         }
     }
@@ -145,9 +148,8 @@ function normAI(tx,ty,curdir,x,y) {
         return 2;
     }else if(min.includes("1")){
         return 1;
-    }else{
-        throw 'help help help i cant movement'
     }
+    return dirs[dirs.indexOf(dirs.at(curdir-2))];
 }
 
 //pacman
@@ -206,15 +208,17 @@ function ghostBehaivor() {
                 break;
             case 1:
                 ghosts["INKY"].x+=pacman.speed;
+                if(ghosts["INKY"].x > canvas.width - pacman.speed)ghosts["INKY"].x = -cellsize;
                 break;
             case 2:
                 ghosts["INKY"].y+=pacman.speed;
                 break;
             case 3:
                 ghosts["INKY"].x-=pacman.speed;
+                if(ghosts["INKY"].x < -cellsize)ghosts["INKY"].x = canvas.width - pacman.speed;
                 break;
         }
-        if(Math.round(ghosts["INKY"].x/cellsize)*cellsize==ghosts["INKY"].x && Math.round(ghosts["INKY"].y/cellsize)*cellsize==ghosts["INKY"].y){
+        if(Math.round(ghosts["INKY"].x/cellsize)*cellsize===ghosts["INKY"].x && Math.round(ghosts["INKY"].y/cellsize)*cellsize===ghosts["INKY"].y){
             ghosts["INKY"].dir = normAI(pacman.x,pacman.y+pacman.h,ghosts["INKY"].dir,ghosts["INKY"].x,ghosts["INKY"].y);
         }
         if (collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)){
@@ -239,7 +243,7 @@ function pelletBehaivor() {
 function pacmanBehavior() {
     switch (pacman.dir) {
         case 0:
-            if (!(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1)) {
+            if (!(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===3)) {
                 pacman.y-=pacman.speed;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             }
@@ -258,7 +262,7 @@ function pacmanBehavior() {
                         break;
                     case "down":
                         if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
-                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
+                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===3){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;
@@ -273,7 +277,7 @@ function pacmanBehavior() {
                 }
             break;
         case 1:
-            if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1)) {
+            if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===3)) {
                 pacman.x+=pacman.speed;
                 if(pacman.x > (canvas.width-pacman.speed))pacman.x = -cellsize;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
@@ -293,7 +297,7 @@ function pacmanBehavior() {
                         break;
                     case "down":
                         if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
-                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
+                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===3){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;
@@ -308,7 +312,7 @@ function pacmanBehavior() {
                 }
             break;
         case 2:
-            if (!(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
+            if (!(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===3)) {
                 pacman.y+=pacman.speed;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             }
@@ -327,7 +331,7 @@ function pacmanBehavior() {
                         break;
                     case "down":
                         if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
-                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
+                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===3){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;
@@ -342,7 +346,7 @@ function pacmanBehavior() {
                 }
             break;    
         case 3:
-            if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1)) {
+            if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===3)) {
                 pacman.x-=pacman.speed;
                 if(pacman.x < -cellsize)pacman.x = canvas.width - pacman.speed;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
@@ -362,7 +366,7 @@ function pacmanBehavior() {
                         break;
                     case "down":
                         if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
-                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
+                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===3){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;

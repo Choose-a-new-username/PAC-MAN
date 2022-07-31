@@ -111,7 +111,7 @@ let ghosts = {
         w: cellsize,
         h: cellsize,
         dir: 3,
-        state: "scatter"
+        state: "chase"
     }
 };
 function normAI(tx,ty,curdir,x,y) {

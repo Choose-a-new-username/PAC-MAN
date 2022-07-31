@@ -13,7 +13,6 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
 * ~~Map~~
 * ~~Collision detection w ghosts~~
 * __GHOST AI__
-* __GHOST AI__
     * ~~Red~~
     * ~~Ghost AI (chase)~~
     * ~~Ghost AI (scatter)~~

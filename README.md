@@ -12,8 +12,15 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
 * ~~Score~~
 * ~~Map~~
 * ~~Collision detection w ghosts~~
-* ~~Ghost AI (chase)~~
-* __Ghost AI (scatter)__
+* __GHOST AI__
+* __GHOST AI__
+    * ~~Red~~
+    * ~~Ghost AI (chase)~~
+    * ~~Ghost AI (scatter)~~
+    * __Pink__
+    * __Blue__
+    * __Orange__
+    * __AI changes over time__
 * __Death/death screen__
 * Better textures
 * Levels

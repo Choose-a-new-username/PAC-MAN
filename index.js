@@ -111,7 +111,7 @@ let ghosts = {
         w: cellsize,
         h: cellsize,
         dir: 3,
-        state: "none"
+        state: "scatter"
     }
 };
 function normAI(tx,ty,curdir,x,y) {
@@ -219,7 +219,14 @@ function ghostBehaivor() {
                 break;
         }
         if(Math.round(ghosts["INKY"].x/cellsize)*cellsize===ghosts["INKY"].x && Math.round(ghosts["INKY"].y/cellsize)*cellsize===ghosts["INKY"].y){
-            ghosts["INKY"].dir = normAI(pacman.x,pacman.y+pacman.h,ghosts["INKY"].dir,ghosts["INKY"].x,ghosts["INKY"].y);
+            switch(ghosts["INKY"].state){
+                case "chase":
+                    ghosts["INKY"].dir = normAI(pacman.x,pacman.y+pacman.h,ghosts["INKY"].dir,ghosts["INKY"].x,ghosts["INKY"].y);
+                    break;
+                case "scatter":
+                    ghosts["INKY"].dir = normAI(cellsize*18,cellsize*1,ghosts["INKY"].dir,ghosts["INKY"].x,ghosts["INKY"].y);
+                    break;
+            }
         }
         if (collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)){
             console.log("COLLISION");

@@ -13,7 +13,7 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
 * ~~Map~~
 * ~~Collision detection w ghosts~~
 * ~~Ghost AI (chase)~~
-* Ghost AI (scatter)
+* __Ghost AI (scatter)__
 * __Death/death screen__
 * Better textures
 * Levels

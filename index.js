@@ -169,7 +169,7 @@ let pacman = {
     h: cellsize,
     dir: 3,
     //cellsize must be divisible by pacman.speed
-    speed: cellsize/5,
+    speed: cellsize/10,
     anim: 2,
     animframes: 3,
     animwidth: 13,

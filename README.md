@@ -16,7 +16,7 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
     * ~~Red~~
     * ~~Ghost AI (chase)~~
     * ~~Ghost AI (scatter)~~
-    * __Pink__
+    * ~~Pink~~
     * __Blue__
     * __Orange__
     * __AI changes over time__

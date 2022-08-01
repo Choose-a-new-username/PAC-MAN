@@ -80,7 +80,7 @@ const tilemap = [
 [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
 [1,1,1,1,0,1,1,1,2,1,2,1,1,1,0,1,1,1,1],
 [2,2,2,1,0,1,2,2,2,2,2,2,2,1,0,1,2,2,2],
-[1,1,1,1,0,1,2,1,1,3,1,1,2,1,0,1,1,1,1],
+[1,1,1,1,0,1,2,1,1,1,1,1,2,1,0,1,1,1,1],
 [2,2,2,2,0,2,2,1,2,2,2,1,2,2,0,2,2,2,2],
 [1,1,1,1,0,1,2,1,1,1,1,1,2,1,0,1,1,1,1],
 [2,2,2,1,0,1,2,2,2,2,2,2,2,1,0,1,2,2,2],
@@ -108,19 +108,19 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 let ghosts = {
     BLINKY: {
         x: cellsize*9,
-        y: cellsize*10,
+        y: cellsize*8,
         w: cellsize,
         h: cellsize,
-        dir: 3,
-        state: "chase"
+        dir: 1,
+        state: "scatter"
     },
     PINKY: {
         x: cellsize*9,
         y: cellsize*8,
         w: cellsize,
         h: cellsize,
-        dir: 0,
-        state: "chase"
+        dir: 3,
+        state: "scatter"
     }
 };
 function normAI(tx,ty,curdir,x,y) {
@@ -169,7 +169,7 @@ let pacman = {
     h: cellsize,
     dir: 3,
     //cellsize must be divisible by pacman.speed
-    speed: cellsize/10,
+    speed: cellsize/20,
     anim: 2,
     animframes: 3,
     animwidth: 13,
@@ -289,7 +289,7 @@ function pelletBehaivor() {
             //pellet collision detection is WEIRD
             if(collision2(pellets[i].x+(pellets[i].w/2),pellets[i].y+(pellets[i].w/2),1,1,pacman.x+4,pacman.y+pacman.h+4,pacman.w-5,pacman.h-5)) {            
                 score += 1;
-                if(munch_b){munch_1.currentTime = 0;munch_1.play();munch_b=false;}else{munch_2.currentTime = 0;munch_2.play();munch_b=true;}
+                if(munch_b){munch_1.currentTime = 0;munch_2.pause();munch_1.play();munch_b=false;}else{munch_2.currentTime = 0;munch_1.pause();munch_2.play();munch_b=true;}
                 pellets.splice(i, 1);
             }
         }

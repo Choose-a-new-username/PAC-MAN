@@ -70,7 +70,7 @@ function getKey(k) {
 const boardsize = [19,21];
 const cellsize = 40;
 const pelletsize = 5;
-const offset = [cellsize,-cellsize/2];
+const offset = [cellsize,0];
 const tilemap = [
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],

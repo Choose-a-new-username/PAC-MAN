@@ -32,7 +32,7 @@ addEventListener("keydown",e=>{if(!keys[e.key]===true){
             break;
         case "ArrowRight":
             queued = "right";
-            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1)) {
+            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===3)) {
                 pacman.dir = 1;
             }
             break;
@@ -44,7 +44,7 @@ addEventListener("keydown",e=>{if(!keys[e.key]===true){
             break;
         case "ArrowLeft":
             queued = "left";
-            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1))===1) {
+            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1))===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===3) {
                 pacman.dir = 3;
             }
             break;
@@ -105,6 +105,14 @@ const getMin = object => {
 
 //ghosts
 let ghosts = {
+    BLINKY: {
+        x: cellsize*9,
+        y: cellsize*10,
+        w: cellsize,
+        h: cellsize,
+        dir: 3,
+        state: "chase"
+    },
     INKY: {
         x: cellsize*9,
         y: cellsize*10,
@@ -201,34 +209,34 @@ function collision2(a,b,c,d,e,f,g,h) {
 
 //behavior functions (movement, pellets, etc...)
 function ghostBehaivor() {
-    //INKY
-        switch (ghosts["INKY"].dir) {
+    //BLINKY
+        switch (ghosts["BLINKY"].dir) {
             case 0:
-                ghosts["INKY"].y-=pacman.speed;
+                ghosts["BLINKY"].y-=pacman.speed;
                 break;
             case 1:
-                ghosts["INKY"].x+=pacman.speed;
-                if(ghosts["INKY"].x > canvas.width - pacman.speed)ghosts["INKY"].x = -cellsize;
+                ghosts["BLINKY"].x+=pacman.speed;
+                if(ghosts["BLINKY"].x > canvas.width - pacman.speed)ghosts["BLINKY"].x = -cellsize;
                 break;
             case 2:
-                ghosts["INKY"].y+=pacman.speed;
+                ghosts["BLINKY"].y+=pacman.speed;
                 break;
             case 3:
-                ghosts["INKY"].x-=pacman.speed;
-                if(ghosts["INKY"].x < -cellsize)ghosts["INKY"].x = canvas.width - pacman.speed;
+                ghosts["BLINKY"].x-=pacman.speed;
+                if(ghosts["BLINKY"].x < -cellsize)ghosts["BLINKY"].x = canvas.width - pacman.speed;
                 break;
         }
-        if(Math.round(ghosts["INKY"].x/cellsize)*cellsize===ghosts["INKY"].x && Math.round(ghosts["INKY"].y/cellsize)*cellsize===ghosts["INKY"].y){
-            switch(ghosts["INKY"].state){
+        if(Math.round(ghosts["BLINKY"].x/cellsize)*cellsize===ghosts["BLINKY"].x && Math.round(ghosts["BLINKY"].y/cellsize)*cellsize===ghosts["BLINKY"].y){
+            switch(ghosts["BLINKY"].state){
                 case "chase":
-                    ghosts["INKY"].dir = normAI(pacman.x,pacman.y+pacman.h,ghosts["INKY"].dir,ghosts["INKY"].x,ghosts["INKY"].y);
+                    ghosts["BLINKY"].dir = normAI(pacman.x,pacman.y+pacman.h,ghosts["BLINKY"].dir,ghosts["BLINKY"].x,ghosts["BLINKY"].y);
                     break;
                 case "scatter":
-                    ghosts["INKY"].dir = normAI(cellsize*18,cellsize*1,ghosts["INKY"].dir,ghosts["INKY"].x,ghosts["INKY"].y);
+                    ghosts["BLINKY"].dir = normAI(cellsize*18,cellsize*1,ghosts["BLINKY"].dir,ghosts["BLINKY"].x,ghosts["BLINKY"].y);
                     break;
             }
         }
-        if (collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)){
+        if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)){
             console.log("COLLISION");
         }
     //PINKY
@@ -268,7 +276,7 @@ function pacmanBehavior() {
                         queued = "";
                         break;
                     case "down":
-                        if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
+                        if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}                        
                         if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===3){break;}
                         pacman.dir = 2;
                         queued = "";
@@ -284,7 +292,7 @@ function pacmanBehavior() {
                 }
             break;
         case 1:
-            if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===3)) {
+            if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1)) {
                 pacman.x+=pacman.speed;
                 if(pacman.x > (canvas.width-pacman.speed))pacman.x = -cellsize;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
@@ -319,7 +327,7 @@ function pacmanBehavior() {
                 }
             break;
         case 2:
-            if (!(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===3)) {
+            if (!(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.y+=pacman.speed;
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             }
@@ -338,7 +346,7 @@ function pacmanBehavior() {
                         break;
                     case "down":
                         if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
-                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===3){break;}
+                        if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1){break;}
                         pacman.dir = 2;
                         queued = "";
                         break;

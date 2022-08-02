@@ -12,6 +12,7 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
 * ~~Score~~
 * ~~Map~~
 * ~~Collision detection w ghosts~~
+* ~~Better textures~~
 * __GHOST AI__
     * ~~Red~~
     * ~~Ghost AI (chase)~~
@@ -21,7 +22,6 @@ CREATED BY (yours truly) FOR A SCHOOL PROJECT.
     * __Orange__
     * __AI changes over time__
 * __Death/death screen__
-* Better textures
 * Levels
 * Multiple lives
 * Cherries

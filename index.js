@@ -14,6 +14,7 @@ function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.wi
 
 //assets/images
 const pacsprite = document.getElementById("pacman");
+const mapsprite = document.getElementById("map");
 const intro = document.getElementById("intro");
 const munch_1 = document.getElementById("munch_1");
 const munch_2 = document.getElementById("munch_2");
@@ -67,33 +68,43 @@ function getKey(k) {
 }
 
 //constants
-const boardsize = [19,21];
-const cellsize = 40;
-const pelletsize = 5;
-const offset = [cellsize,0];
 const tilemap = [
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-[1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-[1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
-[1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
-[1,1,1,1,0,1,1,1,2,1,2,1,1,1,0,1,1,1,1],
-[2,2,2,1,0,1,2,2,2,2,2,2,2,1,0,1,2,2,2],
-[1,1,1,1,0,1,2,1,1,1,1,1,2,1,0,1,1,1,1],
-[2,2,2,2,0,2,2,1,2,2,2,1,2,2,0,2,2,2,2],
-[1,1,1,1,0,1,2,1,1,1,1,1,2,1,0,1,1,1,1],
-[2,2,2,1,0,1,2,2,2,2,2,2,2,1,0,1,2,2,2],
-[1,1,1,1,0,1,2,1,1,1,1,1,2,1,0,1,1,1,1],
-[1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-[1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1],
-[1,0,0,1,0,0,0,0,0,2,0,0,0,0,0,1,0,0,1],
-[1,1,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,1],
-[1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
-[1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1],
+[1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1],
+[1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1],
+[1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1],
+[1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1],
+[2,2,2,2,2,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,2,2,2,2,2],
+[2,2,2,2,2,1,0,1,1,2,2,2,2,2,2,2,2,2,2,1,1,0,1,2,2,2,2,2],
+[2,2,2,2,2,1,0,1,1,2,1,1,1,2,2,1,1,1,2,1,1,0,1,2,2,2,2,2],
+[1,1,1,1,1,1,0,1,1,2,1,2,2,2,2,2,2,1,2,1,1,0,1,1,1,1,1,1],
+[2,2,2,2,2,2,0,2,2,2,1,2,2,2,2,2,2,1,2,2,2,0,2,2,2,2,2,2],
+[1,1,1,1,1,1,0,1,1,2,1,2,2,2,2,2,2,1,2,1,1,0,1,1,1,1,1,1],
+[2,2,2,2,2,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,2,2,2,2,2],
+[2,2,2,2,2,1,0,1,1,2,2,2,2,2,2,2,2,2,2,1,1,0,1,2,2,2,2,2],
+[2,2,2,2,2,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,2,2,2,2,2],
+[1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1],
+[1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1],
+[1,0,0,0,1,1,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,1,1,0,0,0,1],
+[1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1],
+[1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1],
+[1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1],
+[1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1],
+[1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
+const boardsize = [tilemap[0].length,tilemap.length];
+const cellsize = 40;
+const pelletsize = 10;
+const offset = [cellsize,0];
 
 //math
 const getMin = object => {
@@ -163,17 +174,17 @@ function normAI(tx,ty,curdir,x,y) {
 
 //pacman
 let pacman = {
-    x: cellsize*9,
-    y: cellsize*15,
+    x: cellsize*13.5,
+    y: cellsize*23,
     w: cellsize,
     h: cellsize,
     dir: 3,
     //cellsize must be divisible by pacman.speed
-    speed: cellsize/20,
+    speed: cellsize/10,
     anim: 2,
     animframes: 3,
     animwidth: 13,
-    animspeed: 5,
+    animspeed: 2,
 }
 
 //pellets
@@ -184,11 +195,6 @@ for(i in tilemap) {
     for(j in tilemap[i]) {
         if(tilemap[i][j] === 0) {
             pellet(j*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);       
-            if(tilemap[i].at(j-1)===0){pellet((j-0.5)*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);}
-            if(tilemap.at(i-1)[j]===0){pellet(j*cellsize+(cellsize/2)-(pelletsize/2),(i-0.5)*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);}
-            if(j>1){
-                pellet(j+0.25*cellsize+(cellsize/2)-(pelletsize/2),(i)*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);     
-            }
         }
     }
 }
@@ -217,7 +223,7 @@ function ghostBehaivor() {
                     ghosts["BLINKY"].dir = normAI(pacman.x,pacman.y+pacman.h,ghosts["BLINKY"].dir,ghosts["BLINKY"].x,ghosts["BLINKY"].y);
                     break;
                 case "scatter":
-                    ghosts["BLINKY"].dir = normAI(cellsize*18,cellsize*1,ghosts["BLINKY"].dir,ghosts["BLINKY"].x,ghosts["BLINKY"].y);
+                    ghosts["BLINKY"].dir = normAI(cellsize*27,cellsize*1,ghosts["BLINKY"].dir,ghosts["BLINKY"].x,ghosts["BLINKY"].y);
                     break;
             }
         }
@@ -227,7 +233,7 @@ function ghostBehaivor() {
                 break;
             case 1:
                 ghosts["BLINKY"].x+=pacman.speed;
-                if(ghosts["BLINKY"].x > canvas.width - pacman.speed)ghosts["BLINKY"].x = -cellsize;
+                if(ghosts["BLINKY"].x > canvas.width - pacman.speed-offset[1])ghosts["BLINKY"].x = -cellsize;
                 break;
             case 2:
                 ghosts["BLINKY"].y+=pacman.speed;
@@ -267,7 +273,7 @@ function ghostBehaivor() {
             break;
         case 1:
             ghosts["PINKY"].x+=pacman.speed;
-            if(ghosts["PINKY"].x > canvas.width - pacman.speed)ghosts["PINKY"].x = -cellsize;
+            if(ghosts["PINKY"].x > canvas.width - pacman.speed-offset[1])ghosts["PINKY"].x = -cellsize;
             break;
         case 2:
             ghosts["PINKY"].y+=pacman.speed;
@@ -280,6 +286,9 @@ function ghostBehaivor() {
     //INKY
     //CLYDE
     if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)){
+        console.log("COLLISION");
+    }
+    if (collision2(ghosts["PINKY"].x,ghosts["PINKY"].y,ghosts["PINKY"].w,ghosts["PINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)){
         console.log("COLLISION");
     }
 }
@@ -334,7 +343,7 @@ function pacmanBehavior() {
         case 1:
             if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1)) {
                 pacman.x+=pacman.speed;
-                if(pacman.x > (canvas.width-pacman.speed))pacman.x = -cellsize;
+                if(pacman.x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))pacman.x = -(cellsize/2);
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             }
                 switch (queued) {
@@ -403,7 +412,7 @@ function pacmanBehavior() {
         case 3:
             if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===3)) {
                 pacman.x-=pacman.speed;
-                if(pacman.x < -cellsize)pacman.x = canvas.width - pacman.speed;
+                if(pacman.x < -cellsize)pacman.x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
                 if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             } 
                 switch (queued) {
@@ -448,19 +457,21 @@ async function render() {
 }
 
 //draw loop
+const ooo = 13;
 async function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
     ctx.fillText(score,0,25);
-    for(let i = 0; i < boardsize[0];i++) {
+    /*for(let i = 0; i < boardsize[0];i++) {
         for(let j = 0; j < boardsize[1];j++) {
             ctx.fillStyle = tilemap[j][i]===1?"blue":"black";
             ctx.fillRect(offset[1]+i*cellsize,offset[0]+j*cellsize,cellsize,cellsize)
         }
-    }
-    drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth),offset[0]+pacman.y+(cellsize/pacman.animwidth),pacman.w-((cellsize/pacman.animwidth)*2),pacman.h-((cellsize/pacman.animwidth)*2),((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
+    }*/
+    ctx.drawImage(mapsprite,0,-80,cellsize*28,cellsize*36);
+    drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
     ctx.fillStyle = "#db851c";
     for(i in pellets) {
         ctx.fillRect(pellets[i].x+offset[1],pellets[i].y,pellets[i].w,pellets[i].h);

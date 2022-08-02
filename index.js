@@ -240,7 +240,7 @@ function ghostBehaivor() {
                 break;
             case 3:
                 ghosts["BLINKY"].x-=pacman.speed;
-                if(ghosts["BLINKY"].x < -cellsize)ghosts["BLINKY"].x = canvas.width - pacman.speed;
+                if(ghosts["BLINKY"].x < -cellsize)ghosts["BLINKY"].x = canvas.width - pacman.speed - offset[1]- (cellsize/2);
                 break;
         }
     //PINKY
@@ -297,7 +297,7 @@ function pelletBehaivor() {
         for(let i = 0; i < pellets.length; i++) {
             //pellet collision detection is WEIRD
             if(collision2(pellets[i].x+(pellets[i].w/2),pellets[i].y+(pellets[i].w/2),1,1,pacman.x+4,pacman.y+pacman.h+4,pacman.w-5,pacman.h-5)) {            
-                score += 1;
+                score += 10;
                 if(munch_b){munch_1.currentTime = 0;munch_2.pause();munch_1.play();munch_b=false;}else{munch_2.currentTime = 0;munch_1.pause();munch_2.play();munch_b=true;}
                 pellets.splice(i, 1);
             }

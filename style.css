@@ -14,11 +14,11 @@ html, body {
 canvas {
     border: 2px solid black;
     height:100%;
-    width:100%;
+    width:70%;
 }
 .canvascontainer {
     height:100%;
-    width:100%;
+    width:110%;
     display: grid;
     place-content: center;    
 }

@@ -1,7 +1,7 @@
 //canvas/ctx settings
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-ctx.font = "bold 20px pixel-face";
+ctx.font = "bold 40px pixel-face";
 ctx.imageSmoothingEnabled = false; //this is to fix the "blur" effect. 
 function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.width,dh=img.height) {
     context.save();
@@ -21,7 +21,7 @@ const munch_2 = document.getElementById("munch_2");
 
 //key events
 let keys = {};
-let queued = "";
+let queued = "up";
 addEventListener("keydown",e=>{if(!keys[e.key]===true){
     keys[e.key]=true;
     switch(e.key) {
@@ -81,10 +81,10 @@ const tilemap = [
 [1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1],
 [2,2,2,2,2,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,2,2,2,2,2],
 [2,2,2,2,2,1,0,1,1,2,2,2,2,2,2,2,2,2,2,1,1,0,1,2,2,2,2,2],
-[2,2,2,2,2,1,0,1,1,2,1,1,1,2,2,1,1,1,2,1,1,0,1,2,2,2,2,2],
-[1,1,1,1,1,1,0,1,1,2,1,2,2,2,2,2,2,1,2,1,1,0,1,1,1,1,1,1],
-[2,2,2,2,2,2,0,2,2,2,1,2,2,2,2,2,2,1,2,2,2,0,2,2,2,2,2,2],
-[1,1,1,1,1,1,0,1,1,2,1,2,2,2,2,2,2,1,2,1,1,0,1,1,1,1,1,1],
+[2,2,2,2,2,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,2,2,2,2,2],
+[1,1,1,1,1,1,0,1,1,2,1,1,2,2,2,2,1,1,2,1,1,0,1,1,1,1,1,1],
+[2,2,2,2,2,2,0,2,2,2,1,1,2,2,2,2,1,1,2,2,2,0,2,2,2,2,2,2],
+[1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
 [2,2,2,2,2,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,2,2,2,2,2],
 [2,2,2,2,2,1,0,1,1,2,2,2,2,2,2,2,2,2,2,1,1,0,1,2,2,2,2,2],
 [2,2,2,2,2,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,2,2,2,2,2],
@@ -104,7 +104,7 @@ const tilemap = [
 const boardsize = [tilemap[0].length,tilemap.length];
 const cellsize = 40;
 const pelletsize = 10;
-const offset = [cellsize,0];
+const offset = [cellsize*1.5,0];
 
 //math
 const getMin = object => {
@@ -118,19 +118,19 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 //ghosts
 let ghosts = {
     BLINKY: {
-        x: cellsize*9,
-        y: cellsize*8,
+        x: cellsize*15,
+        y: cellsize*11,
         w: cellsize,
         h: cellsize,
-        dir: 1,
+        dir: 0,
         state: "scatter"
     },
     PINKY: {
-        x: cellsize*9,
-        y: cellsize*8,
+        x: cellsize*12,
+        y: cellsize*11,
         w: cellsize,
         h: cellsize,
-        dir: 3,
+        dir: 0,
         state: "scatter"
     }
 };
@@ -463,23 +463,17 @@ async function draw() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
-    ctx.fillText(score,0,25);
-    /*for(let i = 0; i < boardsize[0];i++) {
-        for(let j = 0; j < boardsize[1];j++) {
-            ctx.fillStyle = tilemap[j][i]===1?"blue":"black";
-            ctx.fillRect(offset[1]+i*cellsize,offset[0]+j*cellsize,cellsize,cellsize)
-        }
-    }*/
-    ctx.drawImage(mapsprite,0,-80,cellsize*28,cellsize*36);
-    drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
+    ctx.fillText(score,20,55);
+    ctx.drawImage(mapsprite,0,-80+offset[0],cellsize*28,cellsize*36);
+    drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
     ctx.fillStyle = "#db851c";
     for(i in pellets) {
-        ctx.fillRect(pellets[i].x+offset[1],pellets[i].y,pellets[i].w,pellets[i].h);
+        ctx.fillRect(pellets[i].x+offset[1],pellets[i].y+offset[0],pellets[i].w,pellets[i].h);
     }
     ctx.fillStyle = "red";
-    ctx.fillRect(ghosts["BLINKY"].x+offset[1],ghosts["BLINKY"].y,cellsize,cellsize);
+    ctx.fillRect(ghosts["BLINKY"].x+offset[1]-ooo,ghosts["BLINKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
     ctx.fillStyle = "pink";
-    ctx.fillRect(ghosts["PINKY"].x+offset[1],ghosts["PINKY"].y,cellsize,cellsize);
+    ctx.fillRect(ghosts["PINKY"].x+offset[1]-ooo,ghosts["PINKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
 }
 
 //main loop
@@ -494,7 +488,7 @@ requestAnimationFrame(()=>
     requestAnimationFrame(()=>{
         ctx.fillRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = "white";
-        ctx.fillText("PRESS ENTER TO START",canvas.width/2-("PRESS ENTER TO START".length*10), canvas.height/2);
+        ctx.fillText("PRESS ENTER TO START",canvas.width/2-("PRESS ENTER TO START".length*20), canvas.height/2);
     })
 );
 //when the round begins, is set to true

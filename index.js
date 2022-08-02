@@ -123,7 +123,7 @@ let ghosts = {
         w: cellsize,
         h: cellsize,
         dir: 0,
-        state: "scatter"
+        state: "chase"
     },
     PINKY: {
         x: cellsize*12,
@@ -131,7 +131,7 @@ let ghosts = {
         w: cellsize,
         h: cellsize,
         dir: 0,
-        state: "scatter"
+        state: "chase"
     }
 };
 function normAI(tx,ty,curdir,x,y) {
@@ -233,7 +233,7 @@ function ghostBehaivor() {
                 break;
             case 1:
                 ghosts["BLINKY"].x+=pacman.speed;
-                if(ghosts["BLINKY"].x > canvas.width - pacman.speed-offset[1])ghosts["BLINKY"].x = -cellsize;
+                if(ghosts["BLINKY"].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts["BLINKY"].x = -(cellsize/2);
                 break;
             case 2:
                 ghosts["BLINKY"].y+=pacman.speed;
@@ -249,16 +249,16 @@ function ghostBehaivor() {
             case "chase":
                 switch(pacman.dir) {
                     case 0:
-                        ghosts["PINKY"].dir = normAI(pacman.x,clamp(pacman.y,0,boardsize[1]*cellsize),ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                        ghosts["PINKY"].dir = normAI(pacman.x,clamp(pacman.y-cellsize*2,0,boardsize[1]*cellsize),ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
                         break;
                     case 1:
-                        ghosts["PINKY"].dir = normAI(clamp(pacman.x+cellsize,0,boardsize[1]*cellsize),pacman.y+pacman.h,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                        ghosts["PINKY"].dir = normAI(clamp(pacman.x+cellsize*3,0,boardsize[1]*cellsize),pacman.y+pacman.h,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
                         break;
                     case 2:
-                        ghosts["PINKY"].dir = normAI(pacman.x,clamp(pacman.y+pacman.h+cellsize,0,boardsize[0]*cellsize),ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                        ghosts["PINKY"].dir = normAI(pacman.x,clamp(pacman.y+pacman.h+cellsize*3,0,boardsize[0]*cellsize),ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
                         break;
                     case 3:
-                        ghosts["PINKY"].dir = normAI(clamp(pacman.x-cellsize,0,boardsize[1]*cellsize),pacman.y+pacman.h,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                        ghosts["PINKY"].dir = normAI(clamp(pacman.x-cellsize*3,0,boardsize[1]*cellsize),pacman.y+pacman.h,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
                         break;
                 }
                 break;
@@ -273,7 +273,7 @@ function ghostBehaivor() {
             break;
         case 1:
             ghosts["PINKY"].x+=pacman.speed;
-            if(ghosts["PINKY"].x > canvas.width - pacman.speed-offset[1])ghosts["PINKY"].x = -cellsize;
+            if(ghosts["PINKY"].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts["PINKY"].x = -(cellsize/2);
             break;
         case 2:
             ghosts["PINKY"].y+=pacman.speed;
@@ -488,7 +488,7 @@ requestAnimationFrame(()=>
     requestAnimationFrame(()=>{
         ctx.fillRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = "white";
-        ctx.fillText("PRESS ENTER TO START",canvas.width/2-("PRESS ENTER TO START".length*20), canvas.height/2);
+        ctx.fillText("PRESS ENTER TO START",canvas.width/2-("PRESS ENTER TO START".length*15), canvas.height/2);
     })
 );
 //when the round begins, is set to true

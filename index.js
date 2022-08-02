@@ -249,16 +249,16 @@ function ghostBehaivor() {
             case "chase":
                 switch(pacman.dir) {
                     case 0:
-                        ghosts["PINKY"].dir = normAI(pacman.x,clamp(pacman.y-cellsize*2,0,boardsize[1]*cellsize),ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                        ghosts["PINKY"].dir = normAI(clamp(pacman.x-cellsize*4,0,boardsize[1]*cellsize),clamp(pacman.y+pacman.h-cellsize*4,0,boardsize[1]*cellsize),ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
                         break;
                     case 1:
-                        ghosts["PINKY"].dir = normAI(clamp(pacman.x+cellsize*3,0,boardsize[1]*cellsize),pacman.y+pacman.h,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                        ghosts["PINKY"].dir = normAI(clamp(pacman.x+cellsize*4,0,boardsize[1]*cellsize),pacman.y+pacman.h,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
                         break;
                     case 2:
-                        ghosts["PINKY"].dir = normAI(pacman.x,clamp(pacman.y+pacman.h+cellsize*3,0,boardsize[0]*cellsize),ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                        ghosts["PINKY"].dir = normAI(pacman.x,clamp(pacman.y+pacman.h+cellsize*4,0,boardsize[0]*cellsize),ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
                         break;
                     case 3:
-                        ghosts["PINKY"].dir = normAI(clamp(pacman.x-cellsize*3,0,boardsize[1]*cellsize),pacman.y+pacman.h,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                        ghosts["PINKY"].dir = normAI(clamp(pacman.x-cellsize*4,0,boardsize[1]*cellsize),pacman.y+pacman.h,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
                         break;
                 }
                 break;

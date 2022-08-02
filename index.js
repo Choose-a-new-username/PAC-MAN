@@ -19,6 +19,9 @@ const intro = document.getElementById("intro");
 const munch_1 = document.getElementById("munch_1");
 const munch_2 = document.getElementById("munch_2");
 
+let INKYTARGETX = 0;
+let INKYTARGETY = 0;
+
 //key events
 let keys = {};
 let queued = "up";
@@ -101,7 +104,7 @@ const tilemap = [
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
-const boardsize = [tilemap[0].length,tilemap.length];
+const boardsize = [tilemap[0].length-1,tilemap.length];
 const cellsize = 40;
 const pelletsize = 10;
 const offset = [cellsize*1,20];
@@ -119,7 +122,7 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 let ghosts = {
     BLINKY: {
         x: cellsize*15,
-        y: cellsize*11,
+        y: cellsize*12,
         w: cellsize,
         h: cellsize,
         dir: 0,
@@ -127,10 +130,18 @@ let ghosts = {
     },
     PINKY: {
         x: cellsize*12,
-        y: cellsize*11,
+        y: cellsize*12,
         w: cellsize,
         h: cellsize,
         dir: 0,
+        state: "chase"
+    },
+    INKY: {
+        x: cellsize*13.5,
+        y: cellsize*12,
+        w: cellsize,
+        h: cellsize,
+        dir: 1,
         state: "chase"
     }
 };
@@ -141,7 +152,9 @@ function normAI(tx,ty,curdir,x,y) {
     dirs.splice(dirs.indexOf(dirs.at(curdir-2)),1);
     if((tilemap[y/cellsize-2].at(x/cellsize)===1)){delete dists["0"];dirs.splice(dirs.indexOf(0),1);}
     if((tilemap[y/cellsize].at(x/cellsize)===1)){delete dists["2"];dirs.splice(dirs.indexOf(2),1);}
-    if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){delete dists["3"];dirs.splice(dirs.indexOf(3),1);}
+    if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){delete dists["3"];dirs.splice(dirs.indexOf(3),1);}else{
+        console.log(tilemap[y/cellsize-1].at(x/cellsize-1));
+    }
     if((tilemap[y/cellsize-1].at(x/cellsize+1)===1)){delete dists["1"];dirs.splice(dirs.indexOf(1),1);}
     for(i in dirs) {
         switch(dirs[i]){
@@ -280,10 +293,55 @@ function ghostBehaivor() {
             break;
         case 3:
             ghosts["PINKY"].x-=pacman.speed;
-            if(ghosts["PINKY"].x < -cellsize)ghosts["PINKY"].x = canvas.width - pacman.speed;
+            if(ghosts["PINKY"].x < -cellsize)ghosts["PINKY"].x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
             break;
     }
     //INKY
+        if(Math.round(ghosts["INKY"].x/cellsize)*cellsize===ghosts["INKY"].x && Math.round(ghosts["INKY"].y/cellsize)*cellsize===ghosts["INKY"].y){
+            switch(ghosts["INKY"].state){
+                case "chase":
+                    let xx = pacman.x;
+                    let yy = pacman.y+pacman.h;
+                    switch(pacman.dir) {
+                        case 0:
+                            xx = clamp(pacman.x-cellsize*2,0,boardsize[1]*cellsize);
+                            yy = clamp(pacman.y+pacman.h-cellsize*2,0,boardsize[1]*cellsize);
+                            break;
+                        case 1:
+                            xx = clamp(pacman.x+cellsize*2,0,boardsize[1]*cellsize);
+                            break;
+                        case 2:
+                            yy = clamp(pacman.y+pacman.h+cellsize*2,0,boardsize[0]*cellsize);
+                            break;
+                        case 3:
+                            xx = clamp(pacman.x-cellsize*2,0,boardsize[1]*cellsize);
+                            break;
+                    }
+                    INKYTARGETX = clamp(clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[1]*cellsize)>xx?xx-clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[0]*cellsize):xx+clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[0]*cellsize),0,boardsize[0]*cellsize);
+                    INKYTARGETY = clamp(clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[0]*cellsize)>yy?yy-clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[1]*cellsize):yy+clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[1]*cellsize),0,boardsize[1]*cellsize);
+                    ghosts["INKY"].dir = normAI(INKYTARGETX,INKYTARGETY,ghosts["INKY"].dir,clamp(ghosts["INKY"].x,0,boardsize[0]*cellsize),clamp(ghosts["INKY"].y,0,boardsize[1]*cellsize));
+                    break;
+                case "scatter":
+                    ghosts["INKY"].dir = normAI(cellsize*27,cellsize*30,ghosts["INKY"].dir,ghosts["INKY"].x,ghosts["INKY"].y);
+                    break;
+            }
+        }
+        switch (ghosts["INKY"].dir) {
+            case 0:
+                ghosts["INKY"].y-=pacman.speed;
+                break;
+            case 1:
+                ghosts["INKY"].x+=pacman.speed;
+                if(ghosts["INKY"].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts["INKY"].x = -(cellsize/2);
+                break;
+            case 2:
+                ghosts["INKY"].y+=pacman.speed;
+                break;
+            case 3:
+                ghosts["INKY"].x-=pacman.speed;
+                if(ghosts["INKY"].x < -cellsize)ghosts["INKY"].x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
+                break;
+        }
     //CLYDE
     if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)){
         console.log("COLLISION");
@@ -474,6 +532,8 @@ async function draw() {
     ctx.fillRect(ghosts["BLINKY"].x+offset[1]-ooo,ghosts["BLINKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
     ctx.fillStyle = "pink";
     ctx.fillRect(ghosts["PINKY"].x+offset[1]-ooo,ghosts["PINKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
+    ctx.fillStyle = "cyan";
+    ctx.fillRect(ghosts["INKY"].x+offset[1]-ooo,ghosts["INKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
 }
 
 //main loop

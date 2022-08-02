@@ -19,7 +19,7 @@ This is a school project so dont expect high quality.
     * ~~Ghost AI (chase)~~
     * ~~Ghost AI (scatter)~~
     * ~~Pink~~
-    * __Blue__
+    * ~~Blue~~
     * __Orange__
     * __AI changes over time__
 * __Death/death screen__

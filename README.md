@@ -23,8 +23,8 @@ This is a school project so dont expect high quality.
     * __Orange__
     * __AI changes over time__
 * __Death/death screen__
-* Levels
 * Multiple lives
-* Cherries
 * Large pellets and ghost eating
+* Levels
+* Cherries
 * High-scores/scoreboard

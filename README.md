@@ -6,8 +6,9 @@ Arrow keys to move.
 Game is still a work-in-progress, more features will be added in the future.<br/>
 This is a school project so dont expect high quality.
 ## TODO LIST:
-* ~~Make pacman remember your moves and not bump into walls~~
-* ~~Further optimise pacman's movement~~
+* ~~Pacman~~
+* ~~Maze collisions~~
+* ~~Smart movement and no wall-bumping~~
 * ~~Add coins~~ 
 * ~~Score~~
 * ~~Map~~

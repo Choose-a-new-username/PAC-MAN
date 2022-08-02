@@ -18,7 +18,7 @@ canvas {
 }
 .canvascontainer {
     height:100%;
-    width:110%;
+    width:115%;
     display: grid;
     place-content: center;    
 }

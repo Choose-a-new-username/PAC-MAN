@@ -1,7 +1,7 @@
 //canvas/ctx settings
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-ctx.font = "bold 40px pixel-face";
+ctx.font = "bold 30px pixel-face";
 ctx.imageSmoothingEnabled = false; //this is to fix the "blur" effect. 
 function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.width,dh=img.height) {
     context.save();
@@ -78,8 +78,8 @@ const tilemap = [
 [1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1],
 [1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1],
 [1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1],
-[1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1],
-[2,2,2,2,2,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,2,2,2,2,2],
+[1,1,1,1,1,1,0,1,1,1,1,1,2,1,1,2,1,1,1,1,1,0,1,1,1,1,1,1],
+[2,2,2,2,2,1,0,1,1,1,1,1,2,1,1,2,1,1,1,1,1,0,1,2,2,2,2,2],
 [2,2,2,2,2,1,0,1,1,2,2,2,2,2,2,2,2,2,2,1,1,0,1,2,2,2,2,2],
 [2,2,2,2,2,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,2,2,2,2,2],
 [1,1,1,1,1,1,0,1,1,2,1,1,2,2,2,2,1,1,2,1,1,0,1,1,1,1,1,1],
@@ -104,7 +104,7 @@ const tilemap = [
 const boardsize = [tilemap[0].length,tilemap.length];
 const cellsize = 40;
 const pelletsize = 10;
-const offset = [cellsize*1.5,0];
+const offset = [cellsize*1,20];
 
 //math
 const getMin = object => {
@@ -463,8 +463,8 @@ async function draw() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
-    ctx.fillText(score,20,55);
-    ctx.drawImage(mapsprite,0,-80+offset[0],cellsize*28,cellsize*36);
+    ctx.fillText(score,10,50);
+    ctx.drawImage(mapsprite,offset[1],-80+offset[0],cellsize*28,cellsize*36);
     drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
     ctx.fillStyle = "#db851c";
     for(i in pellets) {

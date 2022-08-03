@@ -152,9 +152,7 @@ function normAI(tx,ty,curdir,x,y) {
     dirs.splice(dirs.indexOf(dirs.at(curdir-2)),1);
     if((tilemap[y/cellsize-2].at(x/cellsize)===1)){delete dists["0"];dirs.splice(dirs.indexOf(0),1);}
     if((tilemap[y/cellsize].at(x/cellsize)===1)){delete dists["2"];dirs.splice(dirs.indexOf(2),1);}
-    if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){delete dists["3"];dirs.splice(dirs.indexOf(3),1);}else{
-        console.log(tilemap[y/cellsize-1].at(x/cellsize-1));
-    }
+    if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){delete dists["3"];dirs.splice(dirs.indexOf(3),1);}
     if((tilemap[y/cellsize-1].at(x/cellsize+1)===1)){delete dists["1"];dirs.splice(dirs.indexOf(1),1);}
     for(i in dirs) {
         switch(dirs[i]){
@@ -317,6 +315,7 @@ function ghostBehaivor() {
                             xx = clamp(pacman.x-cellsize*2,0,boardsize[1]*cellsize);
                             break;
                     }
+                    //for simplifying the complicated algorithm
                     INKYTARGETX = clamp(clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[1]*cellsize)>xx?xx-clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[0]*cellsize):xx+clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[0]*cellsize),0,boardsize[0]*cellsize);
                     INKYTARGETY = clamp(clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[0]*cellsize)>yy?yy-clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[1]*cellsize):yy+clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[1]*cellsize),0,boardsize[1]*cellsize);
                     ghosts["INKY"].dir = normAI(INKYTARGETX,INKYTARGETY,ghosts["INKY"].dir,clamp(ghosts["INKY"].x,0,boardsize[0]*cellsize),clamp(ghosts["INKY"].y,0,boardsize[1]*cellsize));

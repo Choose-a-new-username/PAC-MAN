@@ -22,54 +22,6 @@ const munch_2 = document.getElementById("munch_2");
 let INKYTARGETX = 0;
 let INKYTARGETY = 0;
 
-//key events
-let keys = {};
-let queued = "up";
-addEventListener("keydown",e=>{if(!keys[e.key]===true){
-    keys[e.key]=true;
-    switch(e.key) {
-        case "ArrowUp":
-            queued = "up";
-            if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1)) {
-                pacman.dir = 0;
-            }
-            break;
-        case "ArrowRight":
-            queued = "right";
-            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===3)) {
-                pacman.dir = 1;
-            }
-            break;
-        case "ArrowDown":
-            queued = "down";
-            if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
-                pacman.dir = 2;
-            }
-            break;
-        case "ArrowLeft":
-            queued = "left";
-            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1))===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===3) {
-                pacman.dir = 3;
-            }
-            break;
-        default:
-            break;
-    }
-}});
-addEventListener("keyup",e=>{keys[e.key]=false;});
-function getKey(k) {
-    return new Promise(r=>{
-        const keypressed=()=>{
-            if(keys[k]){
-                r();
-            } else {
-                requestAnimationFrame(keypressed);
-            }
-        }
-        keypressed();
-    });
-}
-
 //constants
 const tilemap = [
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -251,6 +203,120 @@ function corner4(a,b,c,d,e,f,g,h) {
 }
 function collision2(a,b,c,d,e,f,g,h) {
     return corner4(a,b,c,d,e,f,g,h) || corner4(e,f,g,h,a,b,c,d);
+}
+
+//restart
+async function restart() {
+    begun = false;
+    pacman = {
+        x: cellsize*13.5,
+        y: cellsize*23,
+        w: cellsize,
+        h: cellsize,
+        dir: 3,
+        //cellsize must be divisible by pacman.speed
+        speed: cellsize/10,
+        anim: 2,
+        animframes: 3,
+        animwidth: 13,
+        animspeed: 2,
+    }
+    ghosts = {
+        BLINKY: {
+            x: cellsize*15,
+            y: cellsize*12,
+            w: cellsize,
+            h: cellsize,
+            dir: 1,
+            state: "chase"
+        },
+        PINKY: {
+            x: cellsize*12,
+            y: cellsize*12,
+            w: cellsize,
+            h: cellsize,
+            dir: 3,
+            state: "chase"
+        },
+        INKY: {
+            x: cellsize*13.5,
+            y: cellsize*12,
+            w: cellsize,
+            h: cellsize,
+            dir: 1,
+            state: "chase"
+        },
+        CLYDE: {
+            x: cellsize*16,
+            y: cellsize*12,
+            w: cellsize,
+            h: cellsize,
+            dir: 1,
+            state: "chase"
+        },
+    };
+    intro.currentTime = 0;
+    intro.play();
+    update();
+    intro.addEventListener("ended",()=>begun=true);
+}
+
+//key events
+let keys = {};
+let queued = "up";
+addEventListener("keydown",e=>{if(!keys[e.key]===true){
+    keys[e.key]=true;
+    switch(e.key) {
+        case "r":
+        case "s":
+        case "t":
+        case "R":
+        case "S":
+        case "T":
+            if((keys["r"]||keys["R"])&&(keys["s"]||keys["S"])&&(keys["t"]||keys["T"])&&begun){
+                restart();            
+            }
+            break;
+        case "ArrowUp":
+            queued = "up";
+            if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1)) {
+                pacman.dir = 0;
+            }
+            break;
+        case "ArrowRight":
+            queued = "right";
+            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===3)) {
+                pacman.dir = 1;
+            }
+            break;
+        case "ArrowDown":
+            queued = "down";
+            if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
+                pacman.dir = 2;
+            }
+            break;
+        case "ArrowLeft":
+            queued = "left";
+            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1))===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===3) {
+                pacman.dir = 3;
+            }
+            break;
+        default:
+            break;
+    }
+}});
+addEventListener("keyup",e=>{keys[e.key]=false;});
+function getKey(k) {
+    return new Promise(r=>{
+        const keypressed=()=>{
+            if(keys[k]){
+                r();
+            } else {
+                requestAnimationFrame(keypressed);
+            }
+        }
+        keypressed();
+    });
 }
 
 //behavior functions (movement, pellets, etc...)

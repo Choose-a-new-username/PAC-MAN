@@ -532,7 +532,7 @@ async function draw() {
     ctx.fillRect(ghosts["BLINKY"].x+offset[1]-ooo,ghosts["BLINKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
     ctx.fillStyle = "pink";
     ctx.fillRect(ghosts["PINKY"].x+offset[1]-ooo,ghosts["PINKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
-    ctx.fillStyle = "cyan";
+    ctx.fillStyle = "cyan"; 
     ctx.fillRect(ghosts["INKY"].x+offset[1]-ooo,ghosts["INKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
 }
 

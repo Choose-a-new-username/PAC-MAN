@@ -20,7 +20,7 @@ This is a school project so dont expect high quality.
     * ~~Ghost AI (scatter)~~
     * ~~Pink~~
     * ~~Blue~~
-    * __Orange__
+    * ~~Orange~~
     * __AI changes over time__
 * __Death/death screen__
 * Multiple lives

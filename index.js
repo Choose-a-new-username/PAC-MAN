@@ -125,16 +125,16 @@ let ghosts = {
         y: cellsize*12,
         w: cellsize,
         h: cellsize,
-        dir: 0,
-        state: "chase"
+        dir: 1,
+        state: "scatter"
     },
     PINKY: {
         x: cellsize*12,
         y: cellsize*12,
         w: cellsize,
         h: cellsize,
-        dir: 0,
-        state: "chase"
+        dir: 3,
+        state: "scatter"
     },
     INKY: {
         x: cellsize*13.5,
@@ -142,9 +142,30 @@ let ghosts = {
         w: cellsize,
         h: cellsize,
         dir: 1,
+        state: "scatter"
+    },
+    CLYDE: {
+        x: cellsize*16,
+        y: cellsize*12,
+        w: cellsize,
+        h: cellsize,
+        dir: 1,
         state: "chase"
-    }
+    },
 };
+function randAI(curdir,x,y){
+    let dirs = [0,1,2,3];
+    if(curdir===0)dirs.splice(dirs.indexOf(2),1);
+    if(curdir===1)dirs.splice(dirs.indexOf(3),1);
+    if(curdir===2)dirs.splice(dirs.indexOf(0),1);
+    if(curdir===3)dirs.splice(dirs.indexOf(1),1);
+    if((tilemap[y/cellsize-2].at(x/cellsize)===1)){dirs.splice(dirs.indexOf(0),1);}
+    if((tilemap[y/cellsize].at(x/cellsize)===1)){dirs.splice(dirs.indexOf(2),1);}
+    if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){dirs.splice(dirs.indexOf(3),1);}
+    if((tilemap[y/cellsize-1].at(x/cellsize+1)===1)){dirs.splice(dirs.indexOf(1),1);}
+    let i = Math.round(Math.random()*dirs.length-1);
+    return dirs[i] || dirs[0];
+}
 function normAI(tx,ty,curdir,x,y) {
     let dirs = [0,1,2,3];
     let dists = {0:0,1:0,2:0,3:0};
@@ -191,7 +212,7 @@ let pacman = {
     h: cellsize,
     dir: 3,
     //cellsize must be divisible by pacman.speed
-    speed: cellsize/10,
+    speed: cellsize/8,
     anim: 2,
     animframes: 3,
     animwidth: 13,
@@ -342,23 +363,54 @@ function ghostBehaivor() {
                 break;
         }
     //CLYDE
-    if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)){
+        if(Math.round(ghosts["CLYDE"].x/cellsize)*cellsize===ghosts["CLYDE"].x && Math.round(ghosts["CLYDE"].y/cellsize)*cellsize===ghosts["CLYDE"].y){
+            switch(ghosts["CLYDE"].state){
+                case "chase":
+                    if(ghosts["CLYDE"].x < pacman.x + (cellsize*8) && ghosts["CLYDE"].x > pacman.x - (cellsize*8) && ghosts["CLYDE"].y < pacman.y + (cellsize*8) && ghosts["CLYDE"].y > pacman.y - (cellsize*8)){
+                        ghosts["CLYDE"].dir = randAI(ghosts["CLYDE"].dir,ghosts["CLYDE"].x,ghosts["CLYDE"].y);
+                    }else{
+                        ghosts["CLYDE"].dir = normAI(pacman.x,pacman.y+pacman.h,ghosts["CLYDE"].dir,ghosts["CLYDE"].x,ghosts["CLYDE"].y);
+                    }
+                    break;
+                case "scatter":
+                    ghosts["CLYDE"].dir = normAI(cellsize*2,cellsize*30,ghosts["CLYDE"].dir,ghosts["CLYDE"].x,ghosts["CLYDE"].y);
+                    break;
+            }
+        }
+        switch (ghosts["CLYDE"].dir) {
+            case 0:
+                ghosts["CLYDE"].y-=pacman.speed;
+                break;
+            case 1:
+                ghosts["CLYDE"].x+=pacman.speed;
+                if(ghosts["CLYDE"].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts["CLYDE"].x = -(cellsize/2);
+                break;
+            case 2:
+                ghosts["CLYDE"].y+=pacman.speed;
+                break;
+            case 3:
+                ghosts["CLYDE"].x-=pacman.speed;
+                if(ghosts["CLYDE"].x < -cellsize)ghosts["CLYDE"].x = canvas.width - pacman.speed - offset[1]- (cellsize/2);
+                break;
+        }
+    if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
         console.log("COLLISION");
-    }
-    if (collision2(ghosts["PINKY"].x,ghosts["PINKY"].y,ghosts["PINKY"].w,ghosts["PINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)){
+    if (collision2(ghosts["PINKY"].x,ghosts["PINKY"].y,ghosts["PINKY"].w,ghosts["PINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
         console.log("COLLISION");
-    }
+    if (collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
+        console.log("COLLISION");
+    if (collision2(ghosts["CLYDE"].x,ghosts["CLYDE"].y,ghosts["CLYDE"].w,ghosts["CLYDE"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
+        console.log("COLLISION");
 }
 
 function pelletBehaivor() {
-        for(let i = 0; i < pellets.length; i++) {
-            //pellet collision detection is WEIRD
-            if(collision2(pellets[i].x+(pellets[i].w/2),pellets[i].y+(pellets[i].w/2),1,1,pacman.x+4,pacman.y+pacman.h+4,pacman.w-5,pacman.h-5)) {            
-                score += 10;
-                if(munch_b){munch_1.currentTime = 0;munch_2.pause();munch_1.play();munch_b=false;}else{munch_2.currentTime = 0;munch_1.pause();munch_2.play();munch_b=true;}
-                pellets.splice(i, 1);
-            }
+    for(let i = 0; i < pellets.length; i++) {
+        if(collision2(pellets[i].x+(pellets[i].w/2),pellets[i].y+(pellets[i].w/2),1,1,pacman.x+4,pacman.y+pacman.h+4,pacman.w-5,pacman.h-5)) {            
+            score += 10;
+            if(munch_b){munch_1.currentTime = 0;munch_2.pause();munch_1.play();munch_b=false;}else{munch_2.currentTime = 0;munch_1.pause();munch_2.play();munch_b=true;}
+            pellets.splice(i, 1);
         }
+    }
 }
 
 function pacmanBehavior() {
@@ -515,8 +567,7 @@ async function render() {
 
 //draw loop
 const ooo = 13;
-async function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+function draw() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
@@ -533,12 +584,16 @@ async function draw() {
     ctx.fillRect(ghosts["PINKY"].x+offset[1]-ooo,ghosts["PINKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
     ctx.fillStyle = "cyan"; 
     ctx.fillRect(ghosts["INKY"].x+offset[1]-ooo,ghosts["INKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
+    ctx.fillStyle = "orange"; 
+    ctx.fillRect(ghosts["CLYDE"].x+offset[1]-ooo,ghosts["CLYDE"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
 }
 
 //main loop
 async function update() {
     if(begun)render();
+    console.time("time");
     draw();
+    console.timeEnd("time");
     requestAnimationFrame(update);
 }
 

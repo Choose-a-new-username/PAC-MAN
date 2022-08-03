@@ -577,9 +577,13 @@ const ooo = 13;
 function draw() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = "source-in";
+    ctx.fillStyle = `hsl(${tick},100%,50%)`;
+    ctx.drawImage(mapsprite,offset[1],-80+offset[0],cellsize*28,cellsize*36);
+    ctx.fillRect(0,0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = "source-over";
     ctx.fillStyle = "white";
     ctx.fillText(score,10,50);
-    ctx.drawImage(mapsprite,offset[1],-80+offset[0],cellsize*28,cellsize*36);
     drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
     ctx.fillStyle = "#db851c";
     for(i in pellets) {

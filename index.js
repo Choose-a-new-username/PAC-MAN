@@ -126,7 +126,7 @@ let ghosts = {
         w: cellsize,
         h: cellsize,
         dir: 1,
-        state: "scatter"
+        state: "chase"
     },
     PINKY: {
         x: cellsize*12,
@@ -134,7 +134,7 @@ let ghosts = {
         w: cellsize,
         h: cellsize,
         dir: 3,
-        state: "scatter"
+        state: "chase"
     },
     INKY: {
         x: cellsize*13.5,
@@ -142,7 +142,7 @@ let ghosts = {
         w: cellsize,
         h: cellsize,
         dir: 1,
-        state: "scatter"
+        state: "chase"
     },
     CLYDE: {
         x: cellsize*16,
@@ -212,7 +212,7 @@ let pacman = {
     h: cellsize,
     dir: 3,
     //cellsize must be divisible by pacman.speed
-    speed: cellsize/8,
+    speed: cellsize/10,
     anim: 2,
     animframes: 3,
     animwidth: 13,
@@ -591,9 +591,7 @@ function draw() {
 //main loop
 async function update() {
     if(begun)render();
-    console.time("time");
     draw();
-    console.timeEnd("time");
     requestAnimationFrame(update);
 }
 

@@ -24,7 +24,7 @@ This is a school project so dont expect high quality.
     * __AI changes over time__
 * __Death/death screen__
 * Multiple lives
-* Large pellets and ghost eating
+* Large pellets and ghost eating 
 * Levels
 * Cherries
 * High-scores/scoreboard

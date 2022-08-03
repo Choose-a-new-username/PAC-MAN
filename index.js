@@ -257,7 +257,6 @@ async function restart() {
     };
     intro.currentTime = 0;
     intro.play();
-    update();
     intro.addEventListener("ended",()=>begun=true);
 }
 

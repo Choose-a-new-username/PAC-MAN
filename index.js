@@ -155,26 +155,33 @@ let ghosts = {
 };
 function randAI(curdir,x,y){
     let dirs = [0,1,2,3];
-    if(curdir===0)dirs.splice(dirs.indexOf(2),1);
-    if(curdir===1)dirs.splice(dirs.indexOf(3),1);
-    if(curdir===2)dirs.splice(dirs.indexOf(0),1);
-    if(curdir===3)dirs.splice(dirs.indexOf(1),1);
-    if((tilemap[y/cellsize-2].at(x/cellsize)===1)){dirs.splice(dirs.indexOf(0),1);}
-    if((tilemap[y/cellsize].at(x/cellsize)===1)){dirs.splice(dirs.indexOf(2),1);}
-    if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){dirs.splice(dirs.indexOf(3),1);}
-    if((tilemap[y/cellsize-1].at(x/cellsize+1)===1)){dirs.splice(dirs.indexOf(1),1);}
+    if((x === cellsize*12 || x === cellsize*15)&&(y === cellsize*12)){
+        if(dirs.includes(0))dirs.splice(dirs.indexOf(0),1);
+    }    
+    if(dirs.includes(2))if(curdir===0)dirs.splice(dirs.indexOf(2),1);
+    if(dirs.includes(3))if(curdir===1)dirs.splice(dirs.indexOf(3),1);
+    if(dirs.includes(0))if(curdir===2)dirs.splice(dirs.indexOf(0),1);
+    if(dirs.includes(1))if(curdir===3)dirs.splice(dirs.indexOf(1),1);
+    if(dirs.includes(0))if((tilemap[y/cellsize-2].at(x/cellsize)===1)){dirs.splice(dirs.indexOf(0),1);}
+    if(dirs.includes(2))if((tilemap[y/cellsize].at(x/cellsize)===1)){dirs.splice(dirs.indexOf(2),1);}
+    if(dirs.includes(3))if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){dirs.splice(dirs.indexOf(3),1);}
+    if(dirs.includes(1))if((tilemap[y/cellsize-1].at(x/cellsize+1)===1)){dirs.splice(dirs.indexOf(1),1);}
     let i = Math.round(Math.random()*dirs.length-1);
     return dirs[i] || dirs[0];
 }
 function normAI(tx,ty,curdir,x,y) {
     let dirs = [0,1,2,3];
     let dists = {0:0,1:0,2:0,3:0};
-    delete dists[dirs[dirs.indexOf(dirs.at(curdir-2))]];
+    if((x === cellsize*12 || x === cellsize*15)&&(y === cellsize*12)){
+        delete dists["0"];
+        if(dirs.includes(0))dirs.splice(dirs.indexOf(0),1);
+    }
+    delete dists[dirs.at(curdir-2)];    
     dirs.splice(dirs.indexOf(dirs.at(curdir-2)),1);
-    if((tilemap[y/cellsize-2].at(x/cellsize)===1)){delete dists["0"];dirs.splice(dirs.indexOf(0),1);}
-    if((tilemap[y/cellsize].at(x/cellsize)===1)){delete dists["2"];dirs.splice(dirs.indexOf(2),1);}
-    if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){delete dists["3"];dirs.splice(dirs.indexOf(3),1);}
-    if((tilemap[y/cellsize-1].at(x/cellsize+1)===1)){delete dists["1"];dirs.splice(dirs.indexOf(1),1);}
+    if(dirs.includes(0))if((tilemap[y/cellsize-2].at(x/cellsize)===1)){delete dists["0"];dirs.splice(dirs.indexOf(0),1);}
+    if(dirs.includes(2))if((tilemap[y/cellsize].at(x/cellsize)===1)){delete dists["2"];dirs.splice(dirs.indexOf(2),1);}
+    if(dirs.includes(3))if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){delete dists["3"];dirs.splice(dirs.indexOf(3),1);}
+    if(dirs.includes(1))if((tilemap[y/cellsize-1].at(x/cellsize+1)===1)){delete dists["1"];dirs.splice(dirs.indexOf(1),1);}
     for(i in dirs) {
         switch(dirs[i]){
             case 0: 

@@ -36,8 +36,8 @@ const tilemap = [
 [1,1,1,1,1,1,0,1,1,1,1,1,2,1,1,2,1,1,1,1,1,0,1,1,1,1,1,1],
 [2,2,2,2,2,1,0,1,1,1,1,1,2,1,1,2,1,1,1,1,1,0,1,2,2,2,2,2],
 [2,2,2,2,2,1,0,1,1,2,2,2,2,2,2,2,2,2,2,1,1,0,1,2,2,2,2,2],
-[2,2,2,2,2,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,2,2,2,2,2],
-[1,1,1,1,1,1,0,1,1,2,1,1,2,2,2,2,1,1,2,1,1,0,1,1,1,1,1,1],
+[2,2,2,2,2,1,0,1,1,2,1,1,1,2,2,1,1,1,2,1,1,0,1,2,2,2,2,2],
+[1,1,1,1,1,1,0,1,1,2,1,1,1,2,2,1,1,1,2,1,1,0,1,1,1,1,1,1],
 [2,2,2,2,2,2,0,2,2,2,1,1,2,2,2,2,1,1,2,2,2,0,2,2,2,2,2,2],
 [1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
 [2,2,2,2,2,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,2,2,2,2,2],
@@ -70,39 +70,42 @@ const getMin = object => {
 };
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
+//levels
+let level = 1;
+
 //ghosts
 let ghosts = {
     BLINKY: {
-        x: cellsize*15,
-        y: cellsize*12,
-        w: cellsize,
-        h: cellsize,
-        dir: 1,
-        state: "chase"
-    },
-    PINKY: {
-        x: cellsize*12,
-        y: cellsize*12,
-        w: cellsize,
-        h: cellsize,
-        dir: 3,
-        state: "chase"
-    },
-    INKY: {
         x: cellsize*13.5,
         y: cellsize*12,
         w: cellsize,
         h: cellsize,
         dir: 1,
-        state: "chase"
+        state: "scatter"
     },
-    CLYDE: {
-        x: cellsize*16,
-        y: cellsize*12,
+    PINKY: {
+        x: cellsize*15,
+        y: cellsize*15,
+        w: cellsize,
+        h: cellsize,
+        dir: 3,
+        state: "scatter"
+    },
+    INKY: {
+        x: cellsize*13.5,
+        y: cellsize*15,
         w: cellsize,
         h: cellsize,
         dir: 1,
-        state: "chase"
+        state: "scatter"
+    },
+    CLYDE: {
+        x: cellsize*12,
+        y: cellsize*15,
+        w: cellsize,
+        h: cellsize,
+        dir: 1,
+        state: "scatter"
     },
 };
 function randAI(curdir,x,y){
@@ -223,41 +226,47 @@ async function restart() {
     }
     ghosts = {
         BLINKY: {
-            x: cellsize*15,
-            y: cellsize*12,
-            w: cellsize,
-            h: cellsize,
-            dir: 1,
-            state: "chase"
-        },
-        PINKY: {
-            x: cellsize*12,
-            y: cellsize*12,
-            w: cellsize,
-            h: cellsize,
-            dir: 3,
-            state: "chase"
-        },
-        INKY: {
             x: cellsize*13.5,
             y: cellsize*12,
             w: cellsize,
             h: cellsize,
             dir: 1,
-            state: "chase"
+            state: "scatter"
         },
-        CLYDE: {
-            x: cellsize*16,
-            y: cellsize*12,
+        PINKY: {
+            x: cellsize*15,
+            y: cellsize*15,
+            w: cellsize,
+            h: cellsize,
+            dir: 3,
+            state: "scatter"
+        },
+        INKY: {
+            x: cellsize*13.5,
+            y: cellsize*15,
             w: cellsize,
             h: cellsize,
             dir: 1,
-            state: "chase"
+            state: "scatter"
+        },
+        CLYDE: {
+            x: cellsize*12,
+            y: cellsize*15,
+            w: cellsize,
+            h: cellsize,
+            dir: 1,
+            state: "scatter"
         },
     };
     intro.currentTime = 0;
     intro.play();
     intro.addEventListener("ended",()=>begun=true);
+    switch(level) {
+        case 1:
+            break;
+        default:
+            break;
+    }
 }
 
 //key events
@@ -465,14 +474,8 @@ function ghostBehaivor() {
                 if(ghosts["CLYDE"].x < -cellsize)ghosts["CLYDE"].x = canvas.width - pacman.speed - offset[1]- (cellsize/2);
                 break;
         }
-    if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
-        console.log("COLLISION");
-    if (collision2(ghosts["PINKY"].x,ghosts["PINKY"].y,ghosts["PINKY"].w,ghosts["PINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
-        console.log("COLLISION");
-    if (collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
-        console.log("COLLISION");
-    if (collision2(ghosts["CLYDE"].x,ghosts["CLYDE"].y,ghosts["CLYDE"].w,ghosts["CLYDE"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
-        console.log("COLLISION");
+    if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["PINKY"].x,ghosts["PINKY"].y,ghosts["PINKY"].w,ghosts["PINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["CLYDE"].x,ghosts["CLYDE"].y,ghosts["CLYDE"].w,ghosts["CLYDE"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
+        restart();
 }
 
 function pelletBehaivor() {

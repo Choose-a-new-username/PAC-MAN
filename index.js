@@ -74,40 +74,7 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 let level = 1;
 
 //ghosts
-let ghosts = {
-    BLINKY: {
-        x: cellsize*13.5,
-        y: cellsize*12,
-        w: cellsize,
-        h: cellsize,
-        dir: 1,
-        state: "scatter"
-    },
-    PINKY: {
-        x: cellsize*15,
-        y: cellsize*15,
-        w: cellsize,
-        h: cellsize,
-        dir: 3,
-        state: "scatter"
-    },
-    INKY: {
-        x: cellsize*13.5,
-        y: cellsize*15,
-        w: cellsize,
-        h: cellsize,
-        dir: 1,
-        state: "scatter"
-    },
-    CLYDE: {
-        x: cellsize*12,
-        y: cellsize*15,
-        w: cellsize,
-        h: cellsize,
-        dir: 1,
-        state: "scatter"
-    },
-};
+let ghosts = {};
 function randAI(curdir,x,y){
     let dirs = [0,1,2,3];
     if((x === cellsize*12 || x === cellsize*15)&&(y === cellsize*12)){
@@ -268,7 +235,6 @@ async function restart() {
             break;
     }
 }
-
 //key events
 let keys = {};
 let queued = "up";
@@ -688,6 +654,7 @@ let begun = false;
 let munch_b = false;
 (async function(){
     await getKey("Enter");
+    restart();
     intro.play();
     update();
     intro.addEventListener("ended",()=>begun=true);

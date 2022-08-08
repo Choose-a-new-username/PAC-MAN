@@ -134,19 +134,7 @@ function normAI(tx,ty,curdir,x,y) {
 }
 
 //pacman
-let pacman = {
-    x: cellsize*13.5,
-    y: cellsize*23,
-    w: cellsize,
-    h: cellsize,
-    dir: 3,
-    //cellsize must be divisible by pacman.speed
-    speed: cellsize/10,
-    anim: 2,
-    animframes: 3,
-    animwidth: 13,
-    animspeed: 2,
-}
+let pacman = {}
 
 //pellets
 let pellets = [];
@@ -185,7 +173,7 @@ async function restart() {
         h: cellsize,
         dir: 3,
         //cellsize must be divisible by pacman.speed
-        speed: cellsize/10,
+        speed: cellsize/8,
         anim: 2,
         animframes: 3,
         animwidth: 13,
@@ -198,7 +186,7 @@ async function restart() {
             w: cellsize,
             h: cellsize,
             dir: 1,
-            state: "scatter"
+            state: "chase"
         },
         PINKY: {
             x: cellsize*15,
@@ -206,7 +194,7 @@ async function restart() {
             w: cellsize,
             h: cellsize,
             dir: 3,
-            state: "scatter"
+            state: "chase"
         },
         INKY: {
             x: cellsize*13.5,
@@ -214,7 +202,7 @@ async function restart() {
             w: cellsize,
             h: cellsize,
             dir: 1,
-            state: "scatter"
+            state: "chase"
         },
         CLYDE: {
             x: cellsize*12,
@@ -222,7 +210,7 @@ async function restart() {
             w: cellsize,
             h: cellsize,
             dir: 1,
-            state: "scatter"
+            state: "chase"
         },
     };
     intro.currentTime = 0;

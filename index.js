@@ -18,6 +18,7 @@ const mapsprite = document.getElementById("map");
 const intro = document.getElementById("intro");
 const munch_1 = document.getElementById("munch_1");
 const munch_2 = document.getElementById("munch_2");
+const ghost_sound = document.getElementById("ghost_sound");
 
 let INKYTARGETX = 0;
 let INKYTARGETY = 0;
@@ -595,6 +596,7 @@ function pacmanBehavior() {
 
 //run the behavior functions
 async function render() {
+    if(ghost_sound.currentTime >= ghost_sound.duration-0.55){ghost_sound.currentTime = 0;ghost_sound.play();}
     pacmanBehavior();
     pelletBehaivor();
     ghostBehaivor();
@@ -613,7 +615,7 @@ function draw() {
     ctx.globalCompositeOperation = "source-over";
     ctx.fillStyle = "white";
     ctx.fillText(score,10,50);
-    if(pressedsequence === konami)konamimode =! konamimode;
+    if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
     if(konamimode)ctx.fillText("KONAMI MODE ACTIVATED",100,50)
     console.log(konamimode);
     drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
@@ -633,7 +635,7 @@ function draw() {
 
 //main loop
 async function update() {
-    if(begun)render();
+    if(begun)render(); else ghost_sound.pause();
     draw();
     requestAnimationFrame(update);
 }
@@ -655,5 +657,5 @@ let munch_b = false;
     restart();
     intro.play();
     update();
-    intro.addEventListener("ended",()=>begun=true);
+    intro.addEventListener("ended",()=>{ghost_sound.play();begun=true});
 })();

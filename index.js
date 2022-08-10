@@ -225,8 +225,15 @@ async function restart() {
 }
 //key events
 let keys = {};
+let konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","Enter","Enter"];
+let konamimode = false;
+let pressedsequence = [];
 let queued = "up";
 addEventListener("keydown",e=>{if(!keys[e.key]===true){
+    //konami section starts    
+        pressedsequence.push(e.key);
+        if(!(e.key === konami[pressedsequence.length-1]))pressedsequence = [];
+    //konami section ends
     keys[e.key]=true;
     switch(e.key) {
         case "r":
@@ -606,6 +613,9 @@ function draw() {
     ctx.globalCompositeOperation = "source-over";
     ctx.fillStyle = "white";
     ctx.fillText(score,10,50);
+    if(pressedsequence === konami)konamimode =! konamimode;
+    if(konamimode)ctx.fillText("KONAMI MODE ACTIVATED",100,50)
+    console.log(konamimode);
     drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
     ctx.fillStyle = "#db851c";
     for(i in pellets) {

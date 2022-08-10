@@ -616,7 +616,7 @@ function draw() {
     ctx.fillStyle = "white";
     ctx.fillText(score,10,50);
     if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
-    if(konamimode)ctx.fillText("KONAMI MODE ACTIVATED",100,50)
+    if(konamimode)ctx.fillText("KONAMI MODE ACTIVATED",110,50)
     console.log(konamimode);
     drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
     ctx.fillStyle = "#db851c";

@@ -14,6 +14,7 @@ function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.wi
 
 //assets/images
 const pacsprite = document.getElementById("pacman");
+const ghostsprite = document.getElementById("ghosts");
 const mapsprite = document.getElementById("map");
 const intro = document.getElementById("intro");
 const munch_1 = document.getElementById("munch_1");
@@ -76,6 +77,7 @@ let level = 1;
 
 //ghosts
 let ghosts = {};
+let ghoststate = "scatter";
 function randAI(curdir,x,y){
     let dirs = [0,1,2,3];
     if((x === cellsize*12 || x === cellsize*15)&&(y === cellsize*12)){
@@ -624,13 +626,13 @@ function draw() {
         ctx.fillRect(pellets[i].x+offset[1],pellets[i].y+offset[0],pellets[i].w,pellets[i].h);
     }
     ctx.fillStyle = "red";
-    ctx.fillRect(ghosts["BLINKY"].x+offset[1]-ooo,ghosts["BLINKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
+    ctx.drawImage(ghostsprite,(ghosts["BLINKY"].dir==0?64:ghosts["BLINKY"].dir==1?0:ghosts["BLINKY"].dir==2?96:32)+(tick%10<5?16:0),0,16,16,ghosts["BLINKY"].x+offset[1]-ooo*1.5,ghosts["BLINKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
     ctx.fillStyle = "pink";
-    ctx.fillRect(ghosts["PINKY"].x+offset[1]-ooo,ghosts["PINKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
+    ctx.drawImage(ghostsprite,(ghosts["PINKY"].dir==0?64:ghosts["PINKY"].dir==1?0:ghosts["PINKY"].dir==2?96:32)+(tick%10<5?16:0),16,16,16,ghosts["PINKY"].x+offset[1]-ooo*1.5,ghosts["PINKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
     ctx.fillStyle = "cyan"; 
-    ctx.fillRect(ghosts["INKY"].x+offset[1]-ooo,ghosts["INKY"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
+    ctx.drawImage(ghostsprite,(ghosts["INKY"].dir==0?64:ghosts["INKY"].dir==1?0:ghosts["INKY"].dir==2?96:32)+(tick%10<5?16:0),32,16,16,ghosts["INKY"].x+offset[1]-ooo*1.5,ghosts["INKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
     ctx.fillStyle = "orange"; 
-    ctx.fillRect(ghosts["CLYDE"].x+offset[1]-ooo,ghosts["CLYDE"].y+offset[0]-ooo,cellsize+ooo*2,cellsize+ooo*2);
+    ctx.drawImage(ghostsprite,(ghosts["CLYDE"].dir==0?64:ghosts["CLYDE"].dir==1?0:ghosts["CLYDE"].dir==2?96:32)+(tick%10<5?16:0),48,16,16,ghosts["CLYDE"].x+offset[1]-ooo*1.5,ghosts["CLYDE"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
 }
 
 //main loop

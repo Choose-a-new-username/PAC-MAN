@@ -444,7 +444,7 @@ function ghostBehaivor() {
 
 function pelletBehaivor() {
     for(let i = 0; i < pellets.length; i++) {
-        if(collision2(pellets[i].x+(pellets[i].w/2),pellets[i].y+(pellets[i].w/2),1,1,pacman.x+4,pacman.y+pacman.h+4,pacman.w-5,pacman.h-5)) {            
+        if(collision2(pellets[i].x+(pellets[i].w/2),pellets[i].y+(pellets[i].w/2),1,1,pacman.x-13,pacman.y+pacman.h-13,pacman.w+26,pacman.h+26)) {            
             score += 10;
             if(munch_b){munch_1.currentTime = 0;munch_2.pause();munch_1.play();munch_b=false;}else{munch_2.currentTime = 0;munch_1.pause();munch_2.play();munch_b=true;}
             pellets.splice(i, 1);
@@ -488,30 +488,27 @@ function pacmanBehavior() {
         case 0:
             if (!(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===3)) {
                 pacman.y-=pacman.speed;
-                if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             }
             break;
         case 1:
             if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1)) {
                 pacman.x+=pacman.speed;
                 if(pacman.x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))pacman.x = -(cellsize/2);
-                if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             }
             break;
         case 2:
             if (!(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.y+=pacman.speed;
-                if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             }
             break;    
         case 3:
             if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===3)) {
                 pacman.x-=pacman.speed;
                 if(pacman.x < -cellsize)pacman.x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
-                if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
             } 
             break;
     }
+    if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
     queuedDo();
     if(pacman.anim === pacman.animframes)pacman.anim = 0;
 }

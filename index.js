@@ -13,19 +13,19 @@ function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.wi
 }
 
 //assets/images
-const pacsprite = document.getElementById("pacman");
-const ghostsprite = document.getElementById("ghosts");
-const mapsprite = document.getElementById("map");
-const intro = document.getElementById("intro");
-const munch_1 = document.getElementById("munch_1");
-const munch_2 = document.getElementById("munch_2");
-const ghost_sound = document.getElementById("ghost_sound");
+const pacsprite    = document.getElementById("pacman");
+const ghostsprite  = document.getElementById("ghosts");
+const mapsprite    = document.getElementById("map");
+const intro        = document.getElementById("intro");
+const munch_1      = document.getElementById("munch_1");
+const munch_2      = document.getElementById("munch_2");
+const ghost_sound  = document.getElementById("ghost_sound");
 
-let INKYTARGETX = 0;
-let INKYTARGETY = 0;
+let INKYTARGETX    = 0;
+let INKYTARGETY    = 0;
 
 //constants
-const tilemap = [
+const tilemap      = [
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 [1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1],
@@ -58,10 +58,10 @@ const tilemap = [
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
-const boardsize = [tilemap[0].length-1,tilemap.length];
-const cellsize = 40;
-const pelletsize = 10;
-const offset = [cellsize*1,20];
+const boardsize    =  [tilemap[0].length-1,tilemap.length];
+const cellsize     =  40;
+const pelletsize   =  10;
+const offset       =  [cellsize*1,20];
 
 //math
 const getMin = object => {
@@ -73,11 +73,11 @@ const getMin = object => {
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
 //levels
-let level = 1;
+var level = 1;
 
 //ghosts
-let ghosts = {};
-let ghoststate = "scatter";
+var ghosts = {};
+var ghoststate = "scatter";
 function randAI(curdir,x,y){
     let dirs = [0,1,2,3];
     if((x === cellsize*12 || x === cellsize*15)&&(y === cellsize*12)){
@@ -137,11 +137,11 @@ function normAI(tx,ty,curdir,x,y) {
 }
 
 //pacman
-let pacman = {}
+var pacman = {}
 
 //pellets
-let pellets = [];
-let score = 0;
+var pellets = [];
+var score = 0;
 const pellet = (x,y,w,h) => pellets.push({x,y,w,h});
 for(i in tilemap) {
     for(j in tilemap[i]) {
@@ -486,29 +486,32 @@ function queuedDo() {
 function pacmanBehavior() {
     switch (pacman.dir) {
         case 0:
-            if (!(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===3)) {
+            if (!(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.y-=pacman.speed;
+                if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.x-=pacman.speed;
             }
             break;
         case 1:
             if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1)) {
                 pacman.x+=pacman.speed;
                 if(pacman.x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))pacman.x = -(cellsize/2);
+                if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.x-=pacman.speed;
             }
             break;
         case 2:
             if (!(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.y+=pacman.speed;
+                if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.y-=pacman.speed;
             }
             break;    
         case 3:
-            if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===3)) {
+            if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1)) {
                 pacman.x-=pacman.speed;
+                if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.x+=pacman.speed;
                 if(pacman.x < -cellsize)pacman.x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
-            } 
+            }
             break;
     }
-    if(tick%pacman.animspeed===0&&pacman.animframes>1)pacman.anim++;
     queuedDo();
     if(pacman.anim === pacman.animframes)pacman.anim = 0;
 }

@@ -435,7 +435,7 @@ function ghostBehaivor() {
                             ghosts["CLYDE"].dir = normAI(cellsize*2,cellsize*30,ghosts["CLYDE"].dir,ghosts["CLYDE"].x,ghosts["CLYDE"].y);
                             break;
                     }
-                    breaj;
+                    break;
             }
         }
         switch (ghosts["CLYDE"].dir) {

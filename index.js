@@ -58,10 +58,10 @@ const tilemap      = [
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
-const boardsize    =  [tilemap[0].length-1,tilemap.length];
-const cellsize     =  40;
-const pelletsize   =  10;
-const offset       =  [cellsize*1,20];
+const boardsize    = [tilemap[0].length-1,tilemap.length];
+const cellsize     = 40;
+const pelletsize   = 10;
+const offset       = [cellsize*1,20];
 
 //math
 const getMin = object => {
@@ -176,7 +176,7 @@ async function restart() {
         h: cellsize,
         dir: 3,
         //cellsize must be divisible by pacman.speed
-        speed: cellsize/8,
+        speed: cellsize/10,
         anim: 2,
         animframes: 3,
         animwidth: 13,
@@ -489,6 +489,7 @@ function pacmanBehavior() {
             if (!(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.y-=pacman.speed;
                 if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.x-=pacman.speed;
+                if(!(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1))tick++;
             }
             break;
         case 1:
@@ -496,12 +497,14 @@ function pacmanBehavior() {
                 pacman.x+=pacman.speed;
                 if(pacman.x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))pacman.x = -(cellsize/2);
                 if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.x-=pacman.speed;
+                if(!(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1))tick++;
             }
             break;
         case 2:
             if (!(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.y+=pacman.speed;
                 if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.y-=pacman.speed;
+                if(!(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1))tick++;
             }
             break;    
         case 3:
@@ -509,6 +512,7 @@ function pacmanBehavior() {
                 pacman.x-=pacman.speed;
                 if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.x+=pacman.speed;
                 if(pacman.x < -cellsize)pacman.x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
+                pacman.animframe++;
             }
             break;
     }

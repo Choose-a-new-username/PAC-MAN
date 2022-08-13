@@ -488,8 +488,8 @@ function pacmanBehavior() {
         case 0:
             if (!(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.y-=pacman.speed;
-                if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.x-=pacman.speed;
-                if(!(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1))tick++;
+                if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.y+=pacman.speed;
+                if(!(tick%pacman.animspeed))pacman.anim++;
             }
             break;
         case 1:
@@ -497,14 +497,14 @@ function pacmanBehavior() {
                 pacman.x+=pacman.speed;
                 if(pacman.x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))pacman.x = -(cellsize/2);
                 if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.x-=pacman.speed;
-                if(!(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1))tick++;
+                if(!(tick%pacman.animspeed))pacman.anim++;
             }
             break;
         case 2:
             if (!(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
                 pacman.y+=pacman.speed;
                 if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.y-=pacman.speed;
-                if(!(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1))tick++;
+                if(!(tick%pacman.animspeed))pacman.anim++;
             }
             break;    
         case 3:
@@ -512,7 +512,7 @@ function pacmanBehavior() {
                 pacman.x-=pacman.speed;
                 if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.x+=pacman.speed;
                 if(pacman.x < -cellsize)pacman.x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
-                pacman.animframe++;
+                if(!(tick%pacman.animspeed))pacman.anim++;
             }
             break;
     }

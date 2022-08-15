@@ -14,14 +14,14 @@ This is a school project so dont expect high quality.
 * ~~Map~~
 * ~~Collision detection w ghosts~~
 * ~~Better textures~~
-* __GHOST AI__
+* ~~GHOST AI~~
     * ~~Red~~
     * ~~Ghost AI (chase)~~
     * ~~Ghost AI (scatter)~~
     * ~~Pink~~
     * ~~Blue~~
     * ~~Orange~~
-    * __AI changes over time__
+    * ~~AI changes over time~~
 * __Death/death screen__
 * Multiple lives
 * Large pellets and ghost eating 

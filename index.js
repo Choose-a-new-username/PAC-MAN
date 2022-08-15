@@ -153,7 +153,9 @@ for(i in tilemap) {
 
 //time/time functions
 let tick = 0;
-const wait = (secs) => {return new Promise(resolve => setTimeout(resolve,secs));}
+const wait = secs => {return new Promise(resolve => setTimeout(resolve,secs));}
+const AnimationFrame = () => {return new Promise(resolve => requestAnimationFrame(resolve,secs));}
+let TimeNow = Date.now();
 
 //collision functions
 function corner(a,b,c,d,e,f) {
@@ -169,6 +171,7 @@ function collision2(a,b,c,d,e,f,g,h) {
 //restart
 async function restart() {
     begun = false;
+    ghoststate = "scatter";
     pacman = {
         x: cellsize*13.5,
         y: cellsize*23,
@@ -204,7 +207,7 @@ async function restart() {
             y: cellsize*15,
             w: cellsize,
             h: cellsize,
-            dir: 1,
+            dir: 3,
             state: "norm"
         },
         CLYDE: {
@@ -212,7 +215,7 @@ async function restart() {
             y: cellsize*15,
             w: cellsize,
             h: cellsize,
-            dir: 1,
+            dir: 3,
             state: "norm"
         },
     };
@@ -221,7 +224,6 @@ async function restart() {
     intro.addEventListener("ended",()=>begun=true);
     switch(level) {
         case 1:
-            setTimeout(()=>{ghoststate="chase";},14000);
             break;
         default:
             break;
@@ -537,11 +539,44 @@ function pacmanBehavior() {
     if(pacman.anim === pacman.animframes)pacman.anim = 0;
 }
 
+function timeBehavior(){
+    switch (level) {
+        case 1:
+            switch (Math.floor((Date.now()-TimeNow)/1000)) {
+                case 7:
+                case 34:
+                case 41:
+                case 66:
+                    if(ghoststate==="chase")break;
+                    ghoststate = "chase";
+                    ghosts["INKY"].dir=Math.abs(ghosts["INKY"].dir-2)%4;
+                    ghosts["BLINKY"].dir=Math.abs(ghosts["BLINKY"].dir-2)%4;
+                    ghosts["PINKY"].dir=Math.abs(ghosts["PINKY"].dir-2)%4;
+                    ghosts["CLYDE"].dir=Math.abs(ghosts["CLYDE"].dir-2)%4;
+                    break;
+                case 27:
+                case 54:
+                case 61:
+                    if(ghoststate==="scatter")break;
+                    ghoststate = "scatter";
+                    ghosts["INKY"].dir=Math.abs(ghosts["INKY"].dir-2)%4;
+                    ghosts["BLINKY"].dir=Math.abs(ghosts["BLINKY"].dir-2)%4;
+                    ghosts["PINKY"].dir=Math.abs(ghosts["PINKY"].dir-2)%4;
+                    ghosts["CLYDE"].dir=Math.abs(ghosts["CLYDE"].dir-2)%4;
+                    break;
+                default:
+                    break;
+            }
+            break;
+    }
+}
+
 //run the behavior functions
 async function render() {
     if(ghost_sound.currentTime >= ghost_sound.duration-0.55){ghost_sound.currentTime = 0;ghost_sound.play();}
     pacmanBehavior();
     pelletBehaivor();
+    timeBehavior();
     ghostBehaivor();
     tick++;
 }
@@ -559,8 +594,7 @@ function draw() {
     ctx.fillStyle = "white";
     ctx.fillText(score,10,50);
     if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
-    if(konamimode)ctx.fillText("KONAMI MODE ACTIVATED",110,50)
-    console.log(konamimode);
+    if(konamimode)ctx.fillText("KONAMI MODE ACTIVATED",130,50)
     drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
     ctx.fillStyle = "#db851c";
     for(i in pellets) {
@@ -578,7 +612,7 @@ function draw() {
 
 //main loop
 async function update() {
-    if(begun)render(); else ghost_sound.pause();
+    if(begun)render(); else{ghost_sound.pause();TimeNow = Date.now();}
     draw();
     requestAnimationFrame(update);
 }

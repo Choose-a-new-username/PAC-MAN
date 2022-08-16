@@ -200,7 +200,7 @@ async function restart() {
             w: cellsize,
             h: cellsize,
             dir: 3,
-            state: "norm"
+            state: "trapped"
         },
         INKY: {
             x: cellsize*13.5,
@@ -208,7 +208,7 @@ async function restart() {
             w: cellsize,
             h: cellsize,
             dir: 3,
-            state: "norm"
+            state: "trapped"
         },
         CLYDE: {
             x: cellsize*12,
@@ -216,7 +216,7 @@ async function restart() {
             w: cellsize,
             h: cellsize,
             dir: 3,
-            state: "norm"
+            state: "trapped"
         },
     };
     intro.currentTime = 0;
@@ -311,7 +311,7 @@ function ghostBehaivor() {
                     break;
             }
         }
-        switch (ghosts["BLINKY"].dir) {
+        if(ghosts["BLINKY"].state!="trapped")switch (ghosts["BLINKY"].dir) {
             case 0:
                 ghosts["BLINKY"].y-=pacman.speed;
                 break;
@@ -355,7 +355,7 @@ function ghostBehaivor() {
                 break;
         }
     }
-    switch (ghosts["PINKY"].dir) {
+    if(ghosts["PINKY"].state!="trapped")switch (ghosts["PINKY"].dir) {
         case 0:
             ghosts["PINKY"].y-=pacman.speed;
             break;
@@ -406,7 +406,7 @@ function ghostBehaivor() {
                     break;
             }
         }    
-        switch (ghosts["INKY"].dir) {
+        if(ghosts["INKY"].state!="trapped")switch (ghosts["INKY"].dir) {
             case 0:
                 ghosts["INKY"].y-=pacman.speed;
                 break;
@@ -441,7 +441,7 @@ function ghostBehaivor() {
                     break;
             }
         }
-        switch (ghosts["CLYDE"].dir) {
+        if(ghosts["CLYDE"].state!="trapped")switch (ghosts["CLYDE"].dir) {
             case 0:
                 ghosts["CLYDE"].y-=pacman.speed;
                 break;
@@ -596,7 +596,7 @@ function draw() {
     if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
     if(konamimode)ctx.fillText("KONAMI MODE ACTIVATED",130,50)
     drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
-    ctx.fillStyle = "#db851c";
+    ctx.fillStyle = "#FFFFFF";
     for(i in pellets) {
         ctx.fillRect(pellets[i].x+offset[1],pellets[i].y+offset[0],pellets[i].w,pellets[i].h);
     }

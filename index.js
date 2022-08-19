@@ -357,17 +357,17 @@ function ghostBehaivor() {
     }
     if(ghosts["PINKY"].state!="trapped")switch (ghosts["PINKY"].dir) {
         case 0:
-            ghosts["PINKY"].y-=pacman.speed/2;
+            ghosts["PINKY"].y-=pacman.speed;
             break;
         case 1:
-            ghosts["PINKY"].x+=pacman.speed/2;
+            ghosts["PINKY"].x+=pacman.speed;
             if(ghosts["PINKY"].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts["PINKY"].x = -(cellsize/2);
             break;
         case 2:
-            ghosts["PINKY"].y+=pacman.speed/2;
+            ghosts["PINKY"].y+=pacman.speed;
             break;
         case 3:
-            ghosts["PINKY"].x-=pacman.speed/2;
+            ghosts["PINKY"].x-=pacman.speed;
             if(ghosts["PINKY"].x < -cellsize)ghosts["PINKY"].x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
             break;
     }
@@ -539,10 +539,15 @@ function pacmanBehavior() {
     if(pacman.anim === pacman.animframes)pacman.anim = 0;
 }
 
+async function pacmanDie(){
+        begun = false;
+        await wait(1000);
+        restart();
+}
 function timeBehavior(){
     switch (level) {
         case 1:
-            if(Math.floor((Date.now()-TimeNow)/1000==34))ghosts["CLYDE"].state = "norm";
+            if(Math.floor((Date.now()-TimeNow)/1000)==34)ghosts["CLYDE"].state = "norm";
             switch (Math.floor((Date.now()-TimeNow)/1000)) {
                 case 7:
                     ghosts["PINKY"].state = "norm";

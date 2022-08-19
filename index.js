@@ -103,7 +103,7 @@ function normAI(tx,ty,curdir,x,y) {
     }
     delete dists[dirs.at(curdir-2)];    
     dirs.splice(dirs.indexOf(dirs.at(curdir-2)),1);
-    if(dirs.includes(0))if((tilemap[y/cellsize-2].at(x/cellsize)===1)){delete dists["0"];dirs.splice(dirs.indexOf(0),1);}
+    if(dirs.includes(0))if((tilemap[y/cellsize-2].at(x/cellsize)===1)&&!((y/cellsize==15||y/cellsize==14)&&x/cellsize>=13&&x/cellsize<=16)){delete dists["0"];dirs.splice(dirs.indexOf(0),1);}
     if(dirs.includes(2))if((tilemap[y/cellsize].at(x/cellsize)===1)){delete dists["2"];dirs.splice(dirs.indexOf(2),1);}
     if(dirs.includes(3))if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){delete dists["3"];dirs.splice(dirs.indexOf(3),1);}
     if(dirs.includes(1))if((tilemap[y/cellsize-1].at(x/cellsize+1)===1)){delete dists["1"];dirs.splice(dirs.indexOf(1),1);}
@@ -179,7 +179,7 @@ async function restart() {
         h: cellsize,
         dir: 3,
         //cellsize must be divisible by pacman.speed
-        speed: cellsize/10,
+        speed: cellsize/8,
         anim: 2,
         animframes: 3,
         animwidth: 13,
@@ -544,6 +544,7 @@ function timeBehavior(){
         case 1:
             switch (Math.floor((Date.now()-TimeNow)/1000)) {
                 case 7:
+                    ghosts["PINKY"].state = "norm";
                 case 34:
                 case 41:
                 case 66:

@@ -604,7 +604,7 @@ function draw() {
     if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
     if(konamimode)ctx.fillText("KONAMI MODE ACTIVATED",130,50)
     drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
-    ctx.fillStyle = "#FFFFFF";
+     ctx.fillStyle = "#FFFFFF";
     for(i in pellets) {
         ctx.fillRect(pellets[i].x+offset[1],pellets[i].y+offset[0],pellets[i].w,pellets[i].h);
     }

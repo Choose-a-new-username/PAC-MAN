@@ -152,10 +152,10 @@ for(i in tilemap) {
 }
 
 //time/time functions
-let tick = 0;
+var tick = 0;
 const wait = secs => {return new Promise(resolve => setTimeout(resolve,secs));}
 const AnimationFrame = () => {return new Promise(resolve => requestAnimationFrame(resolve,secs));}
-let TimeNow = Date.now();
+var TimeNow = Date.now();
 
 //collision functions
 function corner(a,b,c,d,e,f) {
@@ -230,11 +230,11 @@ async function restart() {
     }
 }
 //key events
-let keys = {};
-let konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","Enter","Enter"];
-let konamimode = false;
-let pressedsequence = [];
-let queued = "up";
+var keys = {};
+var konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","Enter","Enter"];
+var konamimode = false;
+var pressedsequence = [];
+var queued = "up";
 addEventListener("keydown",e=>{if(!keys[e.key]===true){
     //konami section starts    
         pressedsequence.push(e.key);
@@ -634,9 +634,9 @@ requestAnimationFrame(()=>
     })
 );
 //when the round begins, is set to true
-let begun = false;
+var begun = false;
 //which munch sound to play
-let munch_b = false;
+var munch_b = false;
 (async function(){
     await getKey("Enter");
     restart();

@@ -103,7 +103,7 @@ function normAI(tx,ty,curdir,x,y) {
     }
     delete dists[dirs.at(curdir-2)];    
     dirs.splice(dirs.indexOf(dirs.at(curdir-2)),1);
-    if(dirs.includes(0))if((tilemap[y/cellsize-2].at(x/cellsize)===1)&&!((y/cellsize==15||y/cellsize==14)&&x/cellsize>=13&&x/cellsize<=16)){delete dists["0"];dirs.splice(dirs.indexOf(0),1);}
+    if(dirs.includes(0))if((tilemap[y/cellsize-2].at(x/cellsize)===1)&&!((y/cellsize==15||y/cellsize==14)&&x/cellsize>=14&&x/cellsize<=15)){delete dists["0"];dirs.splice(dirs.indexOf(0),1);}
     if(dirs.includes(2))if((tilemap[y/cellsize].at(x/cellsize)===1)){delete dists["2"];dirs.splice(dirs.indexOf(2),1);}
     if(dirs.includes(3))if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){delete dists["3"];dirs.splice(dirs.indexOf(3),1);}
     if(dirs.includes(1))if((tilemap[y/cellsize-1].at(x/cellsize+1)===1)){delete dists["1"];dirs.splice(dirs.indexOf(1),1);}
@@ -357,17 +357,17 @@ function ghostBehaivor() {
     }
     if(ghosts["PINKY"].state!="trapped")switch (ghosts["PINKY"].dir) {
         case 0:
-            ghosts["PINKY"].y-=pacman.speed;
+            ghosts["PINKY"].y-=pacman.speed/2;
             break;
         case 1:
-            ghosts["PINKY"].x+=pacman.speed;
+            ghosts["PINKY"].x+=pacman.speed/2;
             if(ghosts["PINKY"].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts["PINKY"].x = -(cellsize/2);
             break;
         case 2:
-            ghosts["PINKY"].y+=pacman.speed;
+            ghosts["PINKY"].y+=pacman.speed/2;
             break;
         case 3:
-            ghosts["PINKY"].x-=pacman.speed;
+            ghosts["PINKY"].x-=pacman.speed/2;
             if(ghosts["PINKY"].x < -cellsize)ghosts["PINKY"].x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
             break;
     }
@@ -542,6 +542,7 @@ function pacmanBehavior() {
 function timeBehavior(){
     switch (level) {
         case 1:
+            if(Math.floor((Date.now()-TimeNow)/1000==34))ghosts["CLYDE"].state = "norm";
             switch (Math.floor((Date.now()-TimeNow)/1000)) {
                 case 7:
                     ghosts["PINKY"].state = "norm";
@@ -556,6 +557,7 @@ function timeBehavior(){
                     ghosts["CLYDE"].dir=Math.abs(ghosts["CLYDE"].dir-2)%4;
                     break;
                 case 27:
+                    ghosts["INKY"].state = "norm";
                 case 54:
                 case 61:
                     if(ghoststate==="scatter")break;

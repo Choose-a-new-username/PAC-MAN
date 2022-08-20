@@ -294,7 +294,7 @@ function getKey(k) {
     });
 }
 
-//behavior functions (movement, pellets, etc...)
+//behavior functions (movement, pellets, etc...) 
 function ghostBehaivor() {
     //BLINKY
         if(Math.round(ghosts["BLINKY"].x/cellsize)*cellsize===ghosts["BLINKY"].x && Math.round(ghosts["BLINKY"].y/cellsize)*cellsize===ghosts["BLINKY"].y){
@@ -328,49 +328,49 @@ function ghostBehaivor() {
                 break;
         }
     //PINKY
-    if(Math.round(ghosts["PINKY"].x/cellsize)*cellsize===ghosts["PINKY"].x && Math.round(ghosts["PINKY"].y/cellsize)*cellsize===ghosts["PINKY"].y){
-        switch(ghosts["PINKY"].state) {
-            case "norm":
-                switch (ghoststate) {
-                    case "chase":
-                        switch(pacman.dir) {
-                            case 0:
-                                ghosts["PINKY"].dir = normAI(clamp(pacman.x-cellsize*4,0,boardsize[1]*cellsize),clamp(pacman.y+pacman.h-cellsize*4,0,boardsize[1]*cellsize),ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
-                                break;
-                            case 1:
-                                ghosts["PINKY"].dir = normAI(clamp(pacman.x+cellsize*4,0,boardsize[1]*cellsize),pacman.y+pacman.h,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
-                                break;
-                            case 2:
-                                ghosts["PINKY"].dir = normAI(pacman.x,clamp(pacman.y+pacman.h+cellsize*4,0,boardsize[0]*cellsize),ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
-                                break;
-                            case 3:
-                                ghosts["PINKY"].dir = normAI(clamp(pacman.x-cellsize*4,0,boardsize[1]*cellsize),pacman.y+pacman.h,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
-                                break;
+        if(Math.round(ghosts["PINKY"].x/cellsize)*cellsize===ghosts["PINKY"].x && Math.round(ghosts["PINKY"].y/cellsize)*cellsize===ghosts["PINKY"].y){
+            switch(ghosts["PINKY"].state) {
+                case "norm":
+                    switch (ghoststate) {
+                        case "chase":
+                            switch(pacman.dir) {
+                                case 0:
+                                    ghosts["PINKY"].dir = normAI(clamp(pacman.x-cellsize*4,0,boardsize[1]*cellsize),clamp(pacman.y+pacman.h-cellsize*4,0,boardsize[1]*cellsize),ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                                    break;
+                                case 1:
+                                    ghosts["PINKY"].dir = normAI(clamp(pacman.x+cellsize*4,0,boardsize[1]*cellsize),pacman.y+pacman.h,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                                    break;
+                                case 2:
+                                    ghosts["PINKY"].dir = normAI(pacman.x,clamp(pacman.y+pacman.h+cellsize*4,0,boardsize[0]*cellsize),ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                                    break;
+                                case 3:
+                                    ghosts["PINKY"].dir = normAI(clamp(pacman.x-cellsize*4,0,boardsize[1]*cellsize),pacman.y+pacman.h,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                                    break;
+                            }
+                            break;
+                        case "scatter":
+                            ghosts["PINKY"].dir = normAI(cellsize*2,cellsize*1,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
+                            break;
                         }
-                        break;
-                    case "scatter":
-                        ghosts["PINKY"].dir = normAI(cellsize*2,cellsize*1,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
-                        break;
-                    }
+                    break;
+        }
+        }
+        if(ghosts["PINKY"].state!="trapped")switch (ghosts["PINKY"].dir) {
+            case 0:
+                ghosts["PINKY"].y-=pacman.speed;
+                break;
+            case 1:
+                ghosts["PINKY"].x+=pacman.speed;
+                if(ghosts["PINKY"].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts["PINKY"].x = -(cellsize/2);
+                break;
+            case 2:
+                ghosts["PINKY"].y+=pacman.speed;
+                break;
+            case 3:
+                ghosts["PINKY"].x-=pacman.speed;
+                if(ghosts["PINKY"].x < -cellsize)ghosts["PINKY"].x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
                 break;
         }
-    }
-    if(ghosts["PINKY"].state!="trapped")switch (ghosts["PINKY"].dir) {
-        case 0:
-            ghosts["PINKY"].y-=pacman.speed;
-            break;
-        case 1:
-            ghosts["PINKY"].x+=pacman.speed;
-            if(ghosts["PINKY"].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts["PINKY"].x = -(cellsize/2);
-            break;
-        case 2:
-            ghosts["PINKY"].y+=pacman.speed;
-            break;
-        case 3:
-            ghosts["PINKY"].x-=pacman.speed;
-            if(ghosts["PINKY"].x < -cellsize)ghosts["PINKY"].x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
-            break;
-    }
     //INKY
         if(Math.round(ghosts["INKY"].x/cellsize)*cellsize===ghosts["INKY"].x && Math.round(ghosts["INKY"].y/cellsize)*cellsize===ghosts["INKY"].y){
             switch (ghosts["INKY"].state){ 

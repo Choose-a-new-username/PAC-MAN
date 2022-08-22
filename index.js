@@ -592,29 +592,24 @@ async function render() {
 //draw loop
 const ooo = 13;
 function draw() {
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.globalCompositeOperation = "source-in";
     ctx.fillStyle = `hsl(${(tick/12+240)},100%,50%)`;
     ctx.drawImage(mapsprite,offset[1],-80+offset[0],cellsize*28,cellsize*36);
     ctx.fillRect(0,0, canvas.width, canvas.height);
     ctx.globalCompositeOperation = "source-over";
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "#FFFFFF";
     ctx.fillText(score,10,50);
     if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
     if(konamimode)ctx.fillText("KONAMI MODE ACTIVATED",130,50)
     drawImage(ctx,pacsprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
-     ctx.fillStyle = "#FFFFFF";
     for(i in pellets) {
         ctx.fillRect(pellets[i].x+offset[1],pellets[i].y+offset[0],pellets[i].w,pellets[i].h);
     }
-    ctx.fillStyle = "red";
     ctx.drawImage(ghostsprite,(ghosts["BLINKY"].dir==0?64:ghosts["BLINKY"].dir==1?0:ghosts["BLINKY"].dir==2?96:32)+(tick%10<5?16:0),0,16,16,ghosts["BLINKY"].x+offset[1]-ooo*1.5,ghosts["BLINKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
-    ctx.fillStyle = "pink";
     ctx.drawImage(ghostsprite,(ghosts["PINKY"].dir==0?64:ghosts["PINKY"].dir==1?0:ghosts["PINKY"].dir==2?96:32)+(tick%10<5?16:0),16,16,16,ghosts["PINKY"].x+offset[1]-ooo*1.5,ghosts["PINKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
-    ctx.fillStyle = "cyan"; 
     ctx.drawImage(ghostsprite,(ghosts["INKY"].dir==0?64:ghosts["INKY"].dir==1?0:ghosts["INKY"].dir==2?96:32)+(tick%10<5?16:0),32,16,16,ghosts["INKY"].x+offset[1]-ooo*1.5,ghosts["INKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
-    ctx.fillStyle = "orange"; 
     ctx.drawImage(ghostsprite,(ghosts["CLYDE"].dir==0?64:ghosts["CLYDE"].dir==1?0:ghosts["CLYDE"].dir==2?96:32)+(tick%10<5?16:0),48,16,16,ghosts["CLYDE"].x+offset[1]-ooo*1.5,ghosts["CLYDE"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
 }
 

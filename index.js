@@ -16,6 +16,7 @@ function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.wi
 const pacsprite    = document.getElementById("pacman");
 const ghostsprite  = document.getElementById("ghosts");
 const mapsprite    = document.getElementById("map");
+const hpsprite    = document.getElementById("health");
 const intro        = document.getElementById("intro");
 const munch_1      = document.getElementById("munch_1");
 const munch_2      = document.getElementById("munch_2");
@@ -138,6 +139,7 @@ function normAI(tx,ty,curdir,x,y) {
 //pacman
 var pacman = {}
 var pacman_dead = false;
+var health_points = 3;
 
 //pellets
 var pellets = [];
@@ -230,7 +232,8 @@ var konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRigh
 var konamimode = false;
 var pressedsequence = [];
 var queued = "up";
-addEventListener("keydown",e=>{if(!keys[e.key]===true){
+addEventListener("keydown",e=>{
+    if((keys[e.key]===true)||(pacman_dead))return;
     //konami section starts    
         pressedsequence.push(e.key);
         if(!(e.key === konami[pressedsequence.length-1]))pressedsequence = [];
@@ -274,7 +277,7 @@ addEventListener("keydown",e=>{if(!keys[e.key]===true){
         default:
             break;
     }
-}});
+});
 addEventListener("keyup",e=>{keys[e.key]=false;});
 function getKey(k) {
     return new Promise(r=>{
@@ -537,7 +540,7 @@ function pacmanBehavior() {
 function pacmanDie(){
     begun = false;
     pacman_dead = true;
-    setTimeout(restart,1000);
+    setTimeout(()=>{health_points--;if(health_points<0){alert("U DED");history.go(0);}else restart();},1000);
 }
 function timeBehavior(){
     switch (level) {
@@ -602,6 +605,7 @@ function draw() {
     for(i in pellets) {
         ctx.fillRect(pellets[i].x+offset[1],pellets[i].y+offset[0],pellets[i].w,pellets[i].h);
     }
+    for(let i = 0; i < 3; i++)if(3-i<=health_points)ctx.drawImage(hpsprite,(i*60)+30,1330,60,60);
     if(!pacman_dead){
         ctx.drawImage(ghostsprite,(ghosts["BLINKY"].dir==0?64:ghosts["BLINKY"].dir==1?0:ghosts["BLINKY"].dir==2?96:32)+(tick%10<5?16:0),0,16,16,ghosts["BLINKY"].x+offset[1]-ooo*1.5,ghosts["BLINKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
         ctx.drawImage(ghostsprite,(ghosts["PINKY"].dir==0?64:ghosts["PINKY"].dir==1?0:ghosts["PINKY"].dir==2?96:32)+(tick%10<5?16:0),16,16,16,ghosts["PINKY"].x+offset[1]-ooo*1.5,ghosts["PINKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);

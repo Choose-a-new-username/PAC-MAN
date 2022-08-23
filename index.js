@@ -37,15 +37,15 @@ const tilemap      = [
 [1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1],
 [1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,0,1,1,1,1,1,2,1,1,2,1,1,1,1,1,0,1,1,1,1,1,1],
-[2,2,2,2,2,1,0,1,1,1,1,1,2,1,1,2,1,1,1,1,1,0,1,2,2,2,2,2],
-[2,2,2,2,2,1,0,1,1,2,2,2,2,2,2,2,2,2,2,1,1,0,1,2,2,2,2,2],
-[2,2,2,2,2,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,2,2,2,2,2],
+[1,1,1,1,1,1,0,1,1,1,1,1,2,1,1,2,1,1,1,1,1,0,1,1,1,1,1,1],
+[1,1,1,1,1,1,0,1,1,2,2,2,2,2,2,2,2,2,2,1,1,0,1,1,1,1,1,1],
+[1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
 [1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
 [2,2,2,2,2,2,0,2,2,2,1,1,2,2,2,2,1,1,2,2,2,0,2,2,2,2,2,2],
 [1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
-[2,2,2,2,2,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,2,2,2,2,2],
-[2,2,2,2,2,1,0,1,1,2,2,2,2,2,2,2,2,2,2,1,1,0,1,2,2,2,2,2],
-[2,2,2,2,2,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,2,2,2,2,2],
+[1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
+[1,1,1,1,1,1,0,1,1,2,2,2,2,2,2,2,2,2,2,1,1,0,1,1,1,1,1,1],
+[1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
 [1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
 [1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1],
@@ -101,8 +101,8 @@ function normAI(tx,ty,curdir,x,y) {
         delete dists["0"];
         if(dirs.includes(0))dirs.splice(dirs.indexOf(0),1);
     }
-    delete dists[dirs.at(curdir-2)];    
-    dirs.splice(dirs.indexOf(dirs.at(curdir-2)),1);
+    delete dists[(curdir+2)%4];    
+    dirs.splice(dirs.indexOf((curdir+2)%4),1);
     if(dirs.includes(0))if((tilemap[y/cellsize-2].at(x/cellsize)===1)&&!((y/cellsize==15||y/cellsize==14)&&x/cellsize>=14&&x/cellsize<=15)){delete dists["0"];dirs.splice(dirs.indexOf(0),1);}
     if(dirs.includes(2))if((tilemap[y/cellsize].at(x/cellsize)===1)){delete dists["2"];dirs.splice(dirs.indexOf(2),1);}
     if(dirs.includes(3))if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){delete dists["3"];dirs.splice(dirs.indexOf(3),1);}
@@ -133,13 +133,14 @@ function normAI(tx,ty,curdir,x,y) {
     }else if(min.includes("1")){
         return 1;
     }
-    return dirs[dirs.indexOf(dirs.at(curdir-2))];
+    return (curdir+2)%4;
 }
 
 //pacman
 var pacman = {}
 var pacman_dead = false;
 var health_points = 3;
+const max_health = 3;
 
 //pellets
 var pellets = [];
@@ -224,8 +225,9 @@ async function restart() {
     };
     intro.currentTime = 0;
     intro.play();
-    intro.addEventListener("ended",()=>begun=true);
 }
+
+
 //key events
 var keys = {};
 var konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","Enter","Enter"];
@@ -540,7 +542,7 @@ function pacmanBehavior() {
 function pacmanDie(){
     begun = false;
     pacman_dead = true;
-    setTimeout(()=>{health_points--;if(health_points<0){alert("U DED");history.go(0);}else restart();},1000);
+    setTimeout(restart,2000);
 }
 function timeBehavior(){
     switch (level) {
@@ -554,10 +556,10 @@ function timeBehavior(){
                 case 66:
                     if(ghoststate==="chase")break;
                     ghoststate = "chase";
-                    ghosts["INKY"].dir=Math.abs(ghosts["INKY"].dir-2)%4;
-                    ghosts["BLINKY"].dir=Math.abs(ghosts["BLINKY"].dir-2)%4;
-                    ghosts["PINKY"].dir=Math.abs(ghosts["PINKY"].dir-2)%4;
-                    ghosts["CLYDE"].dir=Math.abs(ghosts["CLYDE"].dir-2)%4;
+                    ghosts["INKY"].dir=Math.abs(ghosts["INKY"].dir+2)%4;
+                    ghosts["BLINKY"].dir=Math.abs(ghosts["BLINKY"].dir+2)%4;
+                    ghosts["PINKY"].dir=Math.abs(ghosts["PINKY"].dir+2)%4;
+                    ghosts["CLYDE"].dir=Math.abs(ghosts["CLYDE"].dir+2)%4;
                     break;
                 case 27:
                     ghosts["INKY"].state = "norm";
@@ -565,10 +567,10 @@ function timeBehavior(){
                 case 61:
                     if(ghoststate==="scatter")break;
                     ghoststate = "scatter";
-                    ghosts["INKY"].dir=Math.abs(ghosts["INKY"].dir-2)%4;
-                    ghosts["BLINKY"].dir=Math.abs(ghosts["BLINKY"].dir-2)%4;
-                    ghosts["PINKY"].dir=Math.abs(ghosts["PINKY"].dir-2)%4;
-                    ghosts["CLYDE"].dir=Math.abs(ghosts["CLYDE"].dir-2)%4;
+                    ghosts["INKY"].dir=(ghosts["INKY"].dir+2)%4;
+                    ghosts["BLINKY"].dir=(ghosts["BLINKY"].dir+2)%4;
+                    ghosts["PINKY"].dir=(ghosts["PINKY"].dir+2)%4;
+                    ghosts["CLYDE"].dir=(ghosts["CLYDE"].dir+2)%4;
                     break;
                 default:
                     break;
@@ -593,7 +595,7 @@ function draw() {
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.globalCompositeOperation = "source-in";
-    ctx.fillStyle = `hsl(${(tick/12+240)},100%,50%)`;
+    ctx.fillStyle = `hsla(${(tick/12+240)},100%,50%,0.8)`;
     ctx.drawImage(map_sprite,offset[1],-80+offset[0],cellsize*28,cellsize*36);
     ctx.fillRect(0,0, canvas.width, canvas.height);
     ctx.globalCompositeOperation = "source-over";
@@ -605,7 +607,7 @@ function draw() {
     for(i in pellets) {
         ctx.fillRect(pellets[i].x+offset[1],pellets[i].y+offset[0],pellets[i].w,pellets[i].h);
     }
-    for(let i = 0; i < 3; i++)if(3-i<=health_points)ctx.drawImage(hp_sprite,(i*60)+30,1330,60,60);
+    for(let i = 0; i < max_health; i++)if(max_health-i<=health_points)ctx.drawImage(hp_sprite,(i*60)+30,1330,60,60);
     if(!pacman_dead){
         ctx.drawImage(ghost_sprite,(ghosts["BLINKY"].dir==0?64:ghosts["BLINKY"].dir==1?0:ghosts["BLINKY"].dir==2?96:32)+(tick%10<5?16:0),0,16,16,ghosts["BLINKY"].x+offset[1]-ooo*1.5,ghosts["BLINKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
         ctx.drawImage(ghost_sprite,(ghosts["PINKY"].dir==0?64:ghosts["PINKY"].dir==1?0:ghosts["PINKY"].dir==2?96:32)+(tick%10<5?16:0),16,16,16,ghosts["PINKY"].x+offset[1]-ooo*1.5,ghosts["PINKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
@@ -636,7 +638,6 @@ var munch_b = false;
 (async function(){
     await getKey("Enter");
     restart();
-    intro.play();
     update();
-    intro.addEventListener("ended",()=>{ghost_sound.play();begun=true});
+    intro.addEventListener("ended",()=>{ghost_sound.play();begun=true;health_points--;if(health_points<0){alert("U DED");history.go(0);}});
 })();

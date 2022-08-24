@@ -13,17 +13,14 @@ function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.wi
 }
 
 //assets/images
-const pac_sprite    = document.getElementById("pacman");
-const ghost_sprite  = document.getElementById("ghosts");
-const map_sprite    = document.getElementById("map");
-const hp_sprite    = document.getElementById("health");
-const intro        = document.getElementById("intro");
-const munch_1      = document.getElementById("munch_1");
-const munch_2      = document.getElementById("munch_2");
-const ghost_sound  = document.getElementById("ghost_sound");
-
-var INKYTARGETX    = 0;
-var INKYTARGETY    = 0;
+const pac_sprite    = document.getElementById("pacman"),
+      ghost_sprite  = document.getElementById("ghosts"),
+      map_sprite    = document.getElementById("map"),
+      hp_sprite     = document.getElementById("health"),
+      intro         = document.getElementById("intro"),
+      munch_1       = document.getElementById("munch_1"),
+      munch_2       = document.getElementById("munch_2"),
+      ghost_sound   = document.getElementById("ghost_sound");
 
 //constants
 const tilemap      = [
@@ -41,7 +38,7 @@ const tilemap      = [
 [1,1,1,1,1,1,0,1,1,2,2,2,2,2,2,2,2,2,2,1,1,0,1,1,1,1,1,1],
 [1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
 [1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
-[2,2,2,2,2,2,0,2,2,2,1,1,2,2,2,2,1,1,2,2,2,0,2,2,2,2,2,2],
+[2,2,2,2,2,2,0,2,2,2,1,1,1,1,1,1,1,1,2,2,2,0,2,2,2,2,2,2],
 [1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
 [1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1],
 [1,1,1,1,1,1,0,1,1,2,2,2,2,2,2,2,2,2,2,1,1,0,1,1,1,1,1,1],
@@ -58,11 +55,11 @@ const tilemap      = [
 [1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1],
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-];
-const boardsize    = [tilemap[0].length-1,tilemap.length];
-const cellsize     = 40;
-const pelletsize   = 10;
-const offset       = [cellsize*1,20];
+],
+      boardsize    = [tilemap[0].length-1,tilemap.length],
+      cellsize     = 40,
+      pelletsize   = 10,
+      offset       = [cellsize*1,20];
 
 //math
 const getMin = object => {
@@ -86,7 +83,8 @@ function randAI(curdir,x,y){
     }    
     for (let i = 0; i < 4; i++){
         if(dirs.includes(i))if(curdir===Math.abs(i-3))dirs.splice(dirs.indexOf(i),1);
-    }    
+    }
+    dirs.splice(dirs.indexOf((curdir+2)%4),1);
     if(dirs.includes(0))if((tilemap[y/cellsize-2].at(x/cellsize)===1)){dirs.splice(dirs.indexOf(0),1);}
     if(dirs.includes(2))if((tilemap[y/cellsize].at(x/cellsize)===1)){dirs.splice(dirs.indexOf(2),1);}
     if(dirs.includes(3))if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){dirs.splice(dirs.indexOf(3),1);}
@@ -186,7 +184,8 @@ async function restart() {
         speed: cellsize/8,
         anim: 2,
         animframes: 3,
-        animwidth: 13,
+        animwidth: 16,
+        animheight: 16,
         animspeed: 2,
     }
     ghosts = {
@@ -295,6 +294,24 @@ function getKey(k) {
 }
 
 //behavior functions (movement, pellets, etc...) 
+function moveghost(ghost){
+    if(ghosts[ghost].state!="trapped")switch (ghosts[ghost].dir) {
+        case 0:
+            ghosts[ghost].y-=pacman.speed;
+            break;
+        case 1:
+            ghosts[ghost].x+=pacman.speed;
+            if(ghosts[ghost].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts[ghost].x = -(cellsize/2);
+            break;
+        case 2:
+            ghosts[ghost].y+=pacman.speed;
+            break;
+        case 3:
+            ghosts[ghost].x-=pacman.speed;
+            if(ghosts[ghost].x < -cellsize)ghosts[ghost].x = canvas.width - pacman.speed - offset[1]- (cellsize/2);
+            break;
+    }
+}
 function ghostBehaivor() {
     //BLINKY
         if(Math.round(ghosts["BLINKY"].x/cellsize)*cellsize===ghosts["BLINKY"].x && Math.round(ghosts["BLINKY"].y/cellsize)*cellsize===ghosts["BLINKY"].y){
@@ -311,22 +328,7 @@ function ghostBehaivor() {
                     break;
             }
         }
-        if(ghosts["BLINKY"].state!="trapped")switch (ghosts["BLINKY"].dir) {
-            case 0:
-                ghosts["BLINKY"].y-=pacman.speed;
-                break;
-            case 1:
-                ghosts["BLINKY"].x+=pacman.speed;
-                if(ghosts["BLINKY"].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts["BLINKY"].x = -(cellsize/2);
-                break;
-            case 2:
-                ghosts["BLINKY"].y+=pacman.speed;
-                break;
-            case 3:
-                ghosts["BLINKY"].x-=pacman.speed;
-                if(ghosts["BLINKY"].x < -cellsize)ghosts["BLINKY"].x = canvas.width - pacman.speed - offset[1]- (cellsize/2);
-                break;
-        }
+        moveghost("BLINKY");
     //PINKY
         if(Math.round(ghosts["PINKY"].x/cellsize)*cellsize===ghosts["PINKY"].x && Math.round(ghosts["PINKY"].y/cellsize)*cellsize===ghosts["PINKY"].y){
             switch(ghosts["PINKY"].state) {
@@ -355,22 +357,7 @@ function ghostBehaivor() {
                     break;
         }
         }
-        if(ghosts["PINKY"].state!="trapped")switch (ghosts["PINKY"].dir) {
-            case 0:
-                ghosts["PINKY"].y-=pacman.speed;
-                break;
-            case 1:
-                ghosts["PINKY"].x+=pacman.speed;
-                if(ghosts["PINKY"].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts["PINKY"].x = -(cellsize/2);
-                break;
-            case 2:
-                ghosts["PINKY"].y+=pacman.speed;
-                break;
-            case 3:
-                ghosts["PINKY"].x-=pacman.speed;
-                if(ghosts["PINKY"].x < -cellsize)ghosts["PINKY"].x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
-                break;
-        }
+        moveghost("PINKY");
     //INKY
         if(Math.round(ghosts["INKY"].x/cellsize)*cellsize===ghosts["INKY"].x && Math.round(ghosts["INKY"].y/cellsize)*cellsize===ghosts["INKY"].y){
             switch (ghosts["INKY"].state){ 
@@ -395,8 +382,8 @@ function ghostBehaivor() {
                                     break;
                             }
                             //for simplifying the complicated algorithm
-                            INKYTARGETX = clamp(clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[1]*cellsize)>xx?xx-clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[0]*cellsize):xx+clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[0]*cellsize),0,boardsize[0]*cellsize);
-                            INKYTARGETY = clamp(clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[0]*cellsize)>yy?yy-clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[1]*cellsize):yy+clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[1]*cellsize),0,boardsize[1]*cellsize);
+                            var INKYTARGETX = clamp(clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[1]*cellsize)>xx?xx-clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[0]*cellsize):xx+clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[0]*cellsize),0,boardsize[0]*cellsize);
+                            var INKYTARGETY = clamp(clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[0]*cellsize)>yy?yy-clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[1]*cellsize):yy+clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[1]*cellsize),0,boardsize[1]*cellsize);
                             ghosts["INKY"].dir = normAI(INKYTARGETX,INKYTARGETY,ghosts["INKY"].dir,clamp(ghosts["INKY"].x,0,boardsize[0]*cellsize),clamp(ghosts["INKY"].y,0,boardsize[1]*cellsize));
                             break;
                         case "scatter":
@@ -405,23 +392,8 @@ function ghostBehaivor() {
                     }
                     break;
             }
-        }    
-        if(ghosts["INKY"].state!="trapped")switch (ghosts["INKY"].dir) {
-            case 0:
-                ghosts["INKY"].y-=pacman.speed;
-                break;
-            case 1:
-                ghosts["INKY"].x+=pacman.speed;
-                if(ghosts["INKY"].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts["INKY"].x = -(cellsize/2);
-                break;
-            case 2:
-                ghosts["INKY"].y+=pacman.speed;
-                break;
-            case 3:
-                ghosts["INKY"].x-=pacman.speed;
-                if(ghosts["INKY"].x < -cellsize)ghosts["INKY"].x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
-                break;
         }
+        moveghost("INKY");
     //CLYDE
         if(Math.round(ghosts["CLYDE"].x/cellsize)*cellsize===ghosts["CLYDE"].x && Math.round(ghosts["CLYDE"].y/cellsize)*cellsize===ghosts["CLYDE"].y){
             switch(ghosts["CLYDE"].state) {
@@ -441,22 +413,7 @@ function ghostBehaivor() {
                     break;
             }
         }
-        if(ghosts["CLYDE"].state!="trapped")switch (ghosts["CLYDE"].dir) {
-            case 0:
-                ghosts["CLYDE"].y-=pacman.speed;
-                break;
-            case 1:
-                ghosts["CLYDE"].x+=pacman.speed;
-                if(ghosts["CLYDE"].x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))ghosts["CLYDE"].x = -(cellsize/2);
-                break;
-            case 2:
-                ghosts["CLYDE"].y+=pacman.speed;
-                break;
-            case 3:
-                ghosts["CLYDE"].x-=pacman.speed;
-                if(ghosts["CLYDE"].x < -cellsize)ghosts["CLYDE"].x = canvas.width - pacman.speed - offset[1]- (cellsize/2);
-                break;
-        }
+        moveghost("CLYDE");
     if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["PINKY"].x,ghosts["PINKY"].y,ghosts["PINKY"].w,ghosts["PINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["CLYDE"].x,ghosts["CLYDE"].y,ghosts["CLYDE"].w,ghosts["CLYDE"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
         pacmanDie();
 }
@@ -486,7 +443,7 @@ function queuedDo() {
             queued = "";
             break;
         case "down":
-            if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}                        
+            if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
             if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===3){break;}
             pacman.dir = 2;
             queued = "";
@@ -542,7 +499,6 @@ function pacmanBehavior() {
 function pacmanDie(){
     begun = false;
     pacman_dead = true;
-    setTimeout(restart,2000);
 }
 function timeBehavior(){
     switch (level) {
@@ -586,11 +542,10 @@ async function render() {
     pelletBehaivor();
     timeBehavior();
     ghostBehaivor();
-    tick++;
 }
 
 //draw loop
-const ooo = 13;
+const ooo = 15;
 function draw() {
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -603,24 +558,31 @@ function draw() {
     ctx.fillText(score,10,50);
     if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
     if(konamimode)ctx.fillText("KONAMI MODE ACTIVATED",130,50)
-    drawImage(ctx,pac_sprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animwidth)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animwidth)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth,0,pacman.animwidth,pacman.animwidth);
+    drawImage(ctx,pac_sprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animheight)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animheight)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth+2,0,pacman.animwidth-1,pacman.animheight-1);
     for(i in pellets) {
         ctx.fillRect(pellets[i].x+offset[1],pellets[i].y+offset[0],pellets[i].w,pellets[i].h);
     }
     for(let i = 0; i < max_health; i++)if(max_health-i<=health_points)ctx.drawImage(hp_sprite,(i*60)+30,1330,60,60);
     if(!pacman_dead){
-        ctx.drawImage(ghost_sprite,(ghosts["BLINKY"].dir==0?64:ghosts["BLINKY"].dir==1?0:ghosts["BLINKY"].dir==2?96:32)+(tick%10<5?16:0),0,16,16,ghosts["BLINKY"].x+offset[1]-ooo*1.5,ghosts["BLINKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
-        ctx.drawImage(ghost_sprite,(ghosts["PINKY"].dir==0?64:ghosts["PINKY"].dir==1?0:ghosts["PINKY"].dir==2?96:32)+(tick%10<5?16:0),16,16,16,ghosts["PINKY"].x+offset[1]-ooo*1.5,ghosts["PINKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
-        ctx.drawImage(ghost_sprite,(ghosts["INKY"].dir==0?64:ghosts["INKY"].dir==1?0:ghosts["INKY"].dir==2?96:32)+(tick%10<5?16:0),32,16,16,ghosts["INKY"].x+offset[1]-ooo*1.5,ghosts["INKY"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
-        ctx.drawImage(ghost_sprite,(ghosts["CLYDE"].dir==0?64:ghosts["CLYDE"].dir==1?0:ghosts["CLYDE"].dir==2?96:32)+(tick%10<5?16:0),48,16,16,ghosts["CLYDE"].x+offset[1]-ooo*1.5,ghosts["CLYDE"].y+offset[0]-ooo*1.5,cellsize+ooo*3,cellsize+ooo*3);
+        ctx.drawImage(ghost_sprite,(ghosts["BLINKY"].dir==0?64:ghosts["BLINKY"].dir==1?0:ghosts["BLINKY"].dir==2?96:32)+(tick%10<5?16:0),0,16,16,ghosts["BLINKY"].x+offset[1]-15,ghosts["BLINKY"].y+offset[0]-15,cellsize+30,cellsize+30);
+        ctx.drawImage(ghost_sprite,(ghosts["PINKY"].dir==0?64:ghosts["PINKY"].dir==1?0:ghosts["PINKY"].dir==2?96:32)+(tick%10<5?16:0),16,16,16,ghosts["PINKY"].x+offset[1]-15,ghosts["PINKY"].y+offset[0]-15,cellsize+30,cellsize+30);
+        ctx.drawImage(ghost_sprite,(ghosts["INKY"].dir==0?64:ghosts["INKY"].dir==1?0:ghosts["INKY"].dir==2?96:32)+(tick%10<5?16:0),32,16,16,ghosts["INKY"].x+offset[1]-15,ghosts["INKY"].y+offset[0]-15,cellsize+30,cellsize+30);
+        ctx.drawImage(ghost_sprite,(ghosts["CLYDE"].dir==0?64:ghosts["CLYDE"].dir==1?0:ghosts["CLYDE"].dir==2?96:32)+(tick%10<5?16:0),48,16,16,ghosts["CLYDE"].x+offset[1]-15,ghosts["CLYDE"].y+offset[0]-15,cellsize+30,cellsize+30);
     }    
 }
 
 //main loop
 async function update() {
     if(begun && !pacman_dead)render(); else{ghost_sound.pause();TimeNow = Date.now();}
+    if(pacman_dead && (tick%10==0)){
+        pacman.dir = 1;
+        if(pacman.anim<=2){pacman.anim=2;tick=(Math.round(tick/5)*5);}
+        pacman.anim++;
+        if(pacman.anim>=14)restart();
+    }
     draw();
     requestAnimationFrame(update);
+    tick++;
 }
 
 //setup

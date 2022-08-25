@@ -20,6 +20,7 @@ const pac_sprite    = document.getElementById("pacman"),
       intro         = document.getElementById("intro"),
       munch_1       = document.getElementById("munch_1"),
       munch_2       = document.getElementById("munch_2"),
+      death_sound       = document.getElementById("death_sound"),
       ghost_sound   = document.getElementById("ghost_sound");
 
 //constants
@@ -139,7 +140,7 @@ var pacman = {}
 var pacman_dead = false;
 var debug_mode = false;
 var health_points = 3;
-const max_health = 3;
+var max_health = 3;
 
 //pellets
 var pellets = [];
@@ -171,7 +172,13 @@ function collision2(a,b,c,d,e,f,g,h) {
 }
 
 //restart
-async function restart() {
+async function restart(from=true) {
+    tick=0;
+    TimeNow = Date.now();
+    if(health_points < 0){
+        history.go(0);
+        return;
+    }
     begun = false;
     pacman_dead = false;
     ghoststate = "scatter";
@@ -223,6 +230,7 @@ async function restart() {
             state: "trapped"
         },
     };
+    if(!from){begun=true;return;}
     intro.currentTime = 0;
     intro.play();
 }
@@ -249,7 +257,32 @@ addEventListener("keydown",e=>{
         case "S":
         case "T":
             if((keys["r"]||keys["R"])&&(keys["s"]||keys["S"])&&(keys["t"]||keys["T"])&&begun){
-                restart();            
+                restart(false);            
+            }
+            break;
+        case "h":
+        case "p":
+        case "=":
+        case "H":
+        case "P":
+        case "+":
+            if((keys["h"]||keys["H"])&&(keys["p"]||keys["P"])&&(keys["="]||keys["+"])){
+                health_points += 1;
+                max_health = health_points>3?health_points:3;
+            }
+            break; 
+        case "h":
+        case "p":
+        case "-":
+        case "H":
+        case "P":
+        case "_":
+            if((keys["h"]||keys["H"])&&(keys["p"]||keys["P"])&&(keys["-"]||keys["_"])){
+                health_points -= 1;
+                max_health = health_points>3?health_points:3;
+                if(health_points < 0){
+                    history.go(0);   
+                }
             }
             break;
         case "ArrowUp":
@@ -497,8 +530,12 @@ function pacmanBehavior() {
 }
 
 function pacmanDie(){
+    death_sound.pause();
+    death_sound.currentTime = 0;
+    death_sound.play();
     begun = false;
     pacman_dead = true;
+    death_sound.addEventListener("ended",()=>requestAnimationFrame(restart));
 }
 function timeBehavior(){
     switch (level) {
@@ -549,15 +586,18 @@ const ooo = 15;
 function draw() {
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.globalCompositeOperation = "source-in";
-    ctx.fillStyle = `hsla(${(tick/12+240)},100%,50%,0.8)`;
+    if(konamimode){
+        ctx.globalCompositeOperation = "source-in";
+        ctx.fillStyle = `hsla(${(tick/12+240)},100%,50%,0.8)`;
+    }
     ctx.drawImage(map_sprite,offset[1],-80+offset[0],cellsize*28,cellsize*36);
-    ctx.fillRect(0,0, canvas.width, canvas.height);
-    ctx.globalCompositeOperation = "source-over";
+    if(ctx.fillStyle != "#000000"){
+        ctx.fillRect(0,0, canvas.width, canvas.height);
+        ctx.globalCompositeOperation = "source-over";
+    }
     ctx.fillStyle = "#FFFFFF";
     ctx.fillText(score,10,50);
     if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
-    if(konamimode)ctx.fillText("KONAMI MODE ACTIVATED",130,50)
     drawImage(ctx,pac_sprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animheight)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animheight)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth+2,0,pacman.animwidth-1,pacman.animheight-1);
     for(i in pellets) {
         ctx.fillRect(pellets[i].x+offset[1],pellets[i].y+offset[0],pellets[i].w,pellets[i].h);
@@ -574,8 +614,8 @@ function draw() {
 //main loop
 async function update() {
     if(begun && !pacman_dead)render(); else{ghost_sound.pause();TimeNow = Date.now();}
-    if(pacman_dead && (tick%10==0)){
-        if(pacman.anim>=14)restart(); else {
+    if(pacman_dead && (tick%7==0)){
+        if(pacman.anim<14){
             pacman.dir = 1;
             if(pacman.anim<=2){pacman.anim=2;tick=(Math.round(tick/5)*5);}
             pacman.anim++;
@@ -602,5 +642,5 @@ var munch_b = false;
     await getKey("Enter");
     restart();
     update();
-    intro.addEventListener("ended",()=>{ghost_sound.play();begun=true;health_points--;if(health_points<0){alert("U DED");history.go(0);}});
+    intro.addEventListener("ended",()=>{ghost_sound.play();begun=true;health_points--;});
 })();

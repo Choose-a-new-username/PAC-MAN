@@ -137,6 +137,7 @@ function normAI(tx,ty,curdir,x,y) {
 //pacman
 var pacman = {}
 var pacman_dead = false;
+var debug_mode = false;
 var health_points = 3;
 const max_health = 3;
 
@@ -353,9 +354,8 @@ function ghostBehaivor() {
                         case "scatter":
                             ghosts["PINKY"].dir = normAI(cellsize*2,cellsize*1,ghosts["PINKY"].dir,ghosts["PINKY"].x,ghosts["PINKY"].y);
                             break;
-                        }
-                    break;
-        }
+                    }
+            }
         }
         moveghost("PINKY");
     //INKY
@@ -575,10 +575,11 @@ function draw() {
 async function update() {
     if(begun && !pacman_dead)render(); else{ghost_sound.pause();TimeNow = Date.now();}
     if(pacman_dead && (tick%10==0)){
-        pacman.dir = 1;
-        if(pacman.anim<=2){pacman.anim=2;tick=(Math.round(tick/5)*5);}
-        pacman.anim++;
-        if(pacman.anim>=14)restart();
+        if(pacman.anim>=14)restart(); else {
+            pacman.dir = 1;
+            if(pacman.anim<=2){pacman.anim=2;tick=(Math.round(tick/5)*5);}
+            pacman.anim++;
+        }
     }
     draw();
     requestAnimationFrame(update);

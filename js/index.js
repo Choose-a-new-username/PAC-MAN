@@ -494,10 +494,10 @@ function timeBehavior(){
                 case 66:
                     if(ghoststate==="chase")break;
                     ghoststate = "chase";
-                    ghosts["INKY"].dir=Math.abs(ghosts["INKY"].dir+2)%4;
-                    ghosts["BLINKY"].dir=Math.abs(ghosts["BLINKY"].dir+2)%4;
-                    ghosts["PINKY"].dir=Math.abs(ghosts["PINKY"].dir+2)%4;
-                    ghosts["CLYDE"].dir=Math.abs(ghosts["CLYDE"].dir+2)%4;
+                    ghosts["INKY"].dir=(ghosts["INKY"].dir+2)%4;
+                    ghosts["BLINKY"].dir=(ghosts["BLINKY"].dir+2)%4;
+                    ghosts["PINKY"].dir=(ghosts["PINKY"].dir+2)%4;
+                    ghosts["CLYDE"].dir=(ghosts["CLYDE"].dir+2)%4;
                     break;
                 case 27:
                     ghosts["INKY"].state = "norm";

@@ -22,8 +22,9 @@ This is a school project so dont expect high quality.
     * ~~Blue~~
     * ~~Orange~~
     * ~~AI changes over time~~
-* __Death/death screen__
-* Multiple lives
+* ~~Death/death screen~~
+* ~~Multiple lives~~
+* **REFACTOR THE <u>ENTIRE</u> THING WITH OOP**
 * Large pellets and ghost eating 
 * Levels
 * Cherries

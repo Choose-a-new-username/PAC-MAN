@@ -24,7 +24,7 @@ This is a school project so dont expect high quality.
     * ~~AI changes over time~~
 * ~~Death/death screen~~
 * ~~Multiple lives~~
-* **REFACTOR THE <u>ENTIRE</u> THING WITH OOP**
+* **REFACTOR WITH OOP**
 * Large pellets and ghost eating 
 * Levels
 * Cherries

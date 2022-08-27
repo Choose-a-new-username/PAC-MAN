@@ -319,14 +319,10 @@ function moveghost(ghost){
     }
 }
 function ghostBehaivor() {
-    //BLINKY
-        ghosts["BLINKY"].ibehavior();
-    //PINKY
-        ghosts["PINKY"].ibehavior();
-    //INKY
-        ghosts["INKY"].ibehavior();
-    //CLYDE
-        ghosts["CLYDE"].ibehavior();
+    ghosts["BLINKY"].ibehavior();
+    ghosts["PINKY"].ibehavior();
+    ghosts["INKY"].ibehavior();
+    ghosts["CLYDE"].ibehavior();
     if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["PINKY"].x,ghosts["PINKY"].y,ghosts["PINKY"].w,ghosts["PINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["CLYDE"].x,ghosts["CLYDE"].y,ghosts["CLYDE"].w,ghosts["CLYDE"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
         pacmanDie();
 }

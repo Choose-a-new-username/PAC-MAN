@@ -1,28 +1,3 @@
-//canvas/ctx settings
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-ctx.font = "bold 30px pixel-face";
-ctx.imageSmoothingEnabled = false; //this is to fix the "blur" effect. 
-function drawImage(context, img, x, y, width, height,angle=0,dx=0,dy=0,dw=img.width,dh=img.height) {
-    context.save();
-    context.translate(x + width / 2, y + height / 2);
-    context.rotate(angle);
-    context.translate(- x - width / 2, - y - height / 2);
-    context.drawImage(img, dx, dy, dw, dh, x, y, width, height);
-    context.restore();
-}
-
-//assets/images
-const pac_sprite    = document.getElementById("pacman"),
-      ghost_sprite  = document.getElementById("ghosts"),
-      map_sprite    = document.getElementById("map"),
-      hp_sprite     = document.getElementById("health"),
-      intro         = document.getElementById("intro"),
-      munch_1       = document.getElementById("munch_1"),
-      munch_2       = document.getElementById("munch_2"),
-      death_sound       = document.getElementById("death_sound"),
-      ghost_sound   = document.getElementById("ghost_sound");
-
 //math
 const getMin = object => {
     if(Object.keys(object).length==1)
@@ -35,20 +10,7 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 var level = 1;
 
 //pacman
-var pacman = {
-    x: cellsize*13.5,
-    y: cellsize*23,
-    w: cellsize,
-    h: cellsize,
-    dir: 3,
-    //cellsize must be divisible by pacman.speed
-    speed: cellsize/8,
-    anim: 2,
-    animframes: 3,
-    animwidth: 16,
-    animheight: 16,
-    animspeed: 2,
-};
+var pacman = new pac_man();
 
 var pacman_dead = false;
 var debug_mode = false;
@@ -68,10 +30,10 @@ var ghoststate = "scatter";
 var pellets = [];
 var score = 0;
 const pellet = (x,y,w,h) => pellets.push({x,y,w,h});
-for(i in tilemap) {
-    for(j in tilemap[i]) {
-        if(tilemap[i][j] === 0) {
-            pellet(j*cellsize+(cellsize/2)-(pelletsize/2),i*cellsize+cellsize+(cellsize/2)-(pelletsize/2),pelletsize,pelletsize);       
+for(i in TILEMAP) {
+    for(j in TILEMAP[i]) {
+        if(TILEMAP[i][j] === 0) {
+            pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),PELLET_SIZE,PELLET_SIZE);       
         }
     }
 }
@@ -104,27 +66,14 @@ async function restart(from=true) {
     begun = false;
     pacman_dead = false;
     ghoststate = "scatter";
-    pacman = {
-        x: cellsize*13.5,
-        y: cellsize*23,
-        w: cellsize,
-        h: cellsize,
-        dir: 3,
-        //cellsize must be divisible by pacman.speed
-        speed: cellsize/8,
-        anim: 2,
-        animframes: 3,
-        animwidth: 16,
-        animheight: 16,
-        animspeed: 2,
-    }
+    pacman.reset();
     ghosts["BLINKY"].reset();
     ghosts["PINKY"].reset();
     ghosts["INKY"].reset();
     ghosts["CLYDE"].reset();
     if(!from){begun=true;return;}
-    intro.currentTime = 0;
-    intro.play();
+    MUS_INTRO.currentTime = 0;
+    MUS_INTRO.play();
 }
 
 
@@ -179,25 +128,25 @@ addEventListener("keydown",e=>{
             break;
         case "ArrowUp":
             queued = "up";
-            if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1)) {
+            if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(Math.round(pacman.x/CELL_SIZE))===1)) {
                 pacman.dir = 0;
             }
             break;
         case "ArrowRight":
             queued = "right";
-            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===3)) {
+            if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3)) {
                 pacman.dir = 1;
             }
             break;
         case "ArrowDown":
             queued = "down";
-            if(pacman.x === Math.floor(pacman.x / cellsize)*cellsize && !(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
+            if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1)) {
                 pacman.dir = 2;
             }
             break;
         case "ArrowLeft":
             queued = "left";
-            if(pacman.y === Math.floor(pacman.y / cellsize)*cellsize && !(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1))===1||tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===3) {
+            if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1))===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3) {
                 pacman.dir = 3;
             }
             break;
@@ -224,15 +173,15 @@ function ghostBehaivor() {
     ghosts["PINKY"].ibehavior();
     ghosts["INKY"].ibehavior();
     ghosts["CLYDE"].ibehavior();
-    if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+2,pacman.y+pacman.h+2,pacman.w-6,pacman.h-6)||collision2(ghosts["PINKY"].x,ghosts["PINKY"].y,ghosts["PINKY"].w,ghosts["PINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["CLYDE"].x,ghosts["CLYDE"].y,ghosts["CLYDE"].w,ghosts["CLYDE"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
+    if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+2,pacman.y+PACMAN_HEIGHT+2,PACMAN_WIDTH-6,PACMAN_HEIGHT-6)||collision2(ghosts["PINKY"].x,ghosts["PINKY"].y,ghosts["PINKY"].w,ghosts["PINKY"].h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||collision2(ghosts["CLYDE"].x,ghosts["CLYDE"].y,ghosts["CLYDE"].w,ghosts["CLYDE"].h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3))
         pacmanDie();
 }
 
 function pelletBehaivor() {
     for(let i = 0; i < pellets.length; i++) {
-        if(collision2(pellets[i].x+(pellets[i].w/2),pellets[i].y+(pellets[i].w/2),1,1,pacman.x-13,pacman.y+pacman.h-13,pacman.w+26,pacman.h+26)) {            
+        if(collision2(pellets[i].x+(pellets[i].w/2),pellets[i].y+(pellets[i].w/2),1,1,pacman.x-13,pacman.y+PACMAN_HEIGHT-13,PACMAN_WIDTH+26,PACMAN_HEIGHT+26)) {            
             score += 10;
-            if(munch_b){munch_1.currentTime = 0;munch_2.pause();munch_1.play();munch_b=false;}else{munch_2.currentTime = 0;munch_1.pause();munch_2.play();munch_b=true;}
+            if(munch_b){MUS_MUNCH_1.currentTime = 0;MUS_MUNCH_2.pause();MUS_MUNCH_1.play();munch_b=false;}else{MUS_MUNCH_2.currentTime = 0;MUS_MUNCH_1.pause();MUS_MUNCH_2.play();munch_b=true;}
             pellets.splice(i, 1);
         }
     }
@@ -241,26 +190,26 @@ function pelletBehaivor() {
 function queuedDo() {
     switch (queued) {
         case "up":
-            if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
-            if(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1){break;}    
+            if(pacman.x !== Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE){break;}
+            if(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(Math.round(pacman.x/CELL_SIZE))===1){break;}    
             pacman.dir = 0;
             queued = "";
             break;
         case "right":
-            if(pacman.y !== Math.floor(pacman.y / cellsize)*cellsize){break;}
-            if(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1){break;}
+            if(pacman.y !== Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE){break;}
+            if(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===1){break;}
             pacman.dir = 1;
             queued = "";
             break;
         case "down":
-            if(pacman.x !== Math.floor(pacman.x / cellsize)*cellsize){break;}
-            if(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1||tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===3){break;}
+            if(pacman.x !== Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE){break;}
+            if(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1||TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===3){break;}
             pacman.dir = 2;
             queued = "";
             break;
         case "left":
-            if(pacman.y !== Math.floor(pacman.y / cellsize)*cellsize){break;}
-            if(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1){break;}
+            if(pacman.y !== Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE){break;}
+            if(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1)===1){break;}
             pacman.dir = 3;
             queued = "";
             break;
@@ -269,50 +218,13 @@ function queuedDo() {
     }
 }
 
-function pacmanBehavior() {
-    switch (pacman.dir) {
-        case 0:
-            if (!(tilemap[Math.ceil(pacman.y/cellsize)-1].at(Math.round(pacman.x/cellsize))===1)) {
-                pacman.y-=pacman.speed;
-                if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.y+=pacman.speed;
-                if(!(tick%pacman.animspeed))pacman.anim++;
-            }
-            break;
-        case 1:
-            if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.floor(pacman.x/cellsize)+1)===1)) {
-                pacman.x+=pacman.speed;
-                if(pacman.x > (canvas.width-pacman.speed-offset[1]-(cellsize/2)))pacman.x = -(cellsize/2);
-                if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.x-=pacman.speed;
-                if(!(tick%pacman.animspeed))pacman.anim++;
-            }
-            break;
-        case 2:
-            if (!(tilemap[Math.floor(pacman.y/cellsize)+1].at(Math.round(pacman.x/cellsize))===1)) {
-                pacman.y+=pacman.speed;
-                if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.y-=pacman.speed;
-                if(!(tick%pacman.animspeed))pacman.anim++;
-            }
-            break;    
-        case 3:
-            if (!(tilemap[Math.round(pacman.y/cellsize)].at(Math.ceil(pacman.x/cellsize)-1)===1)) {
-                pacman.x-=pacman.speed;
-                if(tilemap[Math.round(pacman.y/cellsize)][Math.round(pacman.x/cellsize)]===1)pacman.x+=pacman.speed;
-                if(pacman.x < -cellsize)pacman.x = canvas.width - pacman.speed - offset[1] - (cellsize/2);
-                if(!(tick%pacman.animspeed))pacman.anim++;
-            }
-            break;
-    }
-    queuedDo();
-    if(pacman.anim === pacman.animframes)pacman.anim = 0;
-}
-
 function pacmanDie(){
-    death_sound.pause();
-    death_sound.currentTime = 0;
-    death_sound.play();
+    MUS_DEATH.pause();
+    MUS_DEATH.currentTime = 0;
+    MUS_DEATH.play();
     begun = false;
     pacman_dead = true;
-    death_sound.addEventListener("ended",()=>requestAnimationFrame(restart));
+    MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(restart));
 }
 function timeBehavior(){
     switch (level) {
@@ -351,15 +263,14 @@ function timeBehavior(){
 
 //run the behavior functions
 async function render() {
-    if(ghost_sound.currentTime >= ghost_sound.duration-0.55){ghost_sound.currentTime = 0;ghost_sound.play();}
-    pacmanBehavior();
+    if(MUS_GHOST_NORM.currentTime >= MUS_GHOST_NORM.duration-0.55){MUS_GHOST_NORM.currentTime = 0;MUS_GHOST_NORM.play();}
+    pacman.move();
     pelletBehaivor();
     timeBehavior();
     ghostBehaivor();
 }
 
 //draw loop
-const ooo = 15;
 function draw() {
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -367,7 +278,7 @@ function draw() {
         ctx.globalCompositeOperation = "source-in";
         ctx.fillStyle = `hsla(${(tick/12+240)},100%,50%,0.8)`;
     }
-    ctx.drawImage(map_sprite,offset[1],-80+offset[0],cellsize*28,cellsize*36);
+    ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
     if(ctx.fillStyle != "#000000"){
         ctx.fillRect(0,0, canvas.width, canvas.height);
         ctx.globalCompositeOperation = "source-over";
@@ -375,11 +286,11 @@ function draw() {
     ctx.fillStyle = "#FFFFFF";
     ctx.fillText(score,10,50);
     if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
-    drawImage(ctx,pac_sprite,offset[1]+pacman.x+(cellsize/pacman.animwidth)-ooo,offset[0]+cellsize+pacman.y+(cellsize/pacman.animheight)-ooo,pacman.w-((cellsize/pacman.animwidth)*2)+ooo*2,pacman.h-((cellsize/pacman.animheight)*2)+ooo*2,((pacman.dir - 1) * 90)*(Math.PI/180),pacman.anim*pacman.animwidth+2,0,pacman.animwidth-1,pacman.animheight-1);
+    pacman.draw();
     for(i in pellets) {
-        ctx.fillRect(pellets[i].x+offset[1],pellets[i].y+offset[0],pellets[i].w,pellets[i].h);
+        ctx.fillRect(pellets[i].x+OFFSET[1],pellets[i].y+OFFSET[0],pellets[i].w,pellets[i].h);
     }
-    for(let i = 0; i < max_health; i++)if(max_health-i<=health_points)ctx.drawImage(hp_sprite,(i*60)+30,1330,60,60);
+    for(let i = 0; i < max_health; i++)if(max_health-i<=health_points)ctx.drawImage(HP_SPRITE,(i*60)+30,1330,60,60);
     if(!pacman_dead){
         ghosts["BLINKY"].draw();
         ghosts["PINKY"].draw();
@@ -390,7 +301,7 @@ function draw() {
 
 //main loop
 async function update() {
-    if(begun && !pacman_dead)render(); else{ghost_sound.pause();TimeNow = Date.now();}
+    if(begun && !pacman_dead)render(); else{MUS_GHOST_NORM.pause();TimeNow = Date.now();}
     if(pacman_dead && (tick%7==0)){
         if(pacman.anim<14){
             pacman.dir = 1;
@@ -419,5 +330,5 @@ var munch_b = false;
     await getKey("Enter");
     restart();
     update();
-    intro.addEventListener("ended",()=>{ghost_sound.play();begun=true;health_points--;});
+    MUS_INTRO.addEventListener("ended",()=>{MUS_GHOST_NORM.play();begun=true;health_points--;});
 })();

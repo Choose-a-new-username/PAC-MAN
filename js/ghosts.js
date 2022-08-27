@@ -3,11 +3,11 @@ class ghost {
         //if(this.state=="trapped")return;
         this.x+=AI.ddS[this.dir][3]*this.speed;
         this.y+=AI.ddS[this.dir][4]*this.speed;
-        if(this.x >= (canvas.width-this.speed-offset[1]-(cellsize/2)))this.x = -(cellsize/2);
-        if(this.x <= -cellsize)this.x = canvas.width - this.speed - offset[1] - (cellsize/2);
+        if(this.x >= (canvas.width-this.speed-OFFSET[1]-(CELL_SIZE/2)))this.x = -(CELL_SIZE/2);
+        if(this.x <= -CELL_SIZE)this.x = canvas.width - this.speed - OFFSET[1] - (CELL_SIZE/2);
     }
     behavior(x,y,x2,y2,t=false) {
-        if(Math.round(this.x/cellsize)*cellsize===this.x && Math.round(this.y/cellsize)*cellsize===this.y){
+        if(Math.round(this.x/CELL_SIZE)*CELL_SIZE===this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE===this.y){
             switch (this.state){
                 case "norm":
                     switch(ghoststate){
@@ -27,32 +27,32 @@ class ghost {
         this.move();
     }
     constructor() {
-        this.speed = pacman.speed;
+        this.speed = PACMAN_SPEED;
     }
 }
 
 class BLINKY extends ghost {
     ibehavior() {
-        this.behavior(pacman.x,pacman.y+pacman.h,cellsize*27,cellsize);
+        this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT,CELL_SIZE*27,CELL_SIZE);
     }
     draw() {
-        ctx.drawImage(
-            ghost_sprite,
+        ctx.drawImag(
+            GHOST_SPRITE,
+            this.x+OFFSET[1]-ooo,
+            this.y+OFFSET[0]-ooo,
+            CELL_SIZE+ooo*2,
+            CELL_SIZE+ooo*2,
             (AI.ddS[this.dir][0])+((tick%10<5)*16),
             0,
             16,
-            16,
-            this.x+offset[1]-15,
-            this.y+offset[0]-15,
-            cellsize+30,
-            cellsize+30
+            16
         );
     }
     reset() {
-        this.x = cellsize*13.5;
-        this.y = cellsize*12;
-        this.w = cellsize;
-        this.h = cellsize;
+        this.x = CELL_SIZE*13.5;
+        this.y = CELL_SIZE*12;
+        this.w = CELL_SIZE;
+        this.h = CELL_SIZE;
         this.dir = 1;
         this.state = "norm";
     }
@@ -64,26 +64,26 @@ class BLINKY extends ghost {
 
 class PINKY extends ghost {
     ibehavior() {
-        this.behavior(pacman.x+(AI.ddS[pacman.dir][1]*4),pacman.y+pacman.h+(AI.ddS[pacman.dir][2]*4),cellsize*2,cellsize);
+        this.behavior(pacman.x+(AI.ddS[pacman.dir][1]*4),pacman.y+PACMAN_HEIGHT+(AI.ddS[pacman.dir][2]*4),CELL_SIZE*2,CELL_SIZE);
     }
     draw() {
-        ctx.drawImage(
-            ghost_sprite,
+        ctx.drawImag(
+            GHOST_SPRITE,
+            this.x+OFFSET[1]-15,
+            this.y+OFFSET[0]-15,
+            CELL_SIZE+30,
+            CELL_SIZE+30,
             (AI.ddS[this.dir][0])+((tick%10<5)*16),
             16,
             16,
-            16,
-            this.x+offset[1]-15,
-            this.y+offset[0]-15,
-            cellsize+30,
-            cellsize+30
+            16
         );
     }
     reset() {
-        this.x = cellsize*15;
-        this.y = cellsize*15;
-        this.w = cellsize;
-        this.h = cellsize;
+        this.x = CELL_SIZE*15;
+        this.y = CELL_SIZE*15;
+        this.w = CELL_SIZE;
+        this.h = CELL_SIZE;
         this.dir = 3;
         this.state = "trapped";
     }
@@ -96,29 +96,29 @@ class PINKY extends ghost {
 class INKY extends ghost {
     ibehavior() {
         var xx = pacman.x+AI.ddS[pacman.dir][1]*2
-        var yy = pacman.y+pacman.h+AI.ddS[pacman.dir][2]*2
+        var yy = pacman.y+PACMAN_HEIGHT+AI.ddS[pacman.dir][2]*2
         var INKYTARGETX = Math.abs(ghosts["BLINKY"].x-xx)>xx?xx-Math.abs(ghosts["BLINKY"].x-xx):xx+Math.abs(ghosts["BLINKY"].x-xx);
         var INKYTARGETY = Math.abs(ghosts["BLINKY"].y-yy)>yy?yy-Math.abs(ghosts["BLINKY"].y-yy):yy+Math.abs(ghosts["BLINKY"].y-yy);
-        this.behavior(INKYTARGETX,INKYTARGETY,cellsize*27,cellsize*30);
+        this.behavior(INKYTARGETX,INKYTARGETY,CELL_SIZE*27,CELL_SIZE*30);
     }
     draw() {
-        ctx.drawImage(
-            ghost_sprite,
+        ctx.drawImag(
+            GHOST_SPRITE,
+            this.x+OFFSET[1]-15,
+            this.y+OFFSET[0]-15,
+            CELL_SIZE+30,
+            CELL_SIZE+30,
             (AI.ddS[this.dir][0])+((tick%10<5)*16),
             32,
             16,
-            16,
-            this.x+offset[1]-15,
-            this.y+offset[0]-15,
-            cellsize+30,
-            cellsize+30
+            16
         );
     }
     reset() {
-        this.x = cellsize*13.5;
-        this.y = cellsize*15;
-        this.w = cellsize;
-        this.h = cellsize;
+        this.x = CELL_SIZE*13.5;
+        this.y = CELL_SIZE*15;
+        this.w = CELL_SIZE;
+        this.h = CELL_SIZE;
         this.dir = 3;
         this.state = "trapped";
     }
@@ -130,26 +130,26 @@ class INKY extends ghost {
 
 class CLYDE extends ghost {
     ibehavior() {
-        this.behavior(pacman.x,pacman.y+pacman.h,cellsize*2,cellsize,(this.x<pacman.x+(cellsize*8)&&this.x>pacman.x-(cellsize*8)&&this.y<pacman.y+(cellsize*8)&&this.y>pacman.y-(cellsize*8)));
+        this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT,CELL_SIZE*2,CELL_SIZE,(this.x<pacman.x+(CELL_SIZE*8)&&this.x>pacman.x-(CELL_SIZE*8)&&this.y<pacman.y+(CELL_SIZE*8)&&this.y>pacman.y-(CELL_SIZE*8)));
     }
     draw() {
-        ctx.drawImage(
-            ghost_sprite,
+        ctx.drawImag(
+            GHOST_SPRITE,
+            this.x+OFFSET[1]-15,
+            this.y+OFFSET[0]-15,
+            CELL_SIZE+30,
+            CELL_SIZE+30, 
             (AI.ddS[this.dir][0])+((tick%10<5)*16),
             48,
             16,
-            16,
-            this.x+offset[1]-15,
-            this.y+offset[0]-15,
-            cellsize+30,
-            cellsize+30
+            16
         );
     }
     reset() {
-        this.x = cellsize*12;
-        this.y = cellsize*15;
-        this.w = cellsize;
-        this.h = cellsize;
+        this.x = CELL_SIZE*12;
+        this.y = CELL_SIZE*15;
+        this.w = CELL_SIZE;
+        this.h = CELL_SIZE;
         this.dir = 3;
         this.state = "trapped";
     }

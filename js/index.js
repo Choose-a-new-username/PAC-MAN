@@ -35,7 +35,12 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 var level = 1;
 
 //ghosts
-var ghosts = {};
+var ghosts = {
+    BLINKY: new BLINKY(),
+    PINKY: new PINKY(),
+    INKY: new INKY(),
+    CLYDE: new CLYDE(),
+};
 var ghoststate = "scatter";
 
 //pacman
@@ -99,12 +104,10 @@ async function restart(from=true) {
         animheight: 16,
         animspeed: 2,
     }
-    ghosts = {
-        BLINKY: new BLINKY(),
-        PINKY: new PINKY(),
-        INKY: new INKY(),
-        CLYDE: new CLYDE(),
-    };
+    ghosts["BLINKY"].reset();
+    ghosts["PINKY"].reset();
+    ghosts["INKY"].reset();
+    ghosts["CLYDE"].reset();
     if(!from){begun=true;return;}
     intro.currentTime = 0;
     intro.play();

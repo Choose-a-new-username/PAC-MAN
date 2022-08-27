@@ -34,6 +34,27 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 //levels
 var level = 1;
 
+//pacman
+var pacman = {
+    x: cellsize*13.5,
+    y: cellsize*23,
+    w: cellsize,
+    h: cellsize,
+    dir: 3,
+    //cellsize must be divisible by pacman.speed
+    speed: cellsize/8,
+    anim: 2,
+    animframes: 3,
+    animwidth: 16,
+    animheight: 16,
+    animspeed: 2,
+};
+
+var pacman_dead = false;
+var debug_mode = false;
+var health_points = 3;
+var max_health = 3;
+
 //ghosts
 var ghosts = {
     BLINKY: new BLINKY(),
@@ -42,13 +63,6 @@ var ghosts = {
     CLYDE: new CLYDE(),
 };
 var ghoststate = "scatter";
-
-//pacman
-var pacman = {}
-var pacman_dead = false;
-var debug_mode = false;
-var health_points = 3;
-var max_health = 3;
 
 //pellets
 var pellets = [];

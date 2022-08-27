@@ -92,7 +92,7 @@ function randAI(curdir,x,y){
     let i = Math.round(Math.random()*dirs.length-1);
     return dirs[i] || dirs[0];
 }
-function normAI(tx,ty,curdir,x,y) {
+function normAI(tx,ty,curdir,x,y,state) {
     let dirs = [0,1,2,3];
     let dists = {0:0,1:0,2:0,3:0};
     if((x === cellsize*12 || x === cellsize*15)&&(y === cellsize*12)){
@@ -101,7 +101,7 @@ function normAI(tx,ty,curdir,x,y) {
     }
     delete dists[(curdir+2)%4];    
     dirs.splice(dirs.indexOf((curdir+2)%4),1);
-    if(dirs.includes(0))if((tilemap[y/cellsize-2].at(x/cellsize)===1)&&!((y/cellsize==15||y/cellsize==14)&&x/cellsize>=14&&x/cellsize<=15)){delete dists["0"];dirs.splice(dirs.indexOf(0),1);}
+    if(dirs.includes(0))if((tilemap[y/cellsize-2].at(x/cellsize)===1)&&!((y/cellsize==15||y/cellsize==14)&&x/cellsize>=14&&x/cellsize<=15&&(state!="trapped"))){delete dists["0"];dirs.splice(dirs.indexOf(0),1);}
     if(dirs.includes(2))if((tilemap[y/cellsize].at(x/cellsize)===1)){delete dists["2"];dirs.splice(dirs.indexOf(2),1);}
     if(dirs.includes(3))if((tilemap[y/cellsize-1].at(x/cellsize-1)===1)){delete dists["3"];dirs.splice(dirs.indexOf(3),1);}
     if(dirs.includes(1))if((tilemap[y/cellsize-1].at(x/cellsize+1)===1)){delete dists["1"];dirs.splice(dirs.indexOf(1),1);}
@@ -131,6 +131,7 @@ function normAI(tx,ty,curdir,x,y) {
     }else if(min.includes("1")){
         return 1;
     }else{
+        return (curdir+2)%4
     }
 }
 
@@ -198,22 +199,8 @@ async function restart(from=true) {
     ghosts = {
         BLINKY: new BLINKY(),
         PINKY: new PINKY(),
-        INKY: {
-            x: cellsize*13.5,
-            y: cellsize*15,
-            w: cellsize,
-            h: cellsize,
-            dir: 3,
-            state: "trapped"
-        },
-        CLYDE: {
-            x: cellsize*12,
-            y: cellsize*15,
-            w: cellsize,
-            h: cellsize,
-            dir: 3,
-            state: "trapped"
-        },
+        INKY: new INKY(),
+        CLYDE: new CLYDE(),
     };
     if(!from){begun=true;return;}
     intro.currentTime = 0;
@@ -337,61 +324,9 @@ function ghostBehaivor() {
     //PINKY
         ghosts["PINKY"].ibehavior();
     //INKY
-        if(Math.round(ghosts["INKY"].x/cellsize)*cellsize===ghosts["INKY"].x && Math.round(ghosts["INKY"].y/cellsize)*cellsize===ghosts["INKY"].y){
-            switch (ghosts["INKY"].state){ 
-                case "norm":
-                    switch(ghoststate){
-                        case "chase":
-                            let xx = pacman.x;
-                            let yy = pacman.y+pacman.h;
-                            switch(pacman.dir) {
-                                case 0:
-                                    xx = clamp(pacman.x-cellsize*2,0,boardsize[1]*cellsize);
-                                    yy = clamp(pacman.y+pacman.h-cellsize*2,0,boardsize[1]*cellsize);
-                                    break;
-                                case 1:
-                                    xx = clamp(pacman.x+cellsize*2,0,boardsize[1]*cellsize);
-                                    break;
-                                case 2:
-                                    yy = clamp(pacman.y+pacman.h+cellsize*2,0,boardsize[0]*cellsize);
-                                    break;
-                                case 3:
-                                    xx = clamp(pacman.x-cellsize*2,0,boardsize[1]*cellsize);
-                                    break;
-                            }
-                            //for simplifying the complicated algorithm
-                            var INKYTARGETX = clamp(clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[1]*cellsize)>xx?xx-clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[0]*cellsize):xx+clamp(Math.abs(ghosts["BLINKY"].x-xx),0,boardsize[0]*cellsize),0,boardsize[0]*cellsize);
-                            var INKYTARGETY = clamp(clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[0]*cellsize)>yy?yy-clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[1]*cellsize):yy+clamp(Math.abs(ghosts["BLINKY"].y-yy),0,boardsize[1]*cellsize),0,boardsize[1]*cellsize);
-                            ghosts["INKY"].dir = normAI(INKYTARGETX,INKYTARGETY,ghosts["INKY"].dir,clamp(ghosts["INKY"].x,0,boardsize[0]*cellsize),clamp(ghosts["INKY"].y,0,boardsize[1]*cellsize));
-                            break;
-                        case "scatter":
-                            ghosts["INKY"].dir = normAI(cellsize*27,cellsize*30,ghosts["INKY"].dir,ghosts["INKY"].x,ghosts["INKY"].y);
-                            break;
-                    }
-                    break;
-            }
-        }
-        moveghost("INKY");
+        ghosts["INKY"].ibehavior();
     //CLYDE
-        if(Math.round(ghosts["CLYDE"].x/cellsize)*cellsize===ghosts["CLYDE"].x && Math.round(ghosts["CLYDE"].y/cellsize)*cellsize===ghosts["CLYDE"].y){
-            switch(ghosts["CLYDE"].state) {
-                case "norm":
-                    switch(ghoststate){
-                        case "chase":
-                            if(ghosts["CLYDE"].x < pacman.x + (cellsize*8) && ghosts["CLYDE"].x > pacman.x - (cellsize*8) && ghosts["CLYDE"].y < pacman.y + (cellsize*8) && ghosts["CLYDE"].y > pacman.y - (cellsize*8)){
-                                ghosts["CLYDE"].dir = randAI(ghosts["CLYDE"].dir,ghosts["CLYDE"].x,ghosts["CLYDE"].y);
-                            }else{
-                                ghosts["CLYDE"].dir = normAI(pacman.x,pacman.y+pacman.h,ghosts["CLYDE"].dir,ghosts["CLYDE"].x,ghosts["CLYDE"].y);
-                            }
-                            break;
-                        case "scatter":
-                            ghosts["CLYDE"].dir = normAI(cellsize*2,cellsize*30,ghosts["CLYDE"].dir,ghosts["CLYDE"].x,ghosts["CLYDE"].y);
-                            break;
-                    }
-                    break;
-            }
-        }
-        moveghost("CLYDE");
+        ghosts["CLYDE"].ibehavior();
     if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["PINKY"].x,ghosts["PINKY"].y,ghosts["PINKY"].w,ghosts["PINKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3)||collision2(ghosts["CLYDE"].x,ghosts["CLYDE"].y,ghosts["CLYDE"].w,ghosts["CLYDE"].h,pacman.x+1,pacman.y+pacman.h+1,pacman.w-3,pacman.h-3))
         pacmanDie();
 }
@@ -551,8 +486,8 @@ function draw() {
     if(!pacman_dead){
         ghosts["BLINKY"].draw();
         ghosts["PINKY"].draw();
-        ctx.drawImage(ghost_sprite,(ghosts["INKY"].dir==0?64:ghosts["INKY"].dir==1?0:ghosts["INKY"].dir==2?96:32)+(tick%10<5?16:0),32,16,16,ghosts["INKY"].x+offset[1]-15,ghosts["INKY"].y+offset[0]-15,cellsize+30,cellsize+30);
-        ctx.drawImage(ghost_sprite,(ghosts["CLYDE"].dir==0?64:ghosts["CLYDE"].dir==1?0:ghosts["CLYDE"].dir==2?96:32)+(tick%10<5?16:0),48,16,16,ghosts["CLYDE"].x+offset[1]-15,ghosts["CLYDE"].y+offset[0]-15,cellsize+30,cellsize+30);
+        ghosts["INKY"].draw();
+        ghosts["CLYDE"].draw();
     }    
 }
 
@@ -582,7 +517,7 @@ requestAnimationFrame(()=>
 //when the round begins, is set to true
 var begun = false;
 //which munch sound to play
-var munch_b = false;-
+var munch_b = false;
 (async function(){
     await getKey("Enter");
     restart();

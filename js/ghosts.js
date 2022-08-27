@@ -3,8 +3,8 @@ class ghost {
         //if(this.state=="trapped")return;
         this.x+=AI.ddS[this.dir][3]*this.speed;
         this.y+=AI.ddS[this.dir][4]*this.speed;
-        if(this.x > (canvas.width-this.speed-offset[1]-(cellsize/2)))this.x = -(cellsize/2);
-        if(this.x < -cellsize)this.x = canvas.width - this.speed - offset[1] - (cellsize/2);
+        if(this.x >= (canvas.width-this.speed-offset[1]-(cellsize/2)))this.x = -(cellsize/2);
+        if(this.x <= -cellsize)this.x = canvas.width - this.speed - offset[1] - (cellsize/2);
     }
     behavior(x,y,x2,y2,t=false) {
         if(Math.round(this.x/cellsize)*cellsize===this.x && Math.round(this.y/cellsize)*cellsize===this.y){

@@ -7,13 +7,11 @@ const AI = {
     ],
     random: function (curdir,x,y) {
         let dirs = [0,1,2,3];
-        if((x === cellsize*12 || x === cellsize*15)&&(y === cellsize*12)){
-            if(dirs.includes(0))dirs.splice(dirs.indexOf(0),1);
-        }
+        if((x === cellsize*12 || x === cellsize*15)&&(y === cellsize*12))
+            if(dirs.includes(0))dirs.splice(dirs.indexOf(0),1);        
         if(dirs.includes((curdir+2)%4))dirs.splice(dirs.indexOf((curdir+2)%4),1);
         for(let i = 0; i <= 3; i++)
-            if(dirs.includes(i))if((tilemap[(y/cellsize-1)+this.ddS[i][4]][x/cellsize+this.ddS[i][3]]===1)){dirs.splice(dirs.indexOf(i),1);console.log(i)}
-        console.log(dirs);
+            if(dirs.includes(i))if((tilemap[(y/cellsize-1)+this.ddS[i][4]][x/cellsize+this.ddS[i][3]]===1))dirs.splice(dirs.indexOf(i),1);
         return dirs[Math.round(Math.random()*dirs.length)]||dirs[0];
     },
 
@@ -26,11 +24,13 @@ const AI = {
         }
         delete dists[(curdir+2)%4];    
         dirs.splice(dirs.indexOf((curdir+2)%4),1); 
-        for(let i = 0; i <= 3; i++)
-            if(dirs.includes(i))if((tilemap[(y/cellsize-1)+this.ddS[i][4]][x/cellsize+this.ddS[i][3]]===1)){delete dists[String(i)];dirs.splice(dirs.indexOf(i),1);console.log(i)}
-        for(i in dirs) {
-            dists[String(i)]=Math.abs(x+this.ddS[i][3]*cellsize-tx)+Math.abs(y+this.ddS[i][4]*cellsize-ty);
+        for(let i = 0; i <= 3; i++){
+            if((state==="norm")&&(i===0)&&([13,14].includes(x/cellsize))&&([14,15].includes(y/cellsize)))
+                continue;
+            if(dirs.includes(i))if((tilemap[(y/cellsize-1)+this.ddS[i][4]][x/cellsize+this.ddS[i][3]]===1)){delete dists[String(i)];dirs.splice(dirs.indexOf(i),1);(i)}
         }
+        for(i in dirs) 
+            dists[String(dirs[i])]=Math.abs(x+(this.ddS[dirs[i]][3])*cellsize-tx)+Math.abs(y+this.ddS[dirs[i]][4]*cellsize-ty);
         let min = getMin(dists);
         if(min.includes("0"))
             return 0;

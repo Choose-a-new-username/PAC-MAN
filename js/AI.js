@@ -32,7 +32,7 @@ const AI = {
         }
         for(i in dirs) 
             dists[String(dirs[i])]=Math.abs(x+(this.ddS[dirs[i]][3])*CELL_SIZE-tx)+Math.abs(y+this.ddS[dirs[i]][4]*CELL_SIZE-ty);
-        let min = getMin(dists);
+        let min = Math.getMin(dists);
         if(min.includes("0"))
             return 0;
         else if(min.includes("3"))
@@ -43,5 +43,5 @@ const AI = {
            return 1;
         else
            return (curdir+2)%4;
-    }
+    },
 }

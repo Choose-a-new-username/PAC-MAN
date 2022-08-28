@@ -27,5 +27,5 @@ This is a school project so dont expect high quality.
 * **REFACTOR WITH OOP**
 * Large pellets and ghost eating 
 * Levels
-* Cherries
+* Items spawns/cherries
 * High-scores/scoreboard

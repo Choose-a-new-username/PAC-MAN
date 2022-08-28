@@ -6,13 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PAC-MAN</title>
     <link rel="stylesheet" href="style.css">
-    <script defer src="js/assets.js">  </script>
-    <script defer src="js/tilemap.js">  </script>
+    <!-- AI -->
+    <script defer src="js/assets.js"></script>
+    <script defer src="js/tilemap.js"></script>
     <script defer src="js/constants.js"></script>
-    <script defer src="js/AI.js">       </script>
-    <script defer src="js/pacman.js">   </script>
-    <script defer src="js/ghosts.js">   </script>
-    <script defer src="js/index.js">    </script>
+    <script defer src="js/pacman.js"></script>
+    <script defer src="js/AI.js"></script>
+    <script defer src="js/alltheghostsexceptforclyde.js"></script>
+    <script defer src="js/justclyde.js"></script>
+    <script defer src="js/index.js"></script>
+    <script defer src="js/math.js"></script>
+    <script defer src="js/time.js"></script>
 </head>
 <body>
     <!-- assets -->
@@ -37,7 +41,10 @@
             <source src="assets/pacman_death.wav" type="audio/wav" />
         </audio>
     </div>
-    <div style="font-family: pixel-face;"> </div>
-    <div class="canvascontainer"><canvas id="canvas" width="1160" height="1400"></canvas></div>
+    <div class="canvascontainer">
+        <canvas id="canvas" width="1160" height="1400">
+            <!-- ALL HAIL THE DARK LORD OF THE LIMITLESS VOID -->
+        </canvas>
+    </div>
 </body>
 </html>

@@ -1,48 +1,14 @@
-//math
-const getMin = object => {
-    if(Object.keys(object).length==1)
-        return Object.keys(object)[0];
-    return Object.keys(object).filter(x => {return object[x] == Math.min.apply(null,Object.values(object));});
-};
-const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-
-//levels
 var level = 1;
-
-//pacman
-var pacman = new pac_man();
-
-var pacman_dead = false;
 var debug_mode = false;
-var health_points = 3;
-var max_health = 3;
-
-//ghosts
-var ghosts = {
-    BLINKY: new BLINKY(),
-    PINKY: new PINKY(),
-    INKY: new INKY(),
-    CLYDE: new CLYDE(),
-};
-var ghoststate = "scatter";
 
 //pellets
 var pellets = [];
 var score = 0;
 const pellet = (x,y,w,h) => pellets.push({x,y,w,h});
-for(i in TILEMAP) {
-    for(j in TILEMAP[i]) {
-        if(TILEMAP[i][j] === 0) {
+for(i in TILEMAP) 
+    for(j in TILEMAP[i]) 
+        if(TILEMAP[i][j] === 0) 
             pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),PELLET_SIZE,PELLET_SIZE);       
-        }
-    }
-}
-
-//time/time functions
-var tick = 0;
-const wait = secs => {return new Promise(resolve => setTimeout(resolve,secs));}
-const AnimationFrame = () => {return new Promise(resolve => requestAnimationFrame(resolve,secs));}
-var TimeNow = Date.now();
 
 //collision functions
 function corner(a,b,c,d,e,f) {
@@ -58,8 +24,8 @@ function collision2(a,b,c,d,e,f,g,h) {
 //restart
 async function restart(from=true) {
     tick=0;
-    TimeNow = Date.now();
-    if(health_points < 0){
+    time.now = Date.now();
+    if(pacman.hp <= 0){
         history.go(0);
         return;
     }
@@ -67,10 +33,10 @@ async function restart(from=true) {
     pacman_dead = false;
     ghoststate = "scatter";
     pacman.reset();
-    ghosts["BLINKY"].reset();
-    ghosts["PINKY"].reset();
-    ghosts["INKY"].reset();
-    ghosts["CLYDE"].reset();
+    BLINKY_I.reset();
+    PINKY_I.reset();
+    INKY_I.reset();
+    CLYDE_I.reset();
     if(!from){begun=true;return;}
     MUS_INTRO.currentTime = 0;
     MUS_INTRO.play();
@@ -108,8 +74,8 @@ addEventListener("keydown",e=>{
         case "P":
         case "+":
             if((keys["h"]||keys["H"])&&(keys["p"]||keys["P"])&&(keys["="]||keys["+"])){
-                health_points += 1;
-                max_health = health_points>3?health_points:3;
+                pacman.hp += 1;
+                pacman.max_hp = pacman.hp>3?pacman.hp:3;
             }
             break; 
         case "h":
@@ -119,12 +85,21 @@ addEventListener("keydown",e=>{
         case "P":
         case "_":
             if((keys["h"]||keys["H"])&&(keys["p"]||keys["P"])&&(keys["-"]||keys["_"])){
-                health_points -= 1;
-                max_health = health_points>3?health_points:3;
-                if(health_points < 0){
+                pacman.hp -= 1;
+                pacman.max_hp = pacman.hp>3?pacman.hp:3;
+                if(pacman.hp < 0){
                     history.go(0);   
                 }
             }
+            break;
+        case "d":
+        case "b":
+        case "g":
+        case "D":
+        case "B":
+        case "G":
+            if((keys["d"]||keys["D"])&&(keys["b"]||keys["B"])&&(keys["g"]||keys["G"]))
+                debug_mode =! debug_mode
             break;
         case "ArrowUp":
             queued = "up";
@@ -169,11 +144,11 @@ function getKey(k) {
 }
 
 function ghostBehaivor() {
-    ghosts["BLINKY"].ibehavior();
-    ghosts["PINKY"].ibehavior();
-    ghosts["INKY"].ibehavior();
-    ghosts["CLYDE"].ibehavior();
-    if (collision2(ghosts["BLINKY"].x,ghosts["BLINKY"].y,ghosts["BLINKY"].w,ghosts["BLINKY"].h,pacman.x+2,pacman.y+PACMAN_HEIGHT+2,PACMAN_WIDTH-6,PACMAN_HEIGHT-6)||collision2(ghosts["PINKY"].x,ghosts["PINKY"].y,ghosts["PINKY"].w,ghosts["PINKY"].h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||collision2(ghosts["INKY"].x,ghosts["INKY"].y,ghosts["INKY"].w,ghosts["INKY"].h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||collision2(ghosts["CLYDE"].x,ghosts["CLYDE"].y,ghosts["CLYDE"].w,ghosts["CLYDE"].h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3))
+    BLINKY_I.ibehavior();
+    PINKY_I.ibehavior();
+    INKY_I.ibehavior();
+    CLYDE_I.ibehavior();
+    if (collision2(BLINKY_I.x,BLINKY_I.y,BLINKY_I.w,BLINKY_I.h,pacman.x+2,pacman.y+PACMAN_HEIGHT+2,PACMAN_WIDTH-6,PACMAN_HEIGHT-6)||collision2(PINKY_I.x,PINKY_I.y,PINKY_I.w,PINKY_I.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||collision2(INKY_I.x,INKY_I.y,INKY_I.w,INKY_I.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||collision2(CLYDE_I.x,CLYDE_I.y,CLYDE_I.w,CLYDE_I.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3))
         pacmanDie();
 }
 
@@ -226,47 +201,12 @@ function pacmanDie(){
     pacman_dead = true;
     MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(restart));
 }
-function timeBehavior(){
-    switch (level) {
-        case 1:
-            if(Math.floor((Date.now()-TimeNow)/1000)==34)ghosts["CLYDE"].state = "norm";
-            switch (Math.floor((Date.now()-TimeNow)/1000)) {
-                case 7:
-                    ghosts["PINKY"].state = "norm";
-                case 34:
-                case 41:
-                case 66:
-                    if(ghoststate==="chase")break;
-                    ghoststate = "chase";
-                    ghosts["INKY"].dir=(ghosts["INKY"].dir+2)%4;
-                    ghosts["BLINKY"].dir=(ghosts["BLINKY"].dir+2)%4;
-                    ghosts["PINKY"].dir=(ghosts["PINKY"].dir+2)%4;
-                    ghosts["CLYDE"].dir=(ghosts["CLYDE"].dir+2)%4;
-                    break;
-                case 27:
-                    ghosts["INKY"].state = "norm";
-                case 54:
-                case 61:
-                    if(ghoststate==="scatter")break;
-                    ghoststate = "scatter";
-                    ghosts["INKY"].dir=(ghosts["INKY"].dir+2)%4;
-                    ghosts["BLINKY"].dir=(ghosts["BLINKY"].dir+2)%4;
-                    ghosts["PINKY"].dir=(ghosts["PINKY"].dir+2)%4;
-                    ghosts["CLYDE"].dir=(ghosts["CLYDE"].dir+2)%4;
-                    break;
-                default:
-                    break;
-            }
-            break;
-    }
-}
 
-//run the behavior functions
 async function render() {
     if(MUS_GHOST_NORM.currentTime >= MUS_GHOST_NORM.duration-0.55){MUS_GHOST_NORM.currentTime = 0;MUS_GHOST_NORM.play();}
     pacman.move();
     pelletBehaivor();
-    timeBehavior();
+    BLINKY_I.flip();
     ghostBehaivor();
 }
 
@@ -274,34 +214,67 @@ async function render() {
 function draw() {
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    if(konamimode){
-        ctx.globalCompositeOperation = "source-in";
-        ctx.fillStyle = `hsla(${(tick/12+240)},100%,50%,0.8)`;
+    if(!debug_mode){
+        if(konamimode){
+            ctx.globalCompositeOperation = "source-in";
+            ctx.fillStyle = `hsla(${(tick/12+240)},100%,50%,0.8)`;
+        }
+        ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
+        if(ctx.fillStyle != "#000000"){
+            ctx.fillRect(0,0, canvas.width, canvas.height);
+            ctx.globalCompositeOperation = "source-over";
+        }
     }
-    ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
-    if(ctx.fillStyle != "#000000"){
-        ctx.fillRect(0,0, canvas.width, canvas.height);
-        ctx.globalCompositeOperation = "source-over";
-    }
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fillText(score,10,50);
-    if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
-    pacman.draw();
+    ctx.fillStyle = "#ffffff";
+    if(debug_mode)
+        ctx.font = "bold 30px serif";
+    else
+        ctx.font = "bold 30px pixel-face";
+    ctx.fillText(score,10,50);    
     for(i in pellets) {
         ctx.fillRect(pellets[i].x+OFFSET[1],pellets[i].y+OFFSET[0],pellets[i].w,pellets[i].h);
     }
-    for(let i = 0; i < max_health; i++)if(max_health-i<=health_points)ctx.drawImage(HP_SPRITE,(i*60)+30,1330,60,60);
+    ctx.fillStyle = "#2222bb"
+    if(debug_mode){
+        for(i in TILEMAP[0])
+            for(j in TILEMAP)
+                if(TILEMAP[j][i]==1)
+                    ctx.fillRect(i*CELL_SIZE+OFFSET[1],j*CELL_SIZE+CELL_SIZE+OFFSET[0],CELL_SIZE,CELL_SIZE);
+        ctx.fillStyle = "#ffff00"
+    }
+    if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
+    if(debug_mode)
+        ctx.fillRect(pacman.x+OFFSET[1],pacman.y+CELL_SIZE+OFFSET[0]+pacman_dead*(CELL_SIZE/2),CELL_SIZE,CELL_SIZE-pacman_dead*(CELL_SIZE/2));
+    else
+        pacman.draw();
+    if(debug_mode){
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(pacman.hp,30,1360,60,60)
+    }else
+        for(let i = 0; i < pacman.max_hp; i++)if(pacman.max_hp-i<=pacman.hp)
+            ctx.drawImage(HP_SPRITE,(i*60)+30,1330,60,60);
     if(!pacman_dead){
-        ghosts["BLINKY"].draw();
-        ghosts["PINKY"].draw();
-        ghosts["INKY"].draw();
-        ghosts["CLYDE"].draw();
-    }    
+        if(debug_mode){
+            ctx.fillStyle = "#bb2222"
+            ctx.fillRect(BLINKY_I.x+OFFSET[1],BLINKY_I.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
+            ctx.fillStyle = "#ffc0cb"
+            ctx.fillRect(PINKY_I.x+OFFSET[1],PINKY_I.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
+            ctx.fillStyle = "#add8e6"
+            ctx.fillRect(INKY_I.x+OFFSET[1],INKY_I.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
+            ctx.fillStyle = "#ffa500"
+            ctx.fillRect(CLYDE_I.x+OFFSET[1],CLYDE_I.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
+        } else {
+            BLINKY_I.draw();
+            PINKY_I.draw();
+            INKY_I.draw();
+            CLYDE_I.draw();
+        }    
+    }
 }
 
 //main loop
 async function update() {
-    if(begun && !pacman_dead)render(); else{MUS_GHOST_NORM.pause();TimeNow = Date.now();}
+    if(begun && !pacman_dead)render(); else{MUS_GHOST_NORM.pause();MUS_MUNCH_1.pause();MUS_MUNCH_2.pause();time.now = Date.now();}
     if(pacman_dead && (tick%7==0)){
         if(pacman.anim<14){
             pacman.dir = 1;
@@ -330,5 +303,5 @@ var munch_b = false;
     await getKey("Enter");
     restart();
     update();
-    MUS_INTRO.addEventListener("ended",()=>{MUS_GHOST_NORM.play();begun=true;health_points--;});
+    MUS_INTRO.addEventListener("ended",()=>{MUS_GHOST_NORM.play();begun=true;pacman.hp--;});
 })();

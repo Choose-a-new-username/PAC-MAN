@@ -20,20 +20,55 @@ class ghost {
                     }
                     break;
                 case "trapped":
-                    this.dir = AI.normal(11,15,this.dir,this.x,this.y,this.state);
+                    this.dir = AI.normal(15,15,this.dir,this.x,this.y,this.state);
                     break;
             }
         }
         this.move();
     }
+    flip(){ 
+        switch (level) {
+            case 1:
+                if(Math.floor((Date.now()-time.now)/1000)==34)CLYDE_I.state = "norm";
+                switch (Math.floor((Date.now()-time.now)/1000)) {
+                    case 7:
+                        PINKY_I.state = "norm";
+                    case 34:
+                    case 41:
+                    case 66:
+                        if(ghoststate==="chase")break;
+                        ghoststate = "chase";
+                        INKY_I.dir=(INKY_I.dir+2)%4;
+                        BLINKY_I.dir=(BLINKY_I.dir+2)%4;
+                        PINKY_I.dir=(PINKY_I.dir+2)%4;
+                        CLYDE_I.dir=(CLYDE_I.dir+2)%4;
+                        break;
+                    case 27:
+                        INKY_I.state = "norm";
+                    case 54:
+                    case 61:
+                        if(ghoststate==="scatter")break;
+                        ghoststate = "scatter";
+                        INKY_I.dir=(INKY_I.dir+2)%4;
+                        BLINKY_I.dir=(BLINKY_I.dir+2)%4;
+                        PINKY_I.dir=(PINKY_I.dir+2)%4;
+                        CLYDE_I.dir=(CLYDE_I.dir+2)%4;
+                        break;
+                    default:
+                        break;
+                }
+                break;
+        }
+    }
     constructor() {
         this.speed = PACMAN_SPEED;
     }
 }
+var ghoststate  = "scatter";
 
 class BLINKY extends ghost {
     ibehavior() {
-        this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT,CELL_SIZE*27,CELL_SIZE);
+        this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT,CELL_SIZE*27,-CELL_SIZE);
     }
     draw() {
         ctx.drawImag(
@@ -61,10 +96,11 @@ class BLINKY extends ghost {
         this.reset();
     }
 }
+var BLINKY_I = new BLINKY();
 
 class PINKY extends ghost {
     ibehavior() {
-        this.behavior(pacman.x+(AI.ddS[pacman.dir][1]*4),pacman.y+PACMAN_HEIGHT+(AI.ddS[pacman.dir][2]*4),CELL_SIZE*2,CELL_SIZE);
+        this.behavior(pacman.x+(AI.ddS[pacman.dir][1]*4),pacman.y+PACMAN_HEIGHT+(AI.ddS[pacman.dir][2]*4),CELL_SIZE*2,-CELL_SIZE);
     }
     draw() {
         ctx.drawImag(
@@ -92,14 +128,15 @@ class PINKY extends ghost {
         this.reset();
     }
 }
+var PINKY_I = new PINKY();
 
 class INKY extends ghost {
     ibehavior() {
         var xx = pacman.x+AI.ddS[pacman.dir][1]*2
         var yy = pacman.y+PACMAN_HEIGHT+AI.ddS[pacman.dir][2]*2
-        var INKYTARGETX = Math.abs(ghosts["BLINKY"].x-xx)>xx?xx-Math.abs(ghosts["BLINKY"].x-xx):xx+Math.abs(ghosts["BLINKY"].x-xx);
-        var INKYTARGETY = Math.abs(ghosts["BLINKY"].y-yy)>yy?yy-Math.abs(ghosts["BLINKY"].y-yy):yy+Math.abs(ghosts["BLINKY"].y-yy);
-        this.behavior(INKYTARGETX,INKYTARGETY,CELL_SIZE*27,CELL_SIZE*30);
+        var INKYTARGETX = Math.abs(BLINKY_I.x-xx)>xx?xx-Math.abs(BLINKY_I.x-xx):xx+Math.abs(BLINKY_I.x-xx);
+        var INKYTARGETY = Math.abs(BLINKY_I.y-yy)>yy?yy-Math.abs(BLINKY_I.y-yy):yy+Math.abs(BLINKY_I.y-yy);
+        this.behavior(INKYTARGETX,INKYTARGETY,CELL_SIZE*27,CELL_SIZE*31);
     }
     draw() {
         ctx.drawImag(
@@ -127,34 +164,4 @@ class INKY extends ghost {
         this.reset();
     }
 }
-
-class CLYDE extends ghost {
-    ibehavior() {
-        this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT,CELL_SIZE*2,CELL_SIZE,(this.x<pacman.x+(CELL_SIZE*8)&&this.x>pacman.x-(CELL_SIZE*8)&&this.y<pacman.y+(CELL_SIZE*8)&&this.y>pacman.y-(CELL_SIZE*8)));
-    }
-    draw() {
-        ctx.drawImag(
-            GHOST_SPRITE,
-            this.x+OFFSET[1]-15,
-            this.y+OFFSET[0]-15,
-            CELL_SIZE+30,
-            CELL_SIZE+30, 
-            (AI.ddS[this.dir][0])+((tick%10<5)*16),
-            48,
-            16,
-            16
-        );
-    }
-    reset() {
-        this.x = CELL_SIZE*12;
-        this.y = CELL_SIZE*15;
-        this.w = CELL_SIZE;
-        this.h = CELL_SIZE;
-        this.dir = 3;
-        this.state = "trapped";
-    }
-    constructor() {
-        super();
-        this.reset();
-    }
-}
+var INKY_I = new INKY();

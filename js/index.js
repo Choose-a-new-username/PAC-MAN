@@ -206,7 +206,7 @@ async function render() {
     if(MUS_GHOST_NORM.currentTime >= MUS_GHOST_NORM.duration-0.55){MUS_GHOST_NORM.currentTime = 0;MUS_GHOST_NORM.play();}
     pacman.move();
     pelletBehaivor();
-    BLINKY_I.flip();
+    timeGhosts();
     ghostBehaivor();
 }
 

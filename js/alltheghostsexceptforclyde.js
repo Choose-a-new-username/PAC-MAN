@@ -26,39 +26,8 @@ class ghost {
         }
         this.move();
     }
-    flip(){ 
-        switch (level) {
-            case 1:
-                if(Math.floor((Date.now()-time.now)/1000)==34)CLYDE_I.state = "norm";
-                switch (Math.floor((Date.now()-time.now)/1000)) {
-                    case 7:
-                        PINKY_I.state = "norm";
-                    case 34:
-                    case 41:
-                    case 66:
-                        if(ghoststate==="chase")break;
-                        ghoststate = "chase";
-                        INKY_I.dir=(INKY_I.dir+2)%4;
-                        BLINKY_I.dir=(BLINKY_I.dir+2)%4;
-                        PINKY_I.dir=(PINKY_I.dir+2)%4;
-                        CLYDE_I.dir=(CLYDE_I.dir+2)%4;
-                        break;
-                    case 27:
-                        INKY_I.state = "norm";
-                    case 54:
-                    case 61:
-                        if(ghoststate==="scatter")break;
-                        ghoststate = "scatter";
-                        INKY_I.dir=(INKY_I.dir+2)%4;
-                        BLINKY_I.dir=(BLINKY_I.dir+2)%4;
-                        PINKY_I.dir=(PINKY_I.dir+2)%4;
-                        CLYDE_I.dir=(CLYDE_I.dir+2)%4;
-                        break;
-                    default:
-                        break;
-                }
-                break;
-        }
+    flip(){
+        this.dir = (this.dir+2)%4;
     }
     constructor() {
         this.speed = PACMAN_SPEED;
@@ -165,3 +134,38 @@ class INKY extends ghost {
     }
 }
 var INKY_I = new INKY();
+
+function timeGhosts(){ 
+    switch (level) {
+        case 1:
+            if(Math.floor((Date.now()-time.now)/1000)==34)CLYDE_I.state = "norm";
+            switch (Math.floor((Date.now()-time.now)/1000)) {
+                case 7:
+                    PINKY_I.state = "norm";
+                case 34:
+                case 41:
+                case 66:
+                    if(ghoststate==="chase")break;
+                    ghoststate = "chase";
+                    INKY_I.flip();
+                    BLINKY_I.flip();
+                    PINKY_I.flip();
+                    CLYDE_I.flip();
+                    break;
+                case 27:
+                    INKY_I.state = "norm";
+                case 54:
+                case 61:
+                    if(ghoststate==="scatter")break;
+                    ghoststate = "scatter";
+                    INKY_I.flip();
+                    BLINKY_I.flip();
+                    PINKY_I.flip();
+                    CLYDE_I.flip();
+                    break;
+                default:
+                    break;
+            }
+            break;
+    }
+}

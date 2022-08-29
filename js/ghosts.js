@@ -190,7 +190,8 @@ function timeGhosts(){
                 case 34:
                 case 41:
                 case 66:
-                    if(ghoststate==="chase")break;
+                    if(ghoststate==="chase")
+                        break;
                     ghoststate = "chase";
                     INKY_I.flip();
                     BLINKY_I.flip();
@@ -200,14 +201,13 @@ function timeGhosts(){
                 case 27:
                 case 54:
                 case 61:
-                    if(ghoststate==="scatter")break;
+                    if(ghoststate==="scatter")
+                        break;
                     ghoststate = "scatter";
                     INKY_I.flip();
                     BLINKY_I.flip();
                     PINKY_I.flip();
                     CLYDE_I.flip();
-                    break;
-                default:
                     break;
             }
             break;

@@ -55,7 +55,7 @@ class BLINKY extends ghost {
             this.y+OFFSET[0]-ooo,
             CELL_SIZE+ooo*2,
             CELL_SIZE+ooo*2,
-            (AI.ddS[this.dir][0])+((tick%10<5)*16),
+            (AI.ddS[this.dir][0])+((time.tick%10<5)*16),
             0,
             16,
             16
@@ -87,7 +87,7 @@ class PINKY extends ghost {
             this.y+OFFSET[0]-15,
             CELL_SIZE+30,
             CELL_SIZE+30,
-            (AI.ddS[this.dir][0])+((tick%10<5)*16),
+            (AI.ddS[this.dir][0])+((time.tick%10<5)*16),
             16,
             16,
             16
@@ -123,7 +123,7 @@ class INKY extends ghost {
             this.y+OFFSET[0]-15,
             CELL_SIZE+30,
             CELL_SIZE+30,
-            (AI.ddS[this.dir][0])+((tick%10<5)*16),
+            (AI.ddS[this.dir][0])+((time.tick%10<5)*16),
             32,
             16,
             16
@@ -155,7 +155,7 @@ class CLYDE extends ghost {
             this.y+OFFSET[0]-15,
             CELL_SIZE+30,
             CELL_SIZE+30, 
-            (AI.ddS[this.dir][0])+((tick%10<5)*16),
+            (AI.ddS[this.dir][0])+((time.tick%10<5)*16),
             48,
             16,
             16
@@ -186,6 +186,8 @@ function timeGhosts(){
             if(Math.floor((Date.now()-time.now)/1000)==34&&CLYDE_I.state==="trapped")
                 CLYDE_I.state = "exit";
             switch (Math.floor((Date.now()-time.now)/1000)) {
+                case 1:
+                    console.log(time.tick)
                 case 7:
                 case 34:
                 case 41:

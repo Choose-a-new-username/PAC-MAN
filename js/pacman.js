@@ -5,7 +5,7 @@ class pacman_c {
             this.y+=PACMAN_SPEED*AI.ddS[this.dir][4];
             if(this.x > (canvas.width-PACMAN_SPEED-OFFSET[1]-(CELL_SIZE/2)))this.x = -(CELL_SIZE/2);
             if(this.x < -CELL_SIZE)this.x = canvas.width - PACMAN_SPEED - OFFSET[1] - (CELL_SIZE/2);
-            if(!(tick%PACMAN_ANIMATION_SPEED))this.anim++;
+            if(!(time.tick%PACMAN_ANIMATION_SPEED))this.anim++;
         }
         queuedDo();
         if(this.anim === PACMAN_ANIMATION_FRAMES)this.anim = 0;

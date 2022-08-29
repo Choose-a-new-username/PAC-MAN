@@ -11,7 +11,7 @@ for(i in TILEMAP)
 
 //restart
 async function restart(from=true) {
-    tick=0;
+    time.tick=0;
     time.now = Date.now();
     if(pacman.hp < 1){
         history.go(0);
@@ -201,7 +201,7 @@ function draw() {
     if(!debug_mode){
         if(konamimode){
             ctx.globalCompositeOperation = "source-in";
-            ctx.fillStyle = `hsla(${(tick/12+240)},100%,50%,0.8)`;
+            ctx.fillStyle = `hsla(${(time.tick/12+240)},100%,50%,0.8)`;
         }
         ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
         if(ctx.fillStyle != "#000000"){
@@ -258,16 +258,16 @@ function draw() {
 //main loop
 async function update() {
     if(begun && !pacman_dead)render(); else{MUS_GHOST_NORM.pause();MUS_MUNCH_1.pause();MUS_MUNCH_2.pause();time.now = Date.now();}
-    if(pacman_dead && (tick%7==0)){
+    if(pacman_dead && (time.tick%7==0)){
         if(pacman.anim<14){
             pacman.dir = 1;
-            if(pacman.anim<=2){pacman.anim=2;tick=(Math.round(tick/5)*5);}
+            if(pacman.anim<=2){pacman.anim=2;time.tick=(Math.round(time.tick/5)*5);}
             pacman.anim++;
         }
     }
     draw();
     requestAnimationFrame(update);
-    tick++;
+    time.tick++;
 }
 
 //setup

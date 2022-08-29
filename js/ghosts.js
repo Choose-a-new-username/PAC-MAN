@@ -2,6 +2,13 @@ class ghost {
     move() {
         this.x+=AI.ddS[this.dir][3]*this.speed;
         this.y+=AI.ddS[this.dir][4]*this.speed;
+        if(this.x/CELL_SIZE===13.5&&this.state==="exit"&&this.y%CELL_SIZE===0&&this.y/CELL_SIZE>=12&&this.y/CELL_SIZE<=15){
+            if(this.y/CELL_SIZE===12){
+                this.dir = 1;
+                this.state = "norm";
+            }else
+                this.dir = 0;
+        }
         if(this.x >= (canvas.width-this.speed-OFFSET[1]-(CELL_SIZE/2)))this.x = -(CELL_SIZE/2);
         if(this.x <= -CELL_SIZE)this.x = canvas.width - this.speed - OFFSET[1] - (CELL_SIZE/2);
     }
@@ -20,6 +27,9 @@ class ghost {
                     break;
                 case "trapped":
                     this.dir = AI.normal(15,15,this.dir,this.x,this.y,this.state);
+                    break;
+                case "exit":
+                    this.dir = AI.normal(14,15,this.dir,this.x,this.y,this.state);
                     break;
             }
         }
@@ -164,15 +174,19 @@ class CLYDE extends ghost {
         this.reset();
     }
 }
-var CLYDE_I     = new CLYDE();
+var CLYDE_I = new CLYDE();
 
 function timeGhosts(){ 
     switch (level) {
         case 1:
-            if(Math.floor((Date.now()-time.now)/1000)==34)CLYDE_I.state = "norm";
+            if(Math.floor((Date.now()-time.now)/1000)==7&&PINKY_I.state==="trapped")
+                PINKY_I.state = "exit";
+            if(Math.floor((Date.now()-time.now)/1000)==27&&INKY_I.state==="trapped")
+                INKY_I.state = "exit";
+            if(Math.floor((Date.now()-time.now)/1000)==34&&CLYDE_I.state==="trapped")
+                CLYDE_I.state = "exit";
             switch (Math.floor((Date.now()-time.now)/1000)) {
                 case 7:
-                    PINKY_I.state = "norm";
                 case 34:
                 case 41:
                 case 66:
@@ -184,7 +198,6 @@ function timeGhosts(){
                     CLYDE_I.flip();
                     break;
                 case 27:
-                    INKY_I.state = "norm";
                 case 54:
                 case 61:
                     if(ghoststate==="scatter")break;

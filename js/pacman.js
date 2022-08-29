@@ -31,8 +31,9 @@ class pacman_c {
         this.anim  = 2;
     }
     constructor() {
-        this.hp = 3;
-        this.max_hp = 3;
+        this.score   = 0;
+        this.hp      = 3;
+        this.max_hp  = 3;
         this.reset();
     }
 }

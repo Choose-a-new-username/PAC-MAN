@@ -2,30 +2,18 @@ var level = 1;
 var debug_mode = false;
 
 //pellets
-var pellets = [];
-var score = 0;
-const pellet = (x,y,w,h) => pellets.push({x,y,w,h});
+var objects = [];
+
 for(i in TILEMAP) 
     for(j in TILEMAP[i]) 
         if(TILEMAP[i][j] === 0) 
-            pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),PELLET_SIZE,PELLET_SIZE);       
-
-//collision functions
-function corner(a,b,c,d,e,f) {
-    return (a >= c && a <= (c+e) && b >= d && b <= (d+f));
-}
-function corner4(a,b,c,d,e,f,g,h) {
-    return corner(a,b,e,f,g,h) || corner(a+c,b,e,f,g,h) || corner(a,b+d,e,f,g,h) || corner(a+c,b+d,e,f,g,h);
-}
-function collision2(a,b,c,d,e,f,g,h) {
-    return corner4(a,b,c,d,e,f,g,h) || corner4(e,f,g,h,a,b,c,d);
-}
+            objects.push(new pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2)));
 
 //restart
 async function restart(from=true) {
     tick=0;
     time.now = Date.now();
-    if(pacman.hp <= 0){
+    if(pacman.hp < 1){
         history.go(0);
         return;
     }
@@ -148,18 +136,14 @@ function ghostBehaivor() {
     PINKY_I.ibehavior();
     INKY_I.ibehavior();
     CLYDE_I.ibehavior();
-    if (collision2(BLINKY_I.x,BLINKY_I.y,BLINKY_I.w,BLINKY_I.h,pacman.x+2,pacman.y+PACMAN_HEIGHT+2,PACMAN_WIDTH-6,PACMAN_HEIGHT-6)||collision2(PINKY_I.x,PINKY_I.y,PINKY_I.w,PINKY_I.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||collision2(INKY_I.x,INKY_I.y,INKY_I.w,INKY_I.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||collision2(CLYDE_I.x,CLYDE_I.y,CLYDE_I.w,CLYDE_I.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3))
+    if (AI.collision2(BLINKY_I.x,BLINKY_I.y,BLINKY_I.w,BLINKY_I.h,pacman.x+2,pacman.y+PACMAN_HEIGHT+2,PACMAN_WIDTH-6,PACMAN_HEIGHT-6)||AI.collision2(PINKY_I.x,PINKY_I.y,PINKY_I.w,PINKY_I.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||AI.collision2(INKY_I.x,INKY_I.y,INKY_I.w,INKY_I.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||AI.collision2(CLYDE_I.x,CLYDE_I.y,CLYDE_I.w,CLYDE_I.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3))
         pacmanDie();
 }
 
 function pelletBehaivor() {
-    for(let i = 0; i < pellets.length; i++) {
-        if(collision2(pellets[i].x+(pellets[i].w/2),pellets[i].y+(pellets[i].w/2),1,1,pacman.x-13,pacman.y+PACMAN_HEIGHT-13,PACMAN_WIDTH+26,PACMAN_HEIGHT+26)) {            
-            score += 10;
-            if(munch_b){MUS_MUNCH_1.currentTime = 0;MUS_MUNCH_2.pause();MUS_MUNCH_1.play();munch_b=false;}else{MUS_MUNCH_2.currentTime = 0;MUS_MUNCH_1.pause();MUS_MUNCH_2.play();munch_b=true;}
-            pellets.splice(i, 1);
-        }
-    }
+    for(let i = 0; i < objects.length; i++) 
+        if(objects[i].behavior())
+            objects.splice(i,1);
 }
 
 function queuedDo() {
@@ -230,10 +214,9 @@ function draw() {
         ctx.font = "bold 30px serif";
     else
         ctx.font = "bold 30px pixel-face";
-    ctx.fillText(score,10,50);    
-    for(i in pellets) {
-        ctx.fillRect(pellets[i].x+OFFSET[1],pellets[i].y+OFFSET[0],pellets[i].w,pellets[i].h);
-    }
+    ctx.fillText(pacman.score,10,50);    
+    for(i in objects)
+        objects[i].draw();
     ctx.fillStyle = "#2222bb"
     if(debug_mode){
         for(i in TILEMAP[0])

@@ -1,14 +1,6 @@
 var level = 1;
 var debug_mode = false;
 
-//pellets
-var objects = [];
-
-for(i in TILEMAP) 
-    for(j in TILEMAP[i]) 
-        if(TILEMAP[i][j] === 0) 
-            objects.push(new pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2)));
-
 //restart
 async function restart(from=true) {
     time.tick=0;
@@ -21,10 +13,10 @@ async function restart(from=true) {
     pacman_dead = false;
     ghoststate = "scatter";
     pacman.reset();
-    BLINKY_I.reset();
-    PINKY_I.reset();
-    INKY_I.reset();
-    CLYDE_I.reset();
+    ghostmanager.BLINKY.reset();
+    ghostmanager.PINKY.reset();
+    ghostmanager.INKY.reset();
+    ghostmanager.CLYDE.reset();
     if(!from){begun=true;return;}
     MUS_INTRO.currentTime = 0;
     MUS_INTRO.play();
@@ -131,21 +123,6 @@ function getKey(k) {
     });
 }
 
-function ghostBehaivor() {
-    BLINKY_I.ibehavior();
-    PINKY_I.ibehavior();
-    INKY_I.ibehavior();
-    CLYDE_I.ibehavior();
-    if (AI.collision2(BLINKY_I.x,BLINKY_I.y,BLINKY_I.w,BLINKY_I.h,pacman.x+2,pacman.y+PACMAN_HEIGHT+2,PACMAN_WIDTH-6,PACMAN_HEIGHT-6)||AI.collision2(PINKY_I.x,PINKY_I.y,PINKY_I.w,PINKY_I.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||AI.collision2(INKY_I.x,INKY_I.y,INKY_I.w,INKY_I.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||AI.collision2(CLYDE_I.x,CLYDE_I.y,CLYDE_I.w,CLYDE_I.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3))
-        pacmanDie();
-}
-
-function pelletBehaivor() {
-    for(let i = 0; i < objects.length; i++) 
-        if(objects[i].behavior())
-            objects.splice(i,1);
-}
-
 function queuedDo() {
     switch (queued) {
         case "up":
@@ -188,10 +165,9 @@ function pacmanDie(){
 
 async function render() {
     if(MUS_GHOST_NORM.currentTime >= MUS_GHOST_NORM.duration-0.55){MUS_GHOST_NORM.currentTime = 0;MUS_GHOST_NORM.play();}
-    pacman.move();
-    pelletBehaivor();
-    timeGhosts();
-    ghostBehaivor();
+    pacman.update();
+    objectmanager.update();
+    ghostmanager.update();
 }
 
 //draw loop
@@ -215,8 +191,8 @@ function draw() {
     else
         ctx.font = "bold 30px pixel-face";
     ctx.fillText(pacman.score,10,50);    
-    for(i in objects)
-        objects[i].draw();
+    for(i in objectmanager.objects)
+        objectmanager.objects[i].draw();
     ctx.fillStyle = "#2222bb"
     if(debug_mode){
         for(i in TILEMAP[0])
@@ -239,26 +215,26 @@ function draw() {
     if(!pacman_dead){
         if(debug_mode){
             ctx.fillStyle = "#bb2222"
-            ctx.fillRect(BLINKY_I.x+OFFSET[1],BLINKY_I.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
+            ctx.fillRect(ghostmanager.BLINKY.x+OFFSET[1],ghostmanager.BLINKY.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
             ctx.fillStyle = "#ffc0cb"
-            ctx.fillRect(PINKY_I.x+OFFSET[1],PINKY_I.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
+            ctx.fillRect(ghostmanager.PINKY.x+OFFSET[1],ghostmanager.PINKY.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
             ctx.fillStyle = "#add8e6"
-            ctx.fillRect(INKY_I.x+OFFSET[1],INKY_I.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
+            ctx.fillRect(ghostmanager.INKY.x+OFFSET[1],ghostmanager.INKY.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
             ctx.fillStyle = "#ffa500"
-            ctx.fillRect(CLYDE_I.x+OFFSET[1],CLYDE_I.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
+            ctx.fillRect(ghostmanager.CLYDE.x+OFFSET[1],ghostmanager.CLYDE.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
         } else {
-            BLINKY_I.draw();
-            PINKY_I.draw();
-            INKY_I.draw();
-            CLYDE_I.draw();
+            ghostmanager.BLINKY.draw();
+            ghostmanager.PINKY.draw();
+            ghostmanager.INKY.draw();
+            ghostmanager.CLYDE.draw();
         }    
     }
 }
 
 //main loop
 async function update() {
-    if(begun && !pacman_dead)render(); else{MUS_GHOST_NORM.pause();MUS_MUNCH_1.pause();MUS_MUNCH_2.pause();time.now = Date.now();}
-    if(pacman_dead && (time.tick%7==0)){
+    if(begun && !pacman_dead)render(); else{MUS_GHOST_NORM.pause();MUS_MUNCH_1.pause();MUS_MUNCH_2.pause();if(!pacman_dead)time.tick = 0;}
+    if(pacman_dead && ((time.tick%7)==0)){
         if(pacman.anim<14){
             pacman.dir = 1;
             if(pacman.anim<=2){pacman.anim=2;time.tick=(Math.round(time.tick/5)*5);}

@@ -1,3 +1,4 @@
+var ghostmanager = {};
 class ghost {
     move() {
         this.x+=AI.ddS[this.dir][3]*this.speed;
@@ -42,7 +43,7 @@ class ghost {
         this.speed = PACMAN_SPEED;
     }
 }
-var ghoststate  = "scatter";
+var ghoststate = "scatter";
 
 class BLINKY extends ghost {
     ibehavior() {
@@ -74,7 +75,7 @@ class BLINKY extends ghost {
         this.reset();
     }
 }
-var BLINKY_I = new BLINKY();
+ghostmanager.BLINKY = new BLINKY();
 
 class PINKY extends ghost {
     ibehavior() {
@@ -106,14 +107,14 @@ class PINKY extends ghost {
         this.reset();
     }
 }
-var PINKY_I = new PINKY();
+ghostmanager.PINKY = new PINKY();
 
 class INKY extends ghost {
     ibehavior() {
         var xx = pacman.x+AI.ddS[pacman.dir][1]*2
         var yy = pacman.y+PACMAN_HEIGHT+AI.ddS[pacman.dir][2]*2
-        var INKYTARGETX = Math.abs(BLINKY_I.x-xx)>xx?xx-Math.abs(BLINKY_I.x-xx):xx+Math.abs(BLINKY_I.x-xx);
-        var INKYTARGETY = Math.abs(BLINKY_I.y-yy)>yy?yy-Math.abs(BLINKY_I.y-yy):yy+Math.abs(BLINKY_I.y-yy);
+        var INKYTARGETX = Math.abs(ghostmanager.BLINKY.x-xx)>xx?xx-Math.abs(ghostmanager.BLINKY.x-xx):xx+Math.abs(ghostmanager.BLINKY.x-xx);
+        var INKYTARGETY = Math.abs(ghostmanager.BLINKY.y-yy)>yy?yy-Math.abs(ghostmanager.BLINKY.y-yy):yy+Math.abs(ghostmanager.BLINKY.y-yy);
         this.behavior(INKYTARGETX,INKYTARGETY,CELL_SIZE*27,CELL_SIZE*31);
     }
     draw() {
@@ -142,7 +143,7 @@ class INKY extends ghost {
         this.reset();
     }
 }
-var INKY_I = new INKY();
+ghostmanager.INKY = new INKY();
 
 class CLYDE extends ghost {
     ibehavior() {
@@ -174,20 +175,24 @@ class CLYDE extends ghost {
         this.reset();
     }
 }
-var CLYDE_I = new CLYDE();
+ghostmanager.CLYDE = new CLYDE();
 
-function timeGhosts(){ 
+ghostmanager.update = function() { 
+    this.BLINKY.ibehavior();
+    this.PINKY.ibehavior();
+    this.INKY.ibehavior();
+    this.CLYDE.ibehavior();
+    if (AI.collision2(this.BLINKY.x,this.BLINKY.y,this.BLINKY.w,this.BLINKY.h,pacman.x+2,pacman.y+PACMAN_HEIGHT+2,PACMAN_WIDTH-6,PACMAN_HEIGHT-6)||AI.collision2(this.PINKY.x,this.PINKY.y,this.PINKY.w,this.PINKY.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||AI.collision2(this.INKY.x,this.INKY.y,this.INKY.w,this.INKY.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3)||AI.collision2(this.CLYDE.x,this.CLYDE.y,this.CLYDE.w,this.CLYDE.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3))
+        pacmanDie();
     switch (level) {
         case 1:
-            if(Math.floor((Date.now()-time.now)/1000)==7&&PINKY_I.state==="trapped")
-                PINKY_I.state = "exit";
-            if(Math.floor((Date.now()-time.now)/1000)==27&&INKY_I.state==="trapped")
-                INKY_I.state = "exit";
-            if(Math.floor((Date.now()-time.now)/1000)==34&&CLYDE_I.state==="trapped")
-                CLYDE_I.state = "exit";
-            switch (Math.floor((Date.now()-time.now)/1000)) {
-                case 1:
-                    console.log(time.tick)
+            if(Math.floor(time.tick/60)==7&&this.PINKY.state==="trapped")
+                this.PINKY.state = "exit";
+            if(Math.floor(time.tick/60)==27&&this.INKY.state==="trapped")
+                this.INKY.state = "exit";
+            if(Math.floor(time.tick/60)==34&&this.CLYDE.state==="trapped")
+                this.CLYDE.state = "exit";
+            switch (Math.floor((time.tick)/60)) {
                 case 7:
                 case 34:
                 case 41:
@@ -195,10 +200,10 @@ function timeGhosts(){
                     if(ghoststate==="chase")
                         break;
                     ghoststate = "chase";
-                    INKY_I.flip();
-                    BLINKY_I.flip();
-                    PINKY_I.flip();
-                    CLYDE_I.flip();
+                    this.INKY.flip();
+                    this.BLINKY.flip();
+                    this.PINKY.flip();
+                    this.CLYDE.flip();
                     break;
                 case 27:
                 case 54:
@@ -206,10 +211,10 @@ function timeGhosts(){
                     if(ghoststate==="scatter")
                         break;
                     ghoststate = "scatter";
-                    INKY_I.flip();
-                    BLINKY_I.flip();
-                    PINKY_I.flip();
-                    CLYDE_I.flip();
+                    this.INKY.flip();
+                    this.BLINKY.flip();
+                    this.PINKY.flip();
+                    this.CLYDE.flip();
                     break;
             }
             break;

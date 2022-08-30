@@ -26,3 +26,14 @@ class pellet extends object {
         );
     }
 }
+var objectmanager = {objects:[]};
+objectmanager.update = function () {
+    for(i in this.objects) 
+        if(this.objects[i].behavior())
+            this.objects.splice(i,1);
+}
+for(i in TILEMAP) 
+    for(j in TILEMAP[i]) 
+        if(TILEMAP[i][j] === 0) 
+            objectmanager.objects.push(new pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2)));
+            

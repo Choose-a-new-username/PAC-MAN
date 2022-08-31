@@ -1,9 +1,10 @@
 class object {
-    constructor(x,y,w,h) {
+    constructor(x,y,w,h,name) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+        this.name = name;
     }
 }
 class pellet extends object {
@@ -22,7 +23,8 @@ class pellet extends object {
             x,
             y,
             PELLET_SIZE,
-            PELLET_SIZE
+            PELLET_SIZE,
+            "pellet"
         );
     }
 }

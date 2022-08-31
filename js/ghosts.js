@@ -13,7 +13,7 @@ class ghost {
         if(this.x >= (canvas.width-this.speed-OFFSET[1]-(CELL_SIZE/2)))this.x = -(CELL_SIZE/2);
         if(this.x <= -CELL_SIZE)this.x = canvas.width - this.speed - OFFSET[1] - (CELL_SIZE/2);
     }
-    behavior(x,y,x2,y2,t=false) {
+    behavior(x,y,x2=x,y2=y,t=false) {
         if(Math.round(this.x/CELL_SIZE)*CELL_SIZE===this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE===this.y){
             switch (this.state){
                 case "norm":
@@ -47,15 +47,18 @@ var ghoststate = "scatter";
 
 class BLINKY extends ghost {
     ibehavior() {
-        this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT,CELL_SIZE*27,-CELL_SIZE);
+        if(objectmanager.objects.reduce((a, v) => (v.name === "pellet" ? a + 1 : a), 0) >= AI.ppL[level])
+            this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT,CELL_SIZE*27,-CELL_SIZE);
+        else 
+            this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT);
     }
     draw() {
         ctx.drawImag(
             GHOST_SPRITE,
-            this.x+OFFSET[1]-ooo,
-            this.y+OFFSET[0]-ooo,
-            CELL_SIZE+ooo*2,
-            CELL_SIZE+ooo*2,
+            this.x+OFFSET[1]-DRAW_OFFSET,
+            this.y+OFFSET[0]-DRAW_OFFSET,
+            CELL_SIZE+DRAW_OFFSET*2,
+            CELL_SIZE+DRAW_OFFSET*2,
             (AI.ddS[this.dir][0])+((time.tick%10<5)*16),
             0,
             16,

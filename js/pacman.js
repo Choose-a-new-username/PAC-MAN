@@ -16,10 +16,10 @@ class pacman_c {
     draw() {
         ctx.drawImag(
             PACMAN_SPRITE,
-            OFFSET[1]+this.x-ooo,
-            OFFSET[0]+PACMAN_HEIGHT+this.y-ooo,
-            PACMAN_WIDTH+ooo*2-2,
-            PACMAN_HEIGHT+ooo*2-2,
+            OFFSET[1]+this.x-DRAW_OFFSET,
+            OFFSET[0]+PACMAN_HEIGHT+this.y-DRAW_OFFSET,
+            PACMAN_WIDTH+DRAW_OFFSET*2-2,
+            PACMAN_HEIGHT+DRAW_OFFSET*2-2,
             this.anim*PACMAN_ANIMATION_WIDTH+2,
             0,
             PACMAN_ANIMATION_WIDTH-1,

@@ -5,7 +5,27 @@ const AI = {
         [96,0,CELL_SIZE,0,1,Math.round,Math.floor],
         [32,-CELL_SIZE,0,-1,0,Math.ceil,Math.round]
     ],
-
+    ppL: [
+        20,
+        30,
+        40,
+        40,
+        40,
+        50,
+        50,
+        50,
+        60,
+        60,
+        60,
+        80,
+        80,
+        80,
+        100,
+        100,
+        100,
+        100,
+        120
+    ],
     random: function (curdir,x,y) {
         let dirs = [0,1,2,3];
         if((x === CELL_SIZE*12 || x === CELL_SIZE*15)&&(y === CELL_SIZE*12))

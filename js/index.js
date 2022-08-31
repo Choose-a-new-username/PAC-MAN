@@ -11,6 +11,7 @@ addEventListener("keydown",e=>{
         if(!(e.key === konami[pressedsequence.length-1]))pressedsequence = [];
     //konami section ends
     keys[e.key]=true;
+    if(!begun)return;
     switch(e.key) {
         case "r":
         case "s":
@@ -58,27 +59,23 @@ addEventListener("keydown",e=>{
             break;
         case "ArrowUp":
             queued = "up";
-            if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(Math.round(pacman.x/CELL_SIZE))===1)) {
+            if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(Math.round(pacman.x/CELL_SIZE))===1))
                 pacman.dir = 0;
-            }
             break;
         case "ArrowRight":
             queued = "right";
-            if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3)) {
+            if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3))
                 pacman.dir = 1;
-            }
             break;
         case "ArrowDown":
             queued = "down";
-            if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1)) {
+            if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1))
                 pacman.dir = 2;
-            }
             break;
         case "ArrowLeft":
             queued = "left";
-            if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1))===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3) {
+            if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1))===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3) 
                 pacman.dir = 3;
-            }
             break;
         default:
             break;
@@ -186,7 +183,7 @@ function draw() {
         ctx.fillText(pacman.hp,30,1360,60,60)
     }else
         for(let i = 0; i < pacman.max_hp; i++)if(pacman.max_hp-i<=pacman.hp)
-            ctx.drawImage(HP_SPRITE,(i*60)+30,1330,60,60);
+            ctx.drawImage(HP_SPRITE,(i*(CELL_SIZE*1.5))+30,1330,CELL_SIZE*1.5,CELL_SIZE*1.5);
     if(!pacman_dead){
         if(debug_mode){
             ctx.fillStyle = "#bb2222"

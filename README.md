@@ -24,8 +24,8 @@ This is a school project so dont expect high quality.
     * ~~AI changes over time~~
 * ~~Death/death screen~~
 * ~~Multiple lives~~
-* **REFACTOR WITH OOP**
-* Large pellets and ghost eating 
+* ~~REFACTOR WITH OOP~~
+* **Large pellets and ghost eating**
 * Levels
 * Items spawns/cherries
 * High-scores/scoreboard

@@ -3,7 +3,6 @@ var debug_mode = false;
 
 async function restart(from=true) {
     time.tick=0;
-    time.now = Date.now();
     if(pacman.hp < 1){
         history.go(0);
         return;

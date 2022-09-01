@@ -26,12 +26,13 @@ CanvasRenderingContext2D.prototype.drawImag = function
 }
 
 
-const PACMAN_SPRITE    = document.getElementById("pacman"),
-      GHOST_SPRITE     = document.getElementById("ghosts"),
-      MAP_SPRITE       = document.getElementById("map"),
-      HP_SPRITE        = document.getElementById("health"),
-      MUS_INTRO        = document.getElementById("intro"),
-      MUS_MUNCH_1      = document.getElementById("munch_1"),
-      MUS_MUNCH_2      = document.getElementById("munch_2"),
-      MUS_DEATH        = document.getElementById("death_sound"),
-      MUS_GHOST_NORM   = document.getElementById("ghost_sound");
+const PACMAN_SPRITE     = document.getElementById("pacman"),
+      GHOST_SPRITE      = document.getElementById("ghosts"),
+      MAP_SPRITE        = document.getElementById("map"),
+      HP_SPRITE         = document.getElementById("health"),
+      MUS_INTRO         = document.getElementById("intro"),
+      MUS_MUNCH_1       = document.getElementById("munch_1"),
+      MUS_MUNCH_2       = document.getElementById("munch_2"),
+      MUS_DEATH         = document.getElementById("death_sound"),
+      MUS_GHOST_NORM    = document.getElementById("ghost_sound"),
+      MUS_GHOST_SCARED  = document.getElementById("ghost_sound_scared");

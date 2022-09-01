@@ -87,7 +87,7 @@ function getKey(k) {
         const keypressed=()=>{
             if(keys[k]){
                 r();
-            } else {
+            }else{
                 requestAnimationFrame(keypressed);
             }
         }
@@ -136,7 +136,16 @@ function pacmanDie(){
 }
 
 async function render() {
-    if(MUS_GHOST_NORM.currentTime >= MUS_GHOST_NORM.duration-0.55){MUS_GHOST_NORM.currentTime = 0;MUS_GHOST_NORM.play();}
+    if(MUS_GHOST_NORM.currentTime >= MUS_GHOST_NORM.duration-0.55 || MUS_GHOST_SCARED.currentTime >= MUS_GHOST_SCARED.duration){
+        MUS_GHOST_NORM.currentTime = 0;
+        MUS_GHOST_SCARED.currentTime = 0;
+        MUS_GHOST_NORM.pause();
+        MUS_GHOST_SCARED.pause();
+        if(ghostmanager.INKY.scared>0||ghostmanager.PINKY.scared>0||ghostmanager.BLINKY.scared>0||ghostmanager.CLYDE.scared>0)
+            MUS_GHOST_SCARED.play();
+        else
+            MUS_GHOST_NORM.play();
+    }
     pacman.update();
     objectmanager.update();
     ghostmanager.update();
@@ -180,10 +189,10 @@ function draw() {
         pacman.draw();
     if(debug_mode){
         ctx.fillStyle = "#ffffff";
-        ctx.fillText(pacman.hp,30,1360,60,60)
+        ctx.fillText(pacman.hp,DRAW_OFFSET,1360,60,60)
     }else
         for(let i = 0; i < pacman.max_hp; i++)if(pacman.max_hp-i<=pacman.hp)
-            ctx.drawImage(HP_SPRITE,(i*(CELL_SIZE*1.5))+30,1330,CELL_SIZE*1.5,CELL_SIZE*1.5);
+            ctx.drawImage(HP_SPRITE,(i*(CELL_SIZE*1.5))+DRAW_OFFSET,1330,CELL_SIZE*1.5,CELL_SIZE*1.5);
     if(!pacman_dead){
         if(debug_mode){
             ctx.fillStyle = "#bb2222"
@@ -194,7 +203,7 @@ function draw() {
             ctx.fillRect(ghostmanager.INKY.x+OFFSET[1],ghostmanager.INKY.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
             ctx.fillStyle = "#ffa500"
             ctx.fillRect(ghostmanager.CLYDE.x+OFFSET[1],ghostmanager.CLYDE.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
-        } else {
+        }else{
             ghostmanager.BLINKY.draw();
             ghostmanager.PINKY.draw();
             ghostmanager.INKY.draw();

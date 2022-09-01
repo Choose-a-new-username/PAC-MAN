@@ -12,7 +12,7 @@ class pacman_c {
             this.y += speed * AI.ddS[this.dir][4];
             if(this.x > (canvas.width-PACMAN_SPEED-OFFSET[1]-(CELL_SIZE/2)))
                 this.x = -(CELL_SIZE/2);
-            if(this.x < -CELL_SIZE)
+            if(this.x < -(CELL_SIZE/2))
                 this.x = canvas.width - PACMAN_SPEED - OFFSET[1] - (CELL_SIZE/2);
             if((time.tick%PACMAN_ANIMATION_SPEED)==0)
                 this.anim++;

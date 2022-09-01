@@ -1,7 +1,7 @@
 var ghostmanager = {};
 class ghost {
     move() {
-        if(this.scared>0)
+        if(this.scared)
             this.speed = PACMAN_SPEED / 2;
         else
             this.speed = PACMAN_SPEED;
@@ -15,7 +15,7 @@ class ghost {
                 this.dir = 0;
         }
         if(this.x >= (canvas.width-this.speed-OFFSET[1]-(CELL_SIZE/2)))this.x = -(CELL_SIZE/2);
-        if(this.x <= -CELL_SIZE)this.x = canvas.width - this.speed - OFFSET[1] - (CELL_SIZE/2);
+        if(this.x <= -CELL_SIZE/2)this.x = canvas.width - this.speed - OFFSET[1] - (CELL_SIZE/2);
     }
     behavior(x,y,x2=x,y2=y,t=false) {
         console.log(this.speed);
@@ -26,7 +26,7 @@ class ghost {
                 this.scared = 0;
             switch (this.state){
                 case "norm":
-                    if(this.scared)
+                    if(this.scared>0)
                         this.dir = AI.random(this.dir,this.x,this.y,this.state)
                     else
                         switch(ghoststate){

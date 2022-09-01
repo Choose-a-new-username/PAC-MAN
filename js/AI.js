@@ -26,6 +26,27 @@ const AI = {
         100,
         120
     ],
+    asdfasdfhajklhajkl: [
+        6,
+        5,
+        4,
+        3,
+        2,
+        5,
+        2,
+        2,
+        1,
+        5,
+        2,
+        1,
+        1,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+    ],
     random: function (curdir,x,y) {
         let dirs = [0,1,2,3];
         if((x === CELL_SIZE*12 || x === CELL_SIZE*15)&&(y === CELL_SIZE*12))

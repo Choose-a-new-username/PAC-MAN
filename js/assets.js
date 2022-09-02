@@ -39,4 +39,5 @@ const PACMAN_SPRITE                    = document.getElementById("pacman"),
       MUS_MUNCH_2                      = document.getElementById("munch_2"),
       MUS_DEATH                        = document.getElementById("death_sound"),
       MUS_GHOST_NORM                   = document.getElementById("ghost_sound"),
+      MUS_GHOST_RETREAT                = document.getElementById("xX_1h3_sound_th4t_p14ys_wh3n_th3_ghosts_h4v3_b33N_34t3n_Xx"),
       MUS_GHOST_SCARED                 = document.getElementById("ghost_sound_scared");

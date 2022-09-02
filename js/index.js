@@ -127,10 +127,12 @@ function queuedDo() {
 }
 
 async function render() {
-    if(ghostmanager.INKY.scared>0||ghostmanager.PINKY.scared>0||ghostmanager.BLINKY.scared>0||ghostmanager.CLYDE.scared>0)
-            MUS_GHOST_SCARED.pla();
-        else
-            MUS_GHOST_NORM.pla();
+    if(ghostmanager.INKY.state==="dead"||ghostmanager.PINKY.state==="dead"||ghostmanager.BLINKY.state==="dead"||ghostmanager.CLYDE.state==="dead")
+        MUS_GHOST_RETREAT.pla();
+    else if(ghostmanager.INKY.scared>0||ghostmanager.PINKY.scared>0||ghostmanager.BLINKY.scared>0||ghostmanager.CLYDE.scared>0)
+        MUS_GHOST_SCARED.pla();
+    else
+        MUS_GHOST_NORM.pla();
     pacman.update();
     objectmanager.update();
     ghostmanager.update();
@@ -157,6 +159,10 @@ function draw() {
     else
         ctx.font = "bold 30px pixel-face";
     ctx.fillText(pacman.score,10,50);
+    ctx.fillStyle = "yellow";
+    ctx.font = "bold 35px pixel-face";
+    if(!begun&&!pacman_dead)
+        ctx.fillText("READY!",canvas.width/2-("READY!".length*17.5), canvas.height/2+CELL_SIZE*2.25)
     for(i in objectmanager.objects)
         objectmanager.objects[i].draw();
     ctx.fillStyle = "#2222bb"

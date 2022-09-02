@@ -6,7 +6,7 @@ class ghost {
         else
             pacman.die();
     }
-    die() {
+    die(){
         this.state = "deed";
         this.scared = 1;
     }
@@ -76,7 +76,7 @@ class ghost {
                     this.dir = AI.normal(CELL_SIZE*14,CELL_SIZE*15,this.dir,this.x,this.y,this.state);
                     break;
                 case "dead":
-                    this.dir = AI.normal(CELL_SIZE*14,CELL_SIZE*12,this.dir,this.x,this.y,this.state);
+                    this.dir = AI.normal(CELL_SIZE*13.5,CELL_SIZE*12,this.dir,this.x,this.y,this.state);
                     break;
             }
         }

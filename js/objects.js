@@ -33,6 +33,10 @@ class power_pellet extends object {
         if(!AI.collision2(this.x+(this.w/2),this.y+(this.w/2),1,1,pacman.x-13,pacman.y+PACMAN_HEIGHT-13,PACMAN_WIDTH+26,PACMAN_HEIGHT+26))
             return false;
         pacman.score += 50;
+        ghostmanager.INKY.flip();
+        ghostmanager.BLINKY.flip();
+        ghostmanager.PINKY.flip();
+        ghostmanager.CLYDE.flip();
         Object.keys(ghostmanager).forEach(i=>ghostmanager[i].scared = 60 * AI.asdfasdfhajklhajkl[Math.clamp(level,0,18)]);
         return true;
     }

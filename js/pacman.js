@@ -38,6 +38,14 @@ class pacman_c {
         this.dir   = 3;
         this.anim  = 2;
     }
+    die() {
+        MUS_DEATH.pause();
+        MUS_DEATH.currentTime = 0;
+        MUS_DEATH.pla();
+        begun = false;
+        pacman_dead = true;
+        MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(restart));
+    }
     constructor() {
         this.score   = 0;
         this.hp      = 3;

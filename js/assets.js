@@ -1,21 +1,21 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d')
 ctx.font = "bold 30px pixel-face";
-ctx.imageSmoothingEnabled = false; 
+ctx.imageSmoothingEnabled = false;
 
-CanvasRenderingContext2D.prototype.drawImag = function 
+CanvasRenderingContext2D.prototype.drawImag = function
 (
-    img, 
-    x, 
-    y, 
-    width, 
+    img,
+    x,
+    y,
+    width,
     height,
     dx=0,
     dy=0,
     dw=img.width,
     dh=img.height,
     angle=0,
-) 
+)
 {
     this.save();
     this.translate(x + width/2, y + height/2);

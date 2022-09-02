@@ -16,9 +16,7 @@ class pellet extends object {
         return true;
     }
     draw() {
-        if(ctx.fillStyle != "#ffffff")ctx.fillStyle = "#ffffff";
-        ctx.fillRect(this.x+OFFSET[1],this.y+OFFSET[0],this.w,this.h);
-        ctx.drawImag(THE_SPRITE_WE_USE_FOR_THE_DOTS,Math.floor(this.x/CELL_SIZE)*CELL_SIZE,Math.floor(this.y/CELL_SIZE)*CELL_SIZE,16,16,0,0,16,16)
+        ctx.drawImag(THE_SPRITE_WE_USE_FOR_THE_DOTS,Math.floor(this.x/CELL_SIZE)*CELL_SIZE,Math.ceil(this.y/CELL_SIZE)*CELL_SIZE,CELL_SIZE,CELL_SIZE,0,0,8,8)
     }
     constructor(x,y) {
         super(
@@ -39,8 +37,7 @@ class power_pellet extends object {
         return true;
     }
     draw() {
-        if(ctx.fillStyle != "#ffffff")ctx.fillStyle = "#ffffff";
-        ctx.fillRect(this.x+OFFSET[1],this.y+OFFSET[0],this.w,this.h);
+        ctx.drawImag(THE_SPRITE_WE_USE_FOR_THE_DOTS,Math.floor(this.x/CELL_SIZE)*CELL_SIZE,Math.ceil(this.y/CELL_SIZE)*CELL_SIZE,CELL_SIZE,CELL_SIZE,16,0,8,8)
     }
     constructor(x,y) {
         super(

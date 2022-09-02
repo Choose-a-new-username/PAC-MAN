@@ -73,7 +73,7 @@ class BLINKY extends ghost {
             this.y+OFFSET[0]-DRAW_OFFSET,
             CELL_SIZE+DRAW_OFFSET*2,
             CELL_SIZE+DRAW_OFFSET*2,
-            (AI.ddS[this.dir][0])+((time.tick%10<5)*16),
+            (AI.ddS[this.dir][0])+((time.tick%10>5)*16),
             0,
             16,
             16
@@ -106,7 +106,7 @@ class PINKY extends ghost {
             this.y+OFFSET[0]-15,
             CELL_SIZE+30,
             CELL_SIZE+30,
-            (AI.ddS[this.dir][0])+((time.tick%10<5)*16),
+            (AI.ddS[this.dir][0])+((time.tick%10>5)*16),
             16,
             16,
             16
@@ -142,7 +142,7 @@ class INKY extends ghost {
             this.y+OFFSET[0]-15,
             CELL_SIZE+30,
             CELL_SIZE+30,
-            (AI.ddS[this.dir][0])+((time.tick%10<5)*16),
+            (AI.ddS[this.dir][0])+((time.tick%10>5)*16),
             32,
             16,
             16
@@ -174,7 +174,7 @@ class CLYDE extends ghost {
             this.y+OFFSET[0]-15,
             CELL_SIZE+30,
             CELL_SIZE+30, 
-            (AI.ddS[this.dir][0])+((time.tick%10<5)*16),
+            (AI.ddS[this.dir][0])+((time.tick%10>5)*16),
             48,
             16,
             16

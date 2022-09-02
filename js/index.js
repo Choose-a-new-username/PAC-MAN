@@ -129,23 +129,17 @@ function queuedDo() {
 function pacmanDie(){
     MUS_DEATH.pause();
     MUS_DEATH.currentTime = 0;
-    MUS_DEATH.play();
+    MUS_DEATH.pla();
     begun = false;
     pacman_dead = true;
     MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(restart));
 }
 
 async function render() {
-    if(MUS_GHOST_NORM.currentTime >= MUS_GHOST_NORM.duration-0.55 || MUS_GHOST_SCARED.currentTime >= MUS_GHOST_SCARED.duration){
-        MUS_GHOST_NORM.currentTime = 0;
-        MUS_GHOST_SCARED.currentTime = 0;
-        MUS_GHOST_NORM.pause();
-        MUS_GHOST_SCARED.pause();
-        if(ghostmanager.INKY.scared>0||ghostmanager.PINKY.scared>0||ghostmanager.BLINKY.scared>0||ghostmanager.CLYDE.scared>0)
-            MUS_GHOST_SCARED.play();
+    if(ghostmanager.INKY.scared>0||ghostmanager.PINKY.scared>0||ghostmanager.BLINKY.scared>0||ghostmanager.CLYDE.scared>0)
+            MUS_GHOST_SCARED.pla();
         else
-            MUS_GHOST_NORM.play();
-    }
+            MUS_GHOST_NORM.pla();
     pacman.update();
     objectmanager.update();
     ghostmanager.update();

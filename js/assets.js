@@ -24,15 +24,19 @@ CanvasRenderingContext2D.prototype.drawImag = function
     this.drawImage(img, dx, dy, dw, dh, x, y, width, height);
     this.restore();
 }
+HTMLAudioElement.prototype.pla = function() {
+    document.querySelectorAll("audio[loop]").forEach(i=>{i.pause();if(i.currentTime === i.duration)i.currentTime = 0;});
+    this.play();
+}
 
-
-const PACMAN_SPRITE     = document.getElementById("pacman"),
-      GHOST_SPRITE      = document.getElementById("ghosts"),
-      MAP_SPRITE        = document.getElementById("map"),
-      HP_SPRITE         = document.getElementById("health"),
-      MUS_INTRO         = document.getElementById("intro"),
-      MUS_MUNCH_1       = document.getElementById("munch_1"),
-      MUS_MUNCH_2       = document.getElementById("munch_2"),
-      MUS_DEATH         = document.getElementById("death_sound"),
-      MUS_GHOST_NORM    = document.getElementById("ghost_sound"),
-      MUS_GHOST_SCARED  = document.getElementById("ghost_sound_scared");
+const PACMAN_SPRITE                    = document.getElementById("pacman"),
+      GHOST_SPRITE                     = document.getElementById("ghosts"),
+      THE_SPRITE_WE_USE_FOR_THE_DOTS   = document.getElementById("dots"),
+      MAP_SPRITE                       = document.getElementById("dots"),
+      HP_SPRITE                        = document.getElementById("health"),
+      MUS_INTRO                        = document.getElementById("intro"),
+      MUS_MUNCH_1                      = document.getElementById("munch_1"),
+      MUS_MUNCH_2                      = document.getElementById("munch_2"),
+      MUS_DEATH                        = document.getElementById("death_sound"),
+      MUS_GHOST_NORM                   = document.getElementById("ghost_sound"),
+      MUS_GHOST_SCARED                 = document.getElementById("ghost_sound_scared");

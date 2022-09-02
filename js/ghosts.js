@@ -14,16 +14,17 @@ class ghost {
             }else
                 this.dir = 0;
         }
-        if(this.x >= (canvas.width-this.speed-OFFSET[1]-(CELL_SIZE/2)))this.x = -(CELL_SIZE/2);
-        if(this.x <= -CELL_SIZE/2)this.x = canvas.width - this.speed - OFFSET[1] - (CELL_SIZE/2);
+        if(this.x > (canvas.width-this.speed-OFFSET[1]-(CELL_SIZE/2)))this.x = -(CELL_SIZE/2);
+        if(this.x < -CELL_SIZE/2)this.x = canvas.width - this.speed - OFFSET[1] - (CELL_SIZE/2);
     }
     behavior(x,y,x2=x,y2=y,t=false) {
         console.log(this.speed);
         if(this.scared>1)
             this.scared--;
         if(Math.round(this.x/CELL_SIZE)*CELL_SIZE===this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE===this.y){
-            if(this.scared===1)
+            if(this.scared===1){
                 this.scared = 0;
+            }
             switch (this.state){
                 case "norm":
                     if(this.scared>0)

@@ -5,7 +5,7 @@ var konamimode = false;
 var pressedsequence = [];
 var queued = "up";
 addEventListener("keydown",e=>{
-    if((keys[e.key]===true)||(pacman_dead))return;
+    if((keys[e.key]===true)||(pacman.dead))return;
     //konami section starts
         pressedsequence.push(e.key);
         if(!(e.key === konami[pressedsequence.length-1]))pressedsequence = [];
@@ -61,21 +61,29 @@ addEventListener("keydown",e=>{
             queued = "up";
             if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(Math.round(pacman.x/CELL_SIZE))===1))
                 pacman.dir = 0;
+            else if(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(AI.ddS[pacman.dir][6](pacman.x/CELL_SIZE))!==1)
+                pacman.x = AI.ddS[pacman.dir][6](pacman.x/CELL_SIZE)*CELL_SIZE;
             break;
         case "ArrowRight":
             queued = "right";
             if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3))
                 pacman.dir = 1;
+            else if(TILEMAP[AI.ddS[pacman.dir][5](pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)!==1)
+                pacman.y = AI.ddS[pacman.dir][5](pacman.y/CELL_SIZE)*CELL_SIZE;
             break;
         case "ArrowDown":
             queued = "down";
             if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1))
                 pacman.dir = 2;
+            else if(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(AI.ddS[pacman.dir][6](pacman.x/CELL_SIZE))!==1)
+                pacman.x = AI.ddS[pacman.dir][6](pacman.x/CELL_SIZE)*CELL_SIZE;
             break;
         case "ArrowLeft":
             queued = "left";
             if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1))===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3)
                 pacman.dir = 3;
+            else if(TILEMAP[AI.ddS[pacman.dir][6](pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1)!==1)
+                pacman.y = AI.ddS[pacman.dir][5](pacman.y/CELL_SIZE)*CELL_SIZE;
             break;
         default:
             break;
@@ -98,25 +106,25 @@ function getKey(k) {
 function queuedDo() {
     switch (queued) {
         case "up":
-            if(pacman.x !== Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE){break;}
+            if(pacman.x !== Math.round(pacman.x / CELL_SIZE)*CELL_SIZE){break;}
             if(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(Math.round(pacman.x/CELL_SIZE))===1){break;}
             pacman.dir = 0;
             queued = "";
             break;
         case "right":
-            if(pacman.y !== Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE){break;}
+            if(pacman.y !== Math.round(pacman.y / CELL_SIZE)*CELL_SIZE){break;}
             if(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===1){break;}
             pacman.dir = 1;
             queued = "";
             break;
         case "down":
-            if(pacman.x !== Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE){break;}
+            if(pacman.x !== Math.round(pacman.x / CELL_SIZE)*CELL_SIZE){break;}
             if(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1||TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===3){break;}
             pacman.dir = 2;
             queued = "";
             break;
         case "left":
-            if(pacman.y !== Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE){break;}
+            if(pacman.y !== Math.round(pacman.y / CELL_SIZE)*CELL_SIZE){break;}
             if(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1)===1){break;}
             pacman.dir = 3;
             queued = "";
@@ -127,7 +135,7 @@ function queuedDo() {
 }
 
 async function render() {
-    if(ghostmanager.INKY.state==="dead"||ghostmanager.PINKY.state==="dead"||ghostmanager.BLINKY.state==="dead"||ghostmanager.CLYDE.state==="dead")
+    if(ghostmanager.INKY.state==="dead"||ghostmanager.PINKY.state==="dead"||ghostmanager.BLINKY.state==="dead"||ghostmanager.CLYDE.state==="deed"||ghostmanager.INKY.state==="deed"||ghostmanager.PINKY.state==="deed"||ghostmanager.BLINKY.state==="deed"||ghostmanager.CLYDE.state==="deed")
         MUS_GHOST_RETREAT.pla();
     else if(ghostmanager.INKY.scared>0||ghostmanager.PINKY.scared>0||ghostmanager.BLINKY.scared>0||ghostmanager.CLYDE.scared>0)
         MUS_GHOST_SCARED.pla();
@@ -142,27 +150,21 @@ async function render() {
 function draw() {
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    if(!debug_mode){
-        if(konamimode){
-            ctx.globalCompositeOperation = "source-in";
-            ctx.fillStyle = `hsla(${(time.tick/12+240)},100%,50%,0.8)`;
-        }
-        ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
-        if(ctx.fillStyle != "#000000"){
-            ctx.fillRect(0,0, canvas.width, canvas.height);
-            ctx.globalCompositeOperation = "source-over";
-        }
+    if(konamimode){
+        ctx.globalCompositeOperation = "source-in";
+        ctx.fillStyle = `hsla(${(time.tick/12+240)},100%,50%,0.8)`;
+    }
+    ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
+    if(konamimode){
+        ctx.fillRect(0,0, canvas.width, canvas.height);
+        ctx.globalCompositeOperation = "source-over";
     }
     ctx.fillStyle = "#ffffff";
-    if(debug_mode)
-        ctx.font = "bold 30px serif";
-    else
-        ctx.font = "bold 30px pixel-face";
     ctx.fillText(pacman.score,10,50);
     ctx.fillStyle = "yellow";
     ctx.font = "bold 35px pixel-face";
-    if(!begun&&!pacman_dead)
-        ctx.fillText("READY!",canvas.width/2-("READY!".length*17.5), canvas.height/2+CELL_SIZE*2.25)
+    if(!begun&&!pacman.dead)
+        ctx.fillText("READY!",canvas.width/2-("READY!".length*17.5), canvas.height/2+CELL_SIZE*2.45)
     for(i in objectmanager.objects)
         objectmanager.objects[i].draw();
     ctx.fillStyle = "#2222bb"
@@ -175,16 +177,12 @@ function draw() {
     }
     if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
     if(debug_mode)
-        ctx.fillRect(pacman.x+OFFSET[1],pacman.y+CELL_SIZE+OFFSET[0]+pacman_dead*(CELL_SIZE/2),CELL_SIZE,CELL_SIZE-pacman_dead*(CELL_SIZE/2));
+        ctx.fillRect(pacman.x+OFFSET[1],pacman.y+CELL_SIZE+OFFSET[0]+pacman.dead*(CELL_SIZE/2),CELL_SIZE,CELL_SIZE-pacman.dead*(CELL_SIZE/2));
     else
         pacman.draw();
-    if(debug_mode){
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText(pacman.hp,DRAW_OFFSET,1360,60,60)
-    }else
-        for(let i = 0; i < pacman.max_hp; i++)if(pacman.max_hp-i<=pacman.hp)
-            ctx.drawImage(HP_SPRITE,(i*(CELL_SIZE*1.5))+DRAW_OFFSET,1330,CELL_SIZE*1.5,CELL_SIZE*1.5);
-    if(!pacman_dead){
+    for(let i = 0; i < pacman.max_hp; i++)if(pacman.max_hp-i<=pacman.hp)
+        ctx.drawImage(HP_SPRITE,(i*(CELL_SIZE*1.8))+5,1330,CELL_SIZE*1.7,CELL_SIZE*1.7);
+    if(!pacman.dead){
         if(debug_mode){
             ctx.fillStyle = "#bb2222"
             ctx.fillRect(ghostmanager.BLINKY.x+OFFSET[1],ghostmanager.BLINKY.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
@@ -205,8 +203,8 @@ function draw() {
 
 //main loop
 async function update() {
-    if(begun && !pacman_dead)render(); else{MUS_GHOST_NORM.pause();MUS_MUNCH_1.pause();MUS_MUNCH_2.pause();if(!pacman_dead)time.tick = 0;}
-    if(pacman_dead && ((time.tick%7)==0)){
+    if(begun && !pacman.dead)render(); else{MUS_GHOST_NORM.pause();MUS_MUNCH_1.pause();MUS_MUNCH_2.pause();if(!pacman.dead)time.tick = 0;}
+    if(pacman.dead && ((time.tick%7)==0)){
         if(pacman.anim<14){
             pacman.dir = 1;
             if(pacman.anim<=2){pacman.anim=2;time.tick=(Math.round(time.tick/5)*5);}

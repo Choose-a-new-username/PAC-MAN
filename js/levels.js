@@ -8,7 +8,7 @@ async function restart(from=true) {
         return;
     }
     begun = false;
-    pacman_dead = false;
+    pacman.dead = false;
     ghoststate = "scatter";
     pacman.reset();
     ghostmanager.BLINKY.reset();

@@ -6,6 +6,19 @@ class ghost {
         else
             pacman.die();
     }
+    drawself(y){
+        ctx.drawImag(
+            GHOST_SPRITE,
+            this.x+OFFSET[1]-17,
+            this.y+OFFSET[0]-17,
+            CELL_SIZE+34,
+            CELL_SIZE+34,
+            (AI.ddS[this.dir][0])+((time.tick%10>5)*16),
+            y,
+            16,
+            16
+        ); 
+    }
     die(){
         this.state = "deed";
         this.scared = 1;
@@ -100,17 +113,7 @@ class BLINKY extends ghost {
             this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT);
     }
     draw() {
-        ctx.drawImag(
-            GHOST_SPRITE,
-            this.x+OFFSET[1]-DRAW_OFFSET,
-            this.y+OFFSET[0]-DRAW_OFFSET,
-            CELL_SIZE+DRAW_OFFSET*2,
-            CELL_SIZE+DRAW_OFFSET*2,
-            (AI.ddS[this.dir][0])+((time.tick%10>5)*16),
-            0,
-            16,
-            16
-        );
+        this.drawself(0);
     }
     reset() {
         this.x = CELL_SIZE*13.5;
@@ -130,20 +133,10 @@ ghostmanager.BLINKY = new BLINKY();
 
 class PINKY extends ghost {
     ibehavior() {
-        this.behavior(pacman.x+(AI.ddS[pacman.dir][1]*4),pacman.y+PACMAN_HEIGHT+(AI.ddS[pacman.dir][2]*4),CELL_SIZE*2,-CELL_SIZE);
+        this.behavior(pacman.x+(AI.ddS[pacman.dir][1]),pacman.y+PACMAN_HEIGHT+(AI.ddS[pacman.dir][2]),CELL_SIZE*2,-CELL_SIZE);
     }
     draw() {
-        ctx.drawImag(
-            GHOST_SPRITE,
-            this.x+OFFSET[1]-15,
-            this.y+OFFSET[0]-15,
-            CELL_SIZE+30,
-            CELL_SIZE+30,
-            (AI.ddS[this.dir][0])+((time.tick%10>5)*16),
-            16,
-            16,
-            16
-        );
+        this.drawself(16);
     }
     reset() {
         this.x = CELL_SIZE*15;
@@ -170,17 +163,7 @@ class INKY extends ghost {
         this.behavior(INKYTARGETX,INKYTARGETY,CELL_SIZE*27,CELL_SIZE*31);
     }
     draw() {
-        ctx.drawImag(
-            GHOST_SPRITE,
-            this.x+OFFSET[1]-15,
-            this.y+OFFSET[0]-15,
-            CELL_SIZE+30,
-            CELL_SIZE+30,
-            (AI.ddS[this.dir][0])+((time.tick%10>5)*16),
-            32,
-            16,
-            16
-        );
+        this.drawself(32);
     }
     reset() {
         this.x = CELL_SIZE*13.5;
@@ -203,17 +186,7 @@ class CLYDE extends ghost {
         this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT,CELL_SIZE,CELL_SIZE*31,(this.x<pacman.x+(CELL_SIZE*8)&&this.x>pacman.x-(CELL_SIZE*8)&&this.y<pacman.y+(CELL_SIZE*8)&&this.y>pacman.y-(CELL_SIZE*8)));
     }
     draw() {
-        ctx.drawImag(
-            GHOST_SPRITE,
-            this.x+OFFSET[1]-15,
-            this.y+OFFSET[0]-15,
-            CELL_SIZE+30,
-            CELL_SIZE+30,
-            (AI.ddS[this.dir][0])+((time.tick%10>5)*16),
-            48,
-            16,
-            16
-        );
+        this.drawself(48);
     }
     reset() {
         this.x = CELL_SIZE*12;
@@ -236,7 +209,7 @@ ghostmanager.update = function() {
     this.PINKY.ibehavior();
     this.INKY.ibehavior();
     this.CLYDE.ibehavior();
-    if (AI.collision2(this.BLINKY.x,this.BLINKY.y,this.BLINKY.w,this.BLINKY.h,pacman.x+2,pacman.y+PACMAN_HEIGHT+2,PACMAN_WIDTH-6,PACMAN_HEIGHT-6))
+    if (AI.collision2(this.BLINKY.x,this.BLINKY.y,this.BLINKY.w,this.BLINKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
         this.BLINKY.checkDie();
     if (AI.collision2(this.PINKY.x,this.PINKY.y,this.PINKY.w,this.PINKY.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3))
         this.PINKY.checkDie();

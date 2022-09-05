@@ -34,9 +34,8 @@ class ghost {
         else if(this.state==="dead")
             this.speed = PACMAN_SPEED * 2;
         else
-            this.speed = PACMAN_SPEED;
+            this.speed = PACMAN_ACTUAL_SPEED;
         this.x+=AI.ddS[this.dir][3]*this.speed;
-        this.y+=AI.ddS[this.dir][4]*this.speed;
         if(this.x/CELL_SIZE===13.5&&this.state==="exit"&&this.y%CELL_SIZE===0&&this.y/CELL_SIZE>=12&&this.y/CELL_SIZE<=15){
             if(this.y/CELL_SIZE===12){
                 this.dir = 1;

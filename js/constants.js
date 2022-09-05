@@ -3,6 +3,7 @@ const CELL_SIZE                 = 40;
 const PELLET_SIZE               = 10;
 const OFFSET                    = [CELL_SIZE,0];
 const PACMAN_SPEED              = CELL_SIZE/8;
+const PACMAN_ACTUAL_SPEED       = 7;
 const PACMAN_WIDTH              = CELL_SIZE;
 const PACMAN_HEIGHT             = CELL_SIZE;
 const PACMAN_ANIMATION_FRAMES   = 2;

@@ -19,11 +19,11 @@ class pacman_c {
                 this.dir = 0;
             else if(queued=="down")
                 this.dir = 2;
-        }else if(CELL_SIZE%this.speed!==0&&queued==="left"&&TILEMAP[AI.ddS[this.dir][6](this.y/CELL_SIZE)+AI.ddS[this.dir][5](this.speed)*AI.ddS[this.dir][3]].at(AI.ddS[this.dir][5](this.x/CELL_SIZE)+AI.ddS[3][3])!==1){
+        }else if(CELL_SIZE%this.speed!==0&&queued==="left"&&TILEMAP[AI.ddS[this.dir][6](this.y/CELL_SIZE)+AI.ddS[this.dir][5](this.speed)*AI.ddS[this.dir][3]].at(AI.ddS[this.dir][5](this.x/CELL_SIZE)+AI.ddS[this.dir][3])!==1){
             this.y = AI.ddS[this.dir][6](this.y/CELL_SIZE)*CELL_SIZE;
             this.dir = 3;
             canAnimate = true;
-        }else if(CELL_SIZE%this.speed!==0&&queued==="right"&&TILEMAP[AI.ddS[this.dir][6](this.y/CELL_SIZE)+AI.ddS[this.dir][5](this.speed)*AI.ddS[this.dir][3]].at(AI.ddS[this.dir][5](this.x/CELL_SIZE)+AI.ddS[3][3])!==1){
+        }else if(CELL_SIZE%this.speed!==0&&queued==="right"&&TILEMAP[AI.ddS[this.dir][6](this.y/CELL_SIZE)+AI.ddS[this.dir][5](this.speed)*AI.ddS[this.dir][3]].at(AI.ddS[this.dir][5](this.x/CELL_SIZE)+AI.ddS[this.dir][3])!==1){
             this.y = AI.ddS[this.dir][6](this.y/CELL_SIZE)*CELL_SIZE;
             this.dir = 1;
             canAnimate = true;

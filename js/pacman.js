@@ -67,9 +67,9 @@ class pac_manager {
             },
         };
         this.tget = {
-            x: (a) => Math.clamp(a,0,TILEMAP[0].length),
-            y: (a) => Math.clamp(a,0,TILEMAP.length),
-            map: (a,b) => TILEMAP[this.tget.x(a)][this.tget.x(b)],
+            x: (c) => Math.clamp(c,0,TILEMAP[0].length),
+            y: (d) => Math.clamp(d,0,TILEMAP.length),
+            map: (a,b) => TILEMAP[this.tget.y(a)][this.tget.x(b)],
         };
     }
 }
@@ -87,14 +87,14 @@ class pacman_c extends pac_manager {
         let animate = true;
         for(let i = 0; i < this.speed; i++){
             this.x += AI.ddS[this.dir][3];
-            if(this.tget.map(this.roundw.y.z1.z1(0,0),this.roundw.x.z1.z1(0,0))==1){
+            if(this.tget.map(this.round.y.z1.z1(),this.round.x.z1.z1())==1){
                 animate = false;
                 this.x = this.roundb.x.z1.z1();
                 queuedDo();
                 break;
             }
             this.y += AI.ddS[this.dir][4];
-            if(this.tget.map(this.roundw.y.z1.z1(0,0),this.roundw.x.z1.z1(0,0))==1){
+            if(this.tget.map(this.round.y.z1.z1(),this.round.x.z1.z1())==1){
                 animate = false;
                 this.y = this.roundb.y.z1.z1();
                 queuedDo();

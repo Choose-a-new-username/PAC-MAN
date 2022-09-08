@@ -24,6 +24,12 @@ class ghost {
         this.scared = 1;
     }
     move() {
+        if(this.scared>1)
+            this.scared--;
+        if(this.exittimer)
+            this.exittimer--;
+        else if(this.state === "trapped")
+            this.state = "exit";
         if(Math.round(this.x/(PACMAN_SPEED*2))*(PACMAN_SPEED*2)===this.x&&Math.round(this.y/(PACMAN_SPEED*2))*(PACMAN_SPEED*2)===this.y&&this.scared===1){
             this.scared = 0;
             if(this.state==="deed")
@@ -32,33 +38,33 @@ class ghost {
         if(this.scared && this.state != "trapped")
             this.speed = PACMAN_SPEED / 2
         else if(this.state==="dead")
-            this.speed = PACMAN_SPEED * 2;
+            this.speed = PACMAN_SPEED * 100000;
         else
             this.speed = PACMAN_SPEED;
         for(let i = 0; i < this.speed; i++){
             if(Math.round(this.x/CELL_SIZE)*CELL_SIZE == this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE == this.y){
-                console.log("aaaa")
                 this.ithingy2();
             }
             this.x+=AI.ddS[this.dir][3];
             this.y+=AI.ddS[this.dir][4];
+            if(this.state === "exit" && Math.round(this.x / CELL_SIZE * 10) / 10 > 13 && Math.round(this.x / CELL_SIZE * 10) / 10 < 14)
+                if(Math.floor(this.y / CELL_SIZE)+1 === 12){
+                    this.dir = 1;
+                    this.state = "norm";
+                }else
+                    this.dir = 0;
+                
         }
         if(this.x > (canvas.width-this.speed-OFFSET[1]-(CELL_SIZE/2)))this.x = -(CELL_SIZE/2);
         if(this.x < -CELL_SIZE/2)this.x = canvas.width - this.speed - OFFSET[1] - (CELL_SIZE/2);
     }
     behavior(x,y,x2=x,y2=y,t=false) {
-        if(this.scared>1)
-            this.scared--;
-        if(this.exittimer)
-            this.exittimer--;
-        else if(this.state === "trapped")
-            this.state = "exit";
         if(Math.round(this.x/CELL_SIZE)*CELL_SIZE===this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE===this.y){
             switch (this.state){
                 case "norm":
                 case "deed":
                     if(this.scared>0)
-                        this.dir = AI.random(this.dir,this.x,this.y,this.state)
+                        this.dir = AI.random(this.dir,this.x,this.y,this.state);
                     else
                         switch(ghoststate){
                             case "chase":
@@ -76,7 +82,7 @@ class ghost {
                     this.dir = AI.normal(CELL_SIZE*14,CELL_SIZE*15,this.dir,this.x,this.y,this.state);
                     break;
                 case "dead":
-                    this.dir = AI.normal(CELL_SIZE*13.5,CELL_SIZE*12,this.dir,this.x,this.y,this.state);
+                    this.dir = AI.normal(CELL_SIZE*13,CELL_SIZE*12,this.dir,this.x,this.y,this.state);
                     break;
             }
         }
@@ -122,6 +128,7 @@ ghostmanager.BLINKY = new BLINKY();
 
 class PINKY extends ghost {
     ithingy2() {
+        console.log('eeee');
         this.behavior(pacman.x+(AI.ddS[pacman.dir][1]),pacman.y+PACMAN_HEIGHT+(AI.ddS[pacman.dir][2]),CELL_SIZE*2,-CELL_SIZE);
     }
     ibehavior() {

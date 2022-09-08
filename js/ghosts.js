@@ -49,6 +49,7 @@ class ghost {
             this.y+=AI.ddS[this.dir][4];
             if(this.state === "exit" && Math.round(this.x / CELL_SIZE * 10) / 10 > 13 && Math.round(this.x / CELL_SIZE * 10) / 10 < 14)
                 if(Math.floor(this.y / CELL_SIZE)+1 === 12){
+                    this.x = 13.5 * CELL_SIZE;
                     this.dir = 1;
                     this.state = "norm";
                 }else
@@ -82,7 +83,7 @@ class ghost {
                     this.dir = AI.normal(CELL_SIZE*14,CELL_SIZE*15,this.dir,this.x,this.y,this.state);
                     break;
                 case "dead":
-                    this.dir = AI.normal(CELL_SIZE*13,CELL_SIZE*12,this.dir,this.x,this.y,this.state);
+                    this.dir = AI.normal(CELL_SIZE*13.5,CELL_SIZE*12,this.dir,this.x,this.y,this.state);
                     break;
             }
         }

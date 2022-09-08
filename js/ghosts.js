@@ -38,7 +38,7 @@ class ghost {
         if(this.scared && this.state != "trapped")
             this.speed = PACMAN_SPEED / 2
         else if(this.state==="dead")
-            this.speed = PACMAN_SPEED * 100000;
+            this.speed = PACMAN_SPEED * 2;
         else
             this.speed = PACMAN_SPEED;
         for(let i = 0; i < this.speed; i++){
@@ -48,8 +48,9 @@ class ghost {
             this.x+=AI.ddS[this.dir][3];
             this.y+=AI.ddS[this.dir][4];
             if(this.state === "exit" && Math.round(this.x / CELL_SIZE * 10) / 10 > 13.45 && Math.round(this.x / CELL_SIZE * 10) / 10 < 13.55)
-                if(Math.floor(this.y / CELL_SIZE)+1 === 12){
+                if(this.y / CELL_SIZE === 12){
                     this.x = 13.5 * CELL_SIZE;
+                    this.y = 12 * CELL_SIZE
                     this.dir = 1;
                     this.state = "norm";
                 }else

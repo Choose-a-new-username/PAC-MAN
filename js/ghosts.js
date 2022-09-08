@@ -30,30 +30,18 @@ class ghost {
                 this.state = "dead";
         }
         if(this.scared && this.state != "trapped")
-            this.speed = PACMAN_SPEED / 2;
+            this.speed = PACMAN_SPEED / 2
         else if(this.state==="dead")
             this.speed = PACMAN_SPEED * 2;
         else
-            this.speed = PACMAN_ACTUAL_SPEED;
-        this.x+=AI.ddS[this.dir][3]*this.speed;
-        if(this.x/CELL_SIZE===13.5&&this.state==="exit"&&this.y%CELL_SIZE===0&&this.y/CELL_SIZE>=12&&this.y/CELL_SIZE<=15){
-            if(this.y/CELL_SIZE===12){
-                this.dir = 1;
-                this.state = "norm";
-            }else
-                this.dir = 0;
-        }else if(this.state==="dead"&&this.y%CELL_SIZE===0&&this.y/CELL_SIZE>=12&&this.y/CELL_SIZE<=15){
-            if(this.x/CELL_SIZE===13.5)
-            if(this.y/CELL_SIZE===15){
-                this.dir = 1;
-                this.state = "trapped";
-                this.scared = 0;
-            }else
-                this.dir = 2;
-            else if([12,13].includes(this.x/CELL_SIZE))
-                this.dir = 1;
-            else if([14,15].includes(this.x/CELL_SIZE))
-                this.dir = 3;    
+            this.speed = PACMAN_SPEED;
+        for(let i = 0; i < this.speed; i++){
+            if(Math.round(this.x/CELL_SIZE)*CELL_SIZE == this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE == this.y){
+                console.log("aaaa")
+                this.ithingy2();
+            }
+            this.x+=AI.ddS[this.dir][3];
+            this.y+=AI.ddS[this.dir][4];
         }
         if(this.x > (canvas.width-this.speed-OFFSET[1]-(CELL_SIZE/2)))this.x = -(CELL_SIZE/2);
         if(this.x < -CELL_SIZE/2)this.x = canvas.width - this.speed - OFFSET[1] - (CELL_SIZE/2);
@@ -92,7 +80,6 @@ class ghost {
                     break;
             }
         }
-        this.move();
     }
     flip(){
         this.dir = (this.dir+2)%4;
@@ -105,11 +92,14 @@ class ghost {
 var ghoststate = "scatter";
 
 class BLINKY extends ghost {
-    ibehavior() {
+    ithingy2() {
         if(objectmanager.objects.reduce((a, v) => (v.name === "pellet" ? a + 1 : a), 0) >= AI.ppL[Math.clamp(level,0,18)])
             this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT,CELL_SIZE*27,-CELL_SIZE);
         else
             this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT);
+    }
+    ibehavior() {
+        this.move();
     }
     draw() {
         this.drawself(0);
@@ -131,8 +121,11 @@ class BLINKY extends ghost {
 ghostmanager.BLINKY = new BLINKY();
 
 class PINKY extends ghost {
-    ibehavior() {
+    ithingy2() {
         this.behavior(pacman.x+(AI.ddS[pacman.dir][1]),pacman.y+PACMAN_HEIGHT+(AI.ddS[pacman.dir][2]),CELL_SIZE*2,-CELL_SIZE);
+    }
+    ibehavior() {
+        this.move();
     }
     draw() {
         this.drawself(16);
@@ -154,12 +147,15 @@ class PINKY extends ghost {
 ghostmanager.PINKY = new PINKY();
 
 class INKY extends ghost {
-    ibehavior() {
+    ithingy2() {
         var xx = pacman.x+AI.ddS[pacman.dir][1]*2;
         var yy = pacman.y+PACMAN_HEIGHT+AI.ddS[pacman.dir][2]*2;
         var INKYTARGETX = Math.abs(ghostmanager.BLINKY.x-xx)>xx?xx-Math.abs(ghostmanager.BLINKY.x-xx):xx+Math.abs(ghostmanager.BLINKY.x-xx);
         var INKYTARGETY = Math.abs(ghostmanager.BLINKY.y-yy)>yy?yy-Math.abs(ghostmanager.BLINKY.y-yy):yy+Math.abs(ghostmanager.BLINKY.y-yy);
         this.behavior(INKYTARGETX,INKYTARGETY,CELL_SIZE*27,CELL_SIZE*31);
+    }
+    ibehavior() {
+        this.move();
     }
     draw() {
         this.drawself(32);
@@ -181,8 +177,11 @@ class INKY extends ghost {
 ghostmanager.INKY = new INKY();
 
 class CLYDE extends ghost {
-    ibehavior() {
+    ithingy2() {
         this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT,CELL_SIZE,CELL_SIZE*31,(this.x<pacman.x+(CELL_SIZE*8)&&this.x>pacman.x-(CELL_SIZE*8)&&this.y<pacman.y+(CELL_SIZE*8)&&this.y>pacman.y-(CELL_SIZE*8)));
+    }
+    ibehavior() {
+        this.move();
     }
     draw() {
         this.drawself(48);

@@ -3,7 +3,8 @@ const AI = {
         [64,-CELL_SIZE,-CELL_SIZE,0,-1,Math.round,Math.ceil],
         [0,CELL_SIZE,0,1,0,Math.floor,Math.round],
         [96,0,CELL_SIZE,0,1,Math.round,Math.floor],
-        [32,-CELL_SIZE,0,-1,0,Math.ceil,Math.round]
+        [32,-CELL_SIZE,0,-1,0,Math.ceil,Math.round],
+        [0,0,0,0,0,Math.round,Math.round]
     ],
     ppL: [
         20,
@@ -47,6 +48,7 @@ const AI = {
         1,
         1,
     ],
+    queue: ["up","down","left","right",""],
     random: function (curdir,x,y) {
         let dirs = [0,1,2,3];
         if((x === CELL_SIZE*12 || x === CELL_SIZE*15)&&(y === CELL_SIZE*12))
@@ -56,7 +58,6 @@ const AI = {
             if(dirs.includes(i))if((TILEMAP[(y/CELL_SIZE-1)+this.ddS[i][4]][x/CELL_SIZE+this.ddS[i][3]]===1))dirs.splice(dirs.indexOf(i),1);
         return dirs[Math.round(Math.random()*dirs.length)]||dirs[0];
     },
-
     normal: function (tx,ty,curdir,x,y,state) {
         let dirs = [0,1,2,3];
         let dists = {0:0,1:0,2:0,3:0};

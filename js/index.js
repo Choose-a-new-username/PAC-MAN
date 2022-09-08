@@ -119,7 +119,7 @@ function queuedDo() {
             break;
         case "down":
             if(pacman.x !== Math.round(pacman.x / CELL_SIZE)*CELL_SIZE){break;}
-            if(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1||TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===3){break;}
+            if(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1){break;}
             pacman.dir = 2;
             queued = "";
             break;

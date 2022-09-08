@@ -47,7 +47,7 @@ class ghost {
             }
             this.x+=AI.ddS[this.dir][3];
             this.y+=AI.ddS[this.dir][4];
-            if(this.state === "exit" && Math.round(this.x / CELL_SIZE * 10) / 10 > 13 && Math.round(this.x / CELL_SIZE * 10) / 10 < 14)
+            if(this.state === "exit" && Math.round(this.x / CELL_SIZE * 10) / 10 > 13.45 && Math.round(this.x / CELL_SIZE * 10) / 10 < 13.55)
                 if(Math.floor(this.y / CELL_SIZE)+1 === 12){
                     this.x = 13.5 * CELL_SIZE;
                     this.dir = 1;

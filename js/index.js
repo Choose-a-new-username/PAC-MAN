@@ -59,31 +59,23 @@ addEventListener("keydown",e=>{
             break;
         case "ArrowUp":
             queued = "up";
-            if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(Math.round(pacman.x/CELL_SIZE))===1))
+            if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(Math.round(pacman.x/CELL_SIZE))!==1)
                 pacman.dir = 0;
-            else if(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(AI.ddS[pacman.dir][6](pacman.x/CELL_SIZE))!==1)
-                pacman.x = AI.ddS[pacman.dir][6](pacman.x/CELL_SIZE)*CELL_SIZE;
             break;
         case "ArrowRight":
             queued = "right";
             if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3))
                 pacman.dir = 1;
-            else if(TILEMAP[AI.ddS[pacman.dir][5](pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)!==1)
-                pacman.y = AI.ddS[pacman.dir][5](pacman.y/CELL_SIZE)*CELL_SIZE;
             break;
         case "ArrowDown":
             queued = "down";
             if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1))
                 pacman.dir = 2;
-            else if(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(AI.ddS[pacman.dir][6](pacman.x/CELL_SIZE))!==1)
-                pacman.x = AI.ddS[pacman.dir][6](pacman.x/CELL_SIZE)*CELL_SIZE;
             break;
         case "ArrowLeft":
             queued = "left";
             if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1))===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3)
                 pacman.dir = 3;
-            else if(TILEMAP[AI.ddS[pacman.dir][6](pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1)!==1)
-                pacman.y = AI.ddS[pacman.dir][5](pacman.y/CELL_SIZE)*CELL_SIZE;
             break;
         default:
             break;

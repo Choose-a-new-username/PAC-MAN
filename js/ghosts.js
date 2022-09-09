@@ -14,7 +14,7 @@ class ghost {
             CELL_SIZE+34,
             CELL_SIZE+34,
             (AI.ddS[this.dir][0])+((time.tick%10>5)*16),
-            y,
+            this.scared > 0 ? 68 : y,
             16,
             16
         ); 
@@ -38,21 +38,32 @@ class ghost {
         if(this.scared && this.state != "trapped")
             this.speed = PACMAN_SPEED / 2
         else if(this.state==="dead")
-            this.speed = PACMAN_SPEED * 100000;
+            this.speed = PACMAN_SPEED * 2;
         else
-            this.speed = PACMAN_SPEED;
-        for(let i = 0; i < this.speed; i++){
+            this.speed = PACMAN_SPEED * 0.8;
+        const add = 1 / (10 ** Math.countDecimals(this.speed));
+        const iter = this.speed / add; 
+        for(let i = 0; i < iter; i++){
             if(Math.round(this.x/CELL_SIZE)*CELL_SIZE == this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE == this.y){
                 this.ithingy2();
             }
-            this.x+=AI.ddS[this.dir][3];
-            this.y+=AI.ddS[this.dir][4];
-            if(this.state === "exit" && Math.round(this.x / CELL_SIZE * 10) / 10 > 13 && Math.round(this.x / CELL_SIZE * 10) / 10 < 14)
-                if(Math.floor(this.y / CELL_SIZE)+1 === 12){
-                    this.dir = 1;
+            this.x+=AI.ddS[this.dir][3] * add;
+            this.y+=AI.ddS[this.dir][4] * add;
+            if(this.state === "exit" && Math.fround(this.x / CELL_SIZE) === 13.5)
+                if(this.y / CELL_SIZE === 12){
+                    this.dir   = 1;
+                    this.x     = 13.5 * CELL_SIZE;
                     this.state = "norm";
                 }else
                     this.dir = 0;
+            if(this.state === "dead" && Math.fround(this.x / CELL_SIZE) === 13.5)
+                if(this.y >= 12 * CELL_SIZE && this.y <= 14 * CELL_SIZE){
+                    this.dir = 2;
+                    this.x = 13.5 * CELL_SIZE;
+                }else if(this.y == 15 * CELL_SIZE){
+                    this.state = "trapped";
+                    this.dir = 1;
+                }
                 
         }
         if(this.x > (canvas.width-this.speed-OFFSET[1]-(CELL_SIZE/2)))this.x = -(CELL_SIZE/2);
@@ -83,6 +94,10 @@ class ghost {
                     break;
                 case "dead":
                     this.dir = AI.normal(CELL_SIZE*13,CELL_SIZE*12,this.dir,this.x,this.y,this.state);
+                    if(this.x / CELL_SIZE === 13 && this.y / CELL_SIZE === 12)
+                        this.dir = 1;
+                    else if(this.x / CELL_SIZE === 14 && this.y / CELL_SIZE === 12)
+                        this.dir = 3;
                     break;
             }
         }
@@ -128,7 +143,6 @@ ghostmanager.BLINKY = new BLINKY();
 
 class PINKY extends ghost {
     ithingy2() {
-        console.log('eeee');
         this.behavior(pacman.x+(AI.ddS[pacman.dir][1]),pacman.y+PACMAN_HEIGHT+(AI.ddS[pacman.dir][2]),CELL_SIZE*2,-CELL_SIZE);
     }
     ibehavior() {

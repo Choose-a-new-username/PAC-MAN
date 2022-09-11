@@ -136,7 +136,7 @@ const AI = {
         let dirs = [0,1,2,3];
         if(dirs.includes((curdir+2)%4))dirs.splice(dirs.indexOf((curdir+2)%4),1);
         for(let i = 0; i <= 3; i++)
-            if(dirs.includes(i))if((TILEMAP[(y/CELL_SIZE-1)+this.ddS[i][4]][x/CELL_SIZE+this.ddS[i][3]]===1))dirs.splice(dirs.indexOf(i),1);
+            if(dirs.includes(i)&&(TILEMAP[(y/CELL_SIZE-1)+this.ddS[i][4]][x/CELL_SIZE+this.ddS[i][3]]===1))dirs.splice(dirs.indexOf(i),1);
         return dirs[Math.round(Math.random()*dirs.length)]||dirs[0];
     },
     normal: function (tx,ty,curdir,x,y,state) {
@@ -166,4 +166,7 @@ const AI = {
     corner: function (a,b,c,d,e,f) { return (a >= c && a <= (c+e) && b >= d && b <= (d+f)); },
     corner4: function (a,b,c,d,e,f,g,h) { return this.corner(a,b,e,f,g,h) || this.corner(a+c,b,e,f,g,h) || this.corner(a,b+d,e,f,g,h) || this.corner(a+c,b+d,e,f,g,h); },
     collision2: function (a,b,c,d,e,f,g,h) { return this.corner4(a,b,c,d,e,f,g,h) || this.corner4(e,f,g,h,a,b,c,d); },
+}
+Number.prototype.rnd = function(p1){
+    return Math.round(this / p1) * p1;
 }

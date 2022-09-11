@@ -75,6 +75,8 @@ class pac_manager {
 }
 class pacman_c extends pac_manager {
     update() {
+        if(this.ate)
+            return;
         if(this.anim === PACMAN_ANIMATION_FRAMES)
             this.anim = 0;
         if(ghostmanager.BLINKY.scared||ghostmanager.PINKY.scared||ghostmanager.INKY.scared||ghostmanager.CLYDE.scared)
@@ -128,6 +130,7 @@ class pacman_c extends pac_manager {
         );
     }
     reset() {
+        this.ate   = false;
         this.x     = CELL_SIZE*13.5;
         this.y     = CELL_SIZE*23;
         this.dir   = 3;
@@ -140,14 +143,14 @@ class pacman_c extends pac_manager {
         MUS_DEATH.pla();
         begun = false;
         this.dead = true;
-        MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(restart));
+        MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(()=>restart(false)));
     }
     constructor() {
         super();
-        this.score   = 0;
-        this.hp      = 3;
-        this.max_hp  = 3;
-        this.dead = false;
+        this.score  = 0;
+        this.hp     = 4;
+        this.max_hp = 3;
+        this.dead   = false;
         this.reset();
     }
 }

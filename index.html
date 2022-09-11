@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="style.css">
     <!-- AI -->
     <script defer src="js/assets.js"></script>
+    <script defer src="js/math.js"></script>
+    <script defer src="js/time.js"></script>
     <script defer src="js/tilemap.js"></script>
     <script defer src="js/constants.js"></script>
     <script defer src="js/levels.js"></script>
@@ -16,8 +18,6 @@
     <script defer src="js/ghosts.js"></script>
     <script defer src="js/objects.js"></script>
     <script defer src="js/index.js"></script>
-    <script defer src="js/math.js"></script>
-    <script defer src="js/time.js"></script>
 </head>
 <body>
     <!-- assets -->
@@ -36,6 +36,9 @@
         <audio id="munch_2">
             <source src="assets/munch_2.wav" type="audio/wav" />
         </audio>
+        <audio id="eat_ghost">
+            <source src="assets/eat_ghost.wav" type="audio/wav" />
+        </audio>
         <audio loop id="ghost_sound">
             <source src="assets/siren_1.wav" type="audio/wav" />
         </audio>
@@ -50,7 +53,7 @@
         </audio>
     </div>
     <div class="canvascontainer">
-        <canvas id="canvas" width="1120" height="1400">
+        <canvas id="canvas" width="1120" height="1440">
             <!-- ALL HAIL THE DARK LORD OF THE LIMITLESS VOID -->
         </canvas>
     </div>

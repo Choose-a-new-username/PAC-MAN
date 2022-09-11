@@ -16,7 +16,7 @@ class pellet extends object {
         return true;
     }
     draw() {
-        ctx.drawImag(THE_SPRITE_WE_USE_FOR_THE_DOTS,Math.floor(this.x/CELL_SIZE)*CELL_SIZE+OFFSET[1],Math.ceil(this.y/CELL_SIZE)*CELL_SIZE,CELL_SIZE,CELL_SIZE,0,0,8,8)
+        ctx.drawImag(THE_SPRITE_WE_USE_FOR_THE_DOTS,Math.floor(this.x/CELL_SIZE)*CELL_SIZE+OFFSET[1],Math.ceil(this.y/CELL_SIZE-1)*CELL_SIZE+OFFSET[0],CELL_SIZE,CELL_SIZE,0,0,8,8)
     }
     constructor(x,y) {
         super(
@@ -41,7 +41,8 @@ class power_pellet extends object {
         return true;
     }
     draw() {
-        ctx.drawImag(THE_SPRITE_WE_USE_FOR_THE_DOTS,(Math.floor(this.x/CELL_SIZE))*CELL_SIZE+OFFSET[1],Math.ceil(this.y/CELL_SIZE)*CELL_SIZE,CELL_SIZE,CELL_SIZE,16,0,8,8)
+        if(time.secrettick%30<15)
+            ctx.drawImag(THE_SPRITE_WE_USE_FOR_THE_DOTS,(Math.floor(this.x/CELL_SIZE))*CELL_SIZE+OFFSET[1],Math.ceil(this.y/CELL_SIZE-1)*CELL_SIZE+OFFSET[0],CELL_SIZE,CELL_SIZE,16,0,8,8)
     }
     constructor(x,y) {
         super(
@@ -62,7 +63,8 @@ class medium_pellet extends object {
         return true;
     }
     draw() {
-        ctx.drawImag(THE_SPRITE_WE_USE_FOR_THE_DOTS,(Math.floor(this.x/CELL_SIZE))*CELL_SIZE+OFFSET[1],Math.ceil(this.y/CELL_SIZE)*CELL_SIZE,CELL_SIZE,CELL_SIZE,8,0,8,8)
+        if(time.secrettick%10<5)
+            ctx.drawImag(THE_SPRITE_WE_USE_FOR_THE_DOTS,(Math.floor(this.x/CELL_SIZE))*CELL_SIZE+OFFSET[1],Math.ceil(this.y/CELL_SIZE-1)*CELL_SIZE+OFFSET[0],CELL_SIZE,CELL_SIZE,8,0,8,8)
     }
     constructor(x,y) {
         super(

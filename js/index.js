@@ -1,6 +1,12 @@
 async function restart(from=true) {
+    if(from){
+        MUS_INTRO.pause();
+        MUS_INTRO.currentTime = 0;
+        MUS_INTRO.play();
+    }
     time.tick=0;
-    if(pacman.hp < 1){
+    pacman.hp--;
+    if(pacman.hp < 0){
         history.go(0);
         return;
     }
@@ -13,8 +19,6 @@ async function restart(from=true) {
     ghostmanager.INKY.reset();
     ghostmanager.CLYDE.reset();
     if(!from){begun=true;return;}
-    MUS_INTRO.currentTime = 0;
-    MUS_INTRO.play();
 }
 var keys = {};
 var konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","Enter","Enter"];
@@ -99,18 +103,6 @@ addEventListener("keydown",e=>{
     }
 });
 addEventListener("keyup",e=>{keys[e.key]=false;});
-function getKey(k) {
-    return new Promise(r=>{
-        const keypressed=()=>{
-            if(keys[k]){
-                r();
-            }else{
-                requestAnimationFrame(keypressed);
-            }
-        }
-        keypressed();
-    });
-}
 
 function queuedDo() {
     switch (queued) {
@@ -144,7 +136,7 @@ function queuedDo() {
 }
 
 async function render() {
-    if(ghostmanager.INKY.state==="dead"||ghostmanager.PINKY.state==="dead"||ghostmanager.BLINKY.state==="dead")
+    if(ghostmanager.INKY.state==="dead"||ghostmanager.PINKY.state==="dead"||ghostmanager.BLINKY.state==="dead"||ghostmanager.CLYDE.state==="dead")
         MUS_GHOST_RETREAT.pla();
     else if(ghostmanager.INKY.scared>0||ghostmanager.PINKY.scared>0||ghostmanager.BLINKY.scared>0||ghostmanager.CLYDE.scared>0)
         MUS_GHOST_SCARED.pla();
@@ -161,7 +153,7 @@ function draw() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     if(konamimode){
         ctx.globalCompositeOperation = "source-in";
-        ctx.fillStyle = `hsla(${(time.tick/12+240)},100%,50%,0.8)`;
+        ctx.fillStyle = `hsla(${(time.secrettick*2+240)},100%,50%,0.8)`;
     }
     ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
     if(konamimode){
@@ -170,7 +162,7 @@ function draw() {
     }
     ctx.fillStyle = "#ffffff";
     ctx.fillText(pacman.score,10,50);
-    ctx.fillStyle = "yellow";
+    ctx.fillStyle = "#ffff00";
     ctx.font = "bold 35px pixel-face";
     if(!begun&&!pacman.dead)
         ctx.fillText("READY!",canvas.width/2-("READY!".length*17.5), canvas.height/2+CELL_SIZE*2.45)
@@ -185,12 +177,13 @@ function draw() {
         ctx.fillStyle = "#ffff00"
     }
     if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
-    if(debug_mode)
-        ctx.fillRect(pacman.x+OFFSET[1],pacman.y+CELL_SIZE+OFFSET[0]+pacman.dead*(CELL_SIZE/2),CELL_SIZE,CELL_SIZE-pacman.dead*(CELL_SIZE/2));
-    else
-        pacman.draw();
+    if(!pacman.ate)
+        if(debug_mode)
+            ctx.fillRect(pacman.x+OFFSET[1],pacman.y+CELL_SIZE+OFFSET[0]+pacman.dead*(CELL_SIZE/2),CELL_SIZE,CELL_SIZE-pacman.dead*(CELL_SIZE/2));
+        else
+            pacman.draw();
     for(let i = 0; i < pacman.max_hp; i++)if(pacman.max_hp-i<=pacman.hp)
-        ctx.drawImage(HP_SPRITE,(i*(CELL_SIZE*1.8))+5,1330,CELL_SIZE*1.7,CELL_SIZE*1.7);
+        ctx.drawImage(HP_SPRITE,(i*(CELL_SIZE*1.9))+5,CELL_SIZE*33.6,CELL_SIZE*1.8,CELL_SIZE*1.9);
     if(!pacman.dead){
         if(debug_mode){
             ctx.fillStyle = "#bb2222"
@@ -223,6 +216,7 @@ async function update() {
     draw();
     requestAnimationFrame(update);
     time.tick++;
+    time.secrettick++;
 }
 
 //setup
@@ -233,13 +227,11 @@ requestAnimationFrame(()=>
         ctx.fillText("PRESS ENTER TO START",canvas.width/2-("PRESS ENTER TO START".length*15), canvas.height/2);
     })
 );
-//when the round begins, is set to true
 var begun = false;
-//which munch sound to play
 var munch_b = false;
 (async function(){
-    await getKey("Enter");
+    await time.waitbool("keys[\"Enter\"]");
     restart();
     update();
-    MUS_INTRO.addEventListener("ended",()=>{MUS_GHOST_NORM.play();begun=true;pacman.hp--;});
+    MUS_INTRO.addEventListener("ended",()=>{MUS_GHOST_NORM.play();begun=true;});
 })();

@@ -1,31 +1,46 @@
 var ghostmanager = {};
 class ghost {
     checkDie() {
-        if(this.scared||this.state==="dead")
+        if(this.scared)
             this.die();
-        else
+        else if(!(this.state === "dead"))
             pacman.die();
     }
     drawself(y){
-        ctx.drawImag(
-            GHOST_SPRITE,
-            this.x+OFFSET[1]-DRAW_OFFSET,
-            this.y+OFFSET[0]-DRAW_OFFSET,
-            CELL_SIZE+DRAW_OFFSET*2,
-            CELL_SIZE+DRAW_OFFSET*2,
-            (AI.ddS[this.dir][0])+((time.tick%10>5)*16),
-            this.state === "dead" ? 82 : this.scared > 0 ? 64 : y,
-            16,
-            16
-        ); 
+        if(!this.eaten)
+            ctx.drawImag(
+                GHOST_SPRITE,
+                this.x+OFFSET[1]-DRAW_OFFSET,
+                this.y+OFFSET[0]-DRAW_OFFSET,
+                CELL_SIZE+DRAW_OFFSET*2,
+                CELL_SIZE+DRAW_OFFSET*2,
+                (AI.ddS[this.scared?(this.scared < 180 ? (time.tick%40<20?1:3) : 1):this.dir][0])+((time.tick%10>5)*16),
+                this.state === "dead" ? 82 : this.scared > 0 ? 64 : y,
+                16,
+                16
+            ); 
     }
     die(){
-        this.state = "dead";
+        this.x = Math.round(this.x / CELL_SIZE) * CELL_SIZE;
+        this.y = Math.round(this.y / CELL_SIZE) * CELL_SIZE;
         this.scared = 0;
+        pacman.ate = true;
+        this.eaten = true;
+        MUS_EAT_GHOST.currentTime = 0;
+        MUS_EAT_GHOST.pause();
+        MUS_EAT_GHOST.play();
+        MUS_EAT_GHOST.addEventListener("ended",()=>{pacman.ate=false;this.state="dead";this.eaten=false;});
     }
     move() {
-        if(this.scared>1)
+        if(pacman.ate && this.state !== "dead")
+            return;
+        if(this.scared){
             this.scared--;
+            if(!this.scared){
+                pacman.x = Math.round(pacman.x / CELL_SIZE) * CELL_SIZE;
+                pacman.y = Math.round(pacman.y / CELL_SIZE) * CELL_SIZE;
+            }
+        }
         if(this.exittimer)
             this.exittimer--;
         else if(this.state === "trapped")
@@ -105,6 +120,8 @@ class ghost {
     constructor() {
         this.speed = UNIVERSAL_SPEED;
         this.scared = 0;
+        this.eaten = false;
+        this.w = this.h = CELL_SIZE;
     }
 }
 var ghoststate = "scatter";
@@ -116,17 +133,12 @@ class BLINKY extends ghost {
         else
             this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT);
     }
-    ibehavior() {
-        this.move();
-    }
     draw() {
         this.drawself(0);
     }
     reset() {
         this.x = CELL_SIZE*13.5;
         this.y = CELL_SIZE*12;
-        this.w = CELL_SIZE;
-        this.h = CELL_SIZE;
         this.dir = 1;
         this.state = "norm";
         this.exittimer = 0;
@@ -142,17 +154,12 @@ class PINKY extends ghost {
     ithingy2() {
         this.behavior(pacman.x+(AI.ddS[pacman.dir][1]),pacman.y+PACMAN_HEIGHT+(AI.ddS[pacman.dir][2]),CELL_SIZE*2,-CELL_SIZE);
     }
-    ibehavior() {
-        this.move();
-    }
     draw() {
         this.drawself(16);
     }
     reset() {
         this.x = CELL_SIZE*15;
         this.y = CELL_SIZE*15;
-        this.w = CELL_SIZE;
-        this.h = CELL_SIZE;
         this.dir = 1;
         this.state = "trapped";
         this.exittimer = 7 * 60;
@@ -172,17 +179,12 @@ class INKY extends ghost {
         var INKYTARGETY = Math.abs(ghostmanager.BLINKY.y-yy)>yy?yy-Math.abs(ghostmanager.BLINKY.y-yy):yy+Math.abs(ghostmanager.BLINKY.y-yy);
         this.behavior(INKYTARGETX,INKYTARGETY,CELL_SIZE*27,CELL_SIZE*31);
     }
-    ibehavior() {
-        this.move();
-    }
     draw() {
         this.drawself(32);
     }
     reset() {
         this.x = CELL_SIZE*13.5;
         this.y = CELL_SIZE*15;
-        this.w = CELL_SIZE;
-        this.h = CELL_SIZE;
         this.dir = 1;
         this.state = "trapped";
         this.exittimer = 27 * 60;
@@ -198,17 +200,12 @@ class CLYDE extends ghost {
     ithingy2() {
         this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT,CELL_SIZE,CELL_SIZE*31,(this.x<pacman.x+(CELL_SIZE*8)&&this.x>pacman.x-(CELL_SIZE*8)&&this.y<pacman.y+(CELL_SIZE*8)&&this.y>pacman.y-(CELL_SIZE*8)));
     }
-    ibehavior() {
-        this.move();
-    }
     draw() {
         this.drawself(48);
     }
     reset() {
         this.x = CELL_SIZE*12;
         this.y = CELL_SIZE*15;
-        this.w = CELL_SIZE;
-        this.h = CELL_SIZE;
         this.dir = 1;
         this.state = "trapped";
         this.exittimer = 34 * 60;
@@ -221,18 +218,19 @@ class CLYDE extends ghost {
 ghostmanager.CLYDE = new CLYDE();
 
 ghostmanager.update = function() {
-    this.BLINKY.ibehavior();
-    this.PINKY.ibehavior();
-    this.INKY.ibehavior();
-    this.CLYDE.ibehavior();
-    if (AI.collision2(this.BLINKY.x,this.BLINKY.y,this.BLINKY.w,this.BLINKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
-        this.BLINKY.checkDie();
-    if (AI.collision2(this.PINKY.x,this.PINKY.y,this.PINKY.w,this.PINKY.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3))
-        this.PINKY.checkDie();
-    if (AI.collision2(this.INKY.x,this.INKY.y,this.INKY.w,this.INKY.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3))
-        this.INKY.checkDie();
-    if (AI.collision2(this.CLYDE.x,this.CLYDE.y,this.CLYDE.w,this.CLYDE.h,pacman.x+1,pacman.y+PACMAN_HEIGHT+1,PACMAN_WIDTH-3,PACMAN_HEIGHT-3))
-        this.CLYDE.checkDie();
+    this.BLINKY.move();
+    this.PINKY.move();
+    this.INKY.move();
+    this.CLYDE.move();
+    if(!pacman.ate)
+        if (AI.collision2(this.BLINKY.x,this.BLINKY.y,this.BLINKY.w,this.BLINKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
+            this.BLINKY.checkDie();
+        else if (AI.collision2(this.PINKY.x,this.PINKY.y,this.PINKY.w,this.PINKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
+            this.PINKY.checkDie();
+        else if (AI.collision2(this.INKY.x,this.INKY.y,this.INKY.w,this.INKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
+            this.INKY.checkDie();
+        else if (AI.collision2(this.CLYDE.x,this.CLYDE.y,this.CLYDE.w,this.CLYDE.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
+            this.CLYDE.checkDie();
     switch (level) {
         case 1:
             switch (Math.floor((time.tick)/60)) {

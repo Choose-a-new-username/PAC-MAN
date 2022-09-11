@@ -9,19 +9,19 @@ class ghost {
     drawself(y){
         ctx.drawImag(
             GHOST_SPRITE,
-            this.x+OFFSET[1]-17,
-            this.y+OFFSET[0]-17,
-            CELL_SIZE+34,
-            CELL_SIZE+34,
+            this.x+OFFSET[1]-DRAW_OFFSET,
+            this.y+OFFSET[0]-DRAW_OFFSET,
+            CELL_SIZE+DRAW_OFFSET*2,
+            CELL_SIZE+DRAW_OFFSET*2,
             (AI.ddS[this.dir][0])+((time.tick%10>5)*16),
-            this.scared > 0 ? 68 : y,
+            this.state === "dead" ? 82 : this.scared > 0 ? 64 : y,
             16,
             16
         ); 
     }
     die(){
-        this.state = "deed";
-        this.scared = 1;
+        this.state = "dead";
+        this.scared = 0;
     }
     move() {
         if(this.scared>1)
@@ -30,25 +30,22 @@ class ghost {
             this.exittimer--;
         else if(this.state === "trapped")
             this.state = "exit";
-        if(Math.round(this.x/(PACMAN_SPEED*2))*(PACMAN_SPEED*2)===this.x&&Math.round(this.y/(PACMAN_SPEED*2))*(PACMAN_SPEED*2)===this.y&&this.scared===1){
-            this.scared = 0;
-            if(this.state==="deed")
-                this.state = "dead";
-        }
-        if(this.scared && this.state != "trapped")
-            this.speed = PACMAN_SPEED / 2
-        else if(this.state==="dead")
-            this.speed = PACMAN_SPEED * 2;
+        if(this.state==="dead")
+            this.speed = UNIVERSAL_SPEED*2;
+        else if(this.scared && this.state != "trapped")
+            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gp,level);
         else
-            this.speed = PACMAN_SPEED * 0.8;
+            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gn,level);
         const add = 1 / (10 ** Math.countDecimals(this.speed));
-        const iter = this.speed / add; 
+        const iter = this.speed / add;
         for(let i = 0; i < iter; i++){
-            if(Math.round(this.x/CELL_SIZE)*CELL_SIZE == this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE == this.y){
+            if(Math.round(this.x/CELL_SIZE)*CELL_SIZE === this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE === this.y){
                 this.ithingy2();
             }
             this.x+=AI.ddS[this.dir][3] * add;
+            this.x = Math.round(this.x * 100) / 100;
             this.y+=AI.ddS[this.dir][4] * add;
+            this.y = Math.round(this.y * 100) / 100;
             if(this.state === "exit" && Math.fround(this.x / CELL_SIZE) === 13.5)
                 if(this.y / CELL_SIZE === 12){
                     this.dir   = 1;
@@ -60,7 +57,7 @@ class ghost {
                 if(this.y >= 12 * CELL_SIZE && this.y <= 14 * CELL_SIZE){
                     this.dir = 2;
                     this.x = 13.5 * CELL_SIZE;
-                }else if(this.y == 15 * CELL_SIZE){
+                }else if(this.y === 15 * CELL_SIZE){
                     this.state = "trapped";
                     this.dir = 1;
                 }
@@ -73,7 +70,6 @@ class ghost {
         if(Math.round(this.x/CELL_SIZE)*CELL_SIZE===this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE===this.y){
             switch (this.state){
                 case "norm":
-                case "deed":
                     if(this.scared>0)
                         this.dir = AI.random(this.dir,this.x,this.y,this.state);
                     else
@@ -94,19 +90,20 @@ class ghost {
                     break;
                 case "dead":
                     this.dir = AI.normal(CELL_SIZE*13,CELL_SIZE*12,this.dir,this.x,this.y,this.state);
-                    if(this.x / CELL_SIZE === 13 && this.y / CELL_SIZE === 12)
+                    if([12,13].includes(this.x / CELL_SIZE) && this.y / CELL_SIZE === 12)
                         this.dir = 1;
-                    else if(this.x / CELL_SIZE === 14 && this.y / CELL_SIZE === 12)
+                    else if([14,15].includes(this.x / CELL_SIZE) && this.y / CELL_SIZE === 12)
                         this.dir = 3;
                     break;
             }
         }
     }
     flip(){
-        this.dir = (this.dir+2)%4;
+        if(!(["exit","dead"].includes(this.state)))
+            this.dir = (this.dir+2)%4;
     }
     constructor() {
-        this.speed = PACMAN_SPEED;
+        this.speed = UNIVERSAL_SPEED;
         this.scared = 0;
     }
 }

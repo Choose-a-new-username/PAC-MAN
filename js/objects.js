@@ -37,7 +37,7 @@ class power_pellet extends object {
         ghostmanager.BLINKY.flip();
         ghostmanager.PINKY.flip();
         ghostmanager.CLYDE.flip();
-        Object.keys(ghostmanager).forEach(i=>ghostmanager[i].scared = 60 * AI.asdfasdfhajklhajkl[Math.clamp(level,0,18)]);
+        Object.keys(ghostmanager).forEach(i=>ghostmanager[i].scared = 60 * getAt(AI.asdfasdfhajklhajkl,level));
         return true;
     }
     draw() {

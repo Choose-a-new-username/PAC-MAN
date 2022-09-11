@@ -27,6 +27,27 @@ const AI = {
         100,
         120
     ],
+    ppL2: [
+        10,
+        15,
+        20,
+        20,
+        20,
+        25,
+        25,
+        25,
+        30,
+        30,
+        30,
+        40,
+        40,
+        40,
+        50,
+        50,
+        50,
+        50,
+        60
+    ],
     asdfasdfhajklhajkl: [
         6,
         5,
@@ -44,15 +65,75 @@ const AI = {
         3,
         1,
         1,
+        0,
         1,
-        1,
-        1,
+        0,
     ],
+    speed: {
+        gn: [
+            0.75,
+            0.85,
+            0.85,
+            0.85,
+            0.95,
+        ],
+        gp: [
+            0.50,
+            0.55,
+            0.55,
+            0.55,
+            0.60,
+            0.60,
+            0.60,
+            0.60,
+            0.60,
+            0.60,
+            0.60,
+            0.60,
+            0.60,
+            0.60,
+            0.60,
+            0.60,
+            0.60,
+            0.60,
+        ],
+        gd: [
+
+        ],
+        pn: [
+            0.80,
+            0.90,
+            0.90,
+            0.90,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            1.00,
+            0.90,
+        ],
+        pp: [
+            0.90,
+            0.95,
+            0.95,
+            0.95,
+            1.00,
+        ],  
+    },
     queue: ["up","down","left","right",""],
     random: function (curdir,x,y) {
         let dirs = [0,1,2,3];
-        if((x === CELL_SIZE*12 || x === CELL_SIZE*15)&&(y === CELL_SIZE*12))
-            if(dirs.includes(0))dirs.splice(dirs.indexOf(0),1);        
         if(dirs.includes((curdir+2)%4))dirs.splice(dirs.indexOf((curdir+2)%4),1);
         for(let i = 0; i <= 3; i++)
             if(dirs.includes(i))if((TILEMAP[(y/CELL_SIZE-1)+this.ddS[i][4]][x/CELL_SIZE+this.ddS[i][3]]===1))dirs.splice(dirs.indexOf(i),1);
@@ -61,18 +142,14 @@ const AI = {
     normal: function (tx,ty,curdir,x,y,state) {
         let dirs = [0,1,2,3];
         let dists = {0:0,1:0,2:0,3:0};
-        if((x === CELL_SIZE*12 || x === CELL_SIZE*15)&&(y === CELL_SIZE*12)){
-            delete dists["0"];
-            if(dirs.includes(0))dirs.splice(dirs.indexOf(0),1);
-        }
-        delete dists[(curdir+2)%4];    
-        dirs.splice(dirs.indexOf((curdir+2)%4),1); 
+        delete dists[(curdir+2)%4];
+        dirs.splice(dirs.indexOf((curdir+2)%4),1);
         for(let i = 0; i <= 3; i++){
             if((state==="norm")&&(i===0)&&([13,14].includes(x/CELL_SIZE))&&([14,15].includes(y/CELL_SIZE)))
                 continue;
             if(dirs.includes(i))if((TILEMAP[(y/CELL_SIZE-1)+this.ddS[i][4]][x/CELL_SIZE+this.ddS[i][3]]===1)){delete dists[String(i)];dirs.splice(dirs.indexOf(i),1);(i)}
         }
-        for(i in dirs) 
+        for(i in dirs)
             dists[String(dirs[i])]=Math.abs(x+(this.ddS[dirs[i]][3])*CELL_SIZE-tx)+Math.abs(y+this.ddS[dirs[i]][4]*CELL_SIZE-ty);
         let min = Math.getMin(dists);
         if(min.includes("0"))

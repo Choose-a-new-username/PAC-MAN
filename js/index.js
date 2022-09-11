@@ -1,4 +1,21 @@
-//key events
+async function restart(from=true) {
+    time.tick=0;
+    if(pacman.hp < 1){
+        history.go(0);
+        return;
+    }
+    begun = false;
+    pacman.dead = false;
+    ghoststate = "scatter";
+    pacman.reset();
+    ghostmanager.BLINKY.reset();
+    ghostmanager.PINKY.reset();
+    ghostmanager.INKY.reset();
+    ghostmanager.CLYDE.reset();
+    if(!from){begun=true;return;}
+    MUS_INTRO.currentTime = 0;
+    MUS_INTRO.play();
+}
 var keys = {};
 var konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","Enter","Enter"];
 var konamimode = false;
@@ -127,7 +144,7 @@ function queuedDo() {
 }
 
 async function render() {
-    if(ghostmanager.INKY.state==="dead"||ghostmanager.PINKY.state==="dead"||ghostmanager.BLINKY.state==="dead"||ghostmanager.CLYDE.state==="deed"||ghostmanager.INKY.state==="deed"||ghostmanager.PINKY.state==="deed"||ghostmanager.BLINKY.state==="deed"||ghostmanager.CLYDE.state==="deed")
+    if(ghostmanager.INKY.state==="dead"||ghostmanager.PINKY.state==="dead"||ghostmanager.BLINKY.state==="dead")
         MUS_GHOST_RETREAT.pla();
     else if(ghostmanager.INKY.scared>0||ghostmanager.PINKY.scared>0||ghostmanager.BLINKY.scared>0||ghostmanager.CLYDE.scared>0)
         MUS_GHOST_SCARED.pla();
@@ -163,7 +180,7 @@ function draw() {
     if(debug_mode){
         for(i in TILEMAP[0])
             for(j in TILEMAP)
-                if(TILEMAP[j][i]==1)
+                if(TILEMAP[j][i]===1)
                     ctx.fillRect(i*CELL_SIZE+OFFSET[1],j*CELL_SIZE+CELL_SIZE+OFFSET[0],CELL_SIZE,CELL_SIZE);
         ctx.fillStyle = "#ffff00"
     }
@@ -196,7 +213,7 @@ function draw() {
 //main loop
 async function update() {
     if(begun && !pacman.dead)render(); else{MUS_GHOST_NORM.pause();MUS_MUNCH_1.pause();MUS_MUNCH_2.pause();if(!pacman.dead)time.tick = 0;}
-    if(pacman.dead && ((time.tick%7)==0)){
+    if(pacman.dead && ((time.tick%7)===0)){
         if(pacman.anim<14){
             pacman.dir = 1;
             if(pacman.anim<=2){pacman.anim=2;time.tick=(Math.round(time.tick/5)*5);}

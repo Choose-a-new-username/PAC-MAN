@@ -78,23 +78,27 @@ class pacman_c extends pac_manager {
         if(this.anim === PACMAN_ANIMATION_FRAMES)
             this.anim = 0;
         if(ghostmanager.BLINKY.scared||ghostmanager.PINKY.scared||ghostmanager.INKY.scared||ghostmanager.CLYDE.scared)
-            this.speed = PACMAN_SPEED*0.9;
+            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.pp,level);
         else
-            this.speed = PACMAN_SPEED*0.8;
+            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.pn,level);
         this.move();
     }
     move() {
         let animate = true;
-        for(let i = 0; i < this.speed; i++){
-            this.x += AI.ddS[this.dir][3];
-            if(this.tget.map(this.round.y.z1.z1(),this.round.x.z1.z1())==1){
+        const add = 1 / (10 ** Math.countDecimals(this.speed));
+        const iter = this.speed / add;
+        for(let i = 0; i < iter; i++){
+            this.x += AI.ddS[this.dir][3]*add;
+            this.x = Math.round(this.x * 100) / 100;
+            if(this.tget.map(this.round.y.z1.z1(),this.round.x.z1.z1())===1){
                 animate = false;
                 this.x = this.roundb.x.z1.z1();
                 queuedDo();
                 break;
             }
-            this.y += AI.ddS[this.dir][4];
-            if(this.tget.map(this.round.y.z1.z1(),this.round.x.z1.z1())==1){
+            this.y += AI.ddS[this.dir][4]*add;
+            this.y = Math.round(this.y * 100) / 100;
+            if(this.tget.map(this.round.y.z1.z1(),this.round.x.z1.z1())===1){
                 animate = false;
                 this.y = this.roundb.y.z1.z1();
                 queuedDo();
@@ -102,10 +106,10 @@ class pacman_c extends pac_manager {
             }
             queuedDo();
         }
-        if(this.x > (canvas.width-PACMAN_SPEED-OFFSET[1]-(CELL_SIZE/2)))
+        if(this.x > (canvas.width-UNIVERSAL_SPEED-OFFSET[1]-(CELL_SIZE/2)))
             this.x = -(CELL_SIZE/2);
         if(this.x < -(CELL_SIZE/2))
-            this.x = canvas.width - PACMAN_SPEED - OFFSET[1] - (CELL_SIZE/2);
+            this.x = canvas.width - UNIVERSAL_SPEED - OFFSET[1] - (CELL_SIZE/2);
         if(time.tick%PACMAN_ANIMATION_SPEED===0&&animate)
             this.anim++;
     }
@@ -114,8 +118,8 @@ class pacman_c extends pac_manager {
             PACMAN_SPRITE,
             OFFSET[1]+this.x-DRAW_OFFSET,
             OFFSET[0]+(PACMAN_HEIGHT+this.y)-DRAW_OFFSET,
-            PACMAN_WIDTH+DRAW_OFFSET*2-2,
-            PACMAN_HEIGHT+DRAW_OFFSET*2-2,
+            PACMAN_WIDTH+DRAW_OFFSET*2-4,
+            PACMAN_HEIGHT+DRAW_OFFSET*2-4,
             this.anim*PACMAN_ANIMATION_WIDTH+2,
             0,
             PACMAN_ANIMATION_WIDTH-1,
@@ -128,7 +132,7 @@ class pacman_c extends pac_manager {
         this.y     = CELL_SIZE*23;
         this.dir   = 3;
         this.anim  = 2;
-        this.speed = PACMAN_SPEED;
+        this.speed = UNIVERSAL_SPEED;
     }
     die() {
         MUS_DEATH.pause();

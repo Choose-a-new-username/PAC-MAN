@@ -1,7 +1,10 @@
+"use strict";
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d')
 ctx.font = "bold 30px pixel-face";
 ctx.imageSmoothingEnabled = false;
+// ctx.shadowColor="green";
+// ctx.shadowBlur=15;
 
 CanvasRenderingContext2D.prototype.drawImag = function
 (

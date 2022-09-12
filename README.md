@@ -31,3 +31,4 @@ Game is still a work-in-progress, more features will be added in the future.<br/
 * Items spawns/cherries
 * High-scores/scoreboard
 ## BUGS:
+* speed no work js floats SUK i HAT THEDM

@@ -41,7 +41,7 @@ class power_pellet extends object {
             ghostmanager[i].x = Math.round(ghostmanager[i].x / CELL_SIZE) * CELL_SIZE;
             ghostmanager[i].y = Math.round(ghostmanager[i].y / CELL_SIZE) * CELL_SIZE;
         }
-        Object.keys(ghostmanager).forEach(i=>ghostmanager[i].scared = 60 * getAt(AI.asdfasdfhajklhajkl,level));
+        Object.keys(ghostmanager).forEach(i=>ghostmanager[i].scared = 120 * getAt(AI.asdfasdfhajklhajkl,level));
         return true;
     }
     draw() {

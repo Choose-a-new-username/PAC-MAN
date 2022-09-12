@@ -26,8 +26,8 @@ Game is still a work-in-progress, more features will be added in the future.<br/
 * ~~Multiple lives~~
 * ~~REFACTOR WITH OOP~~
 * ~~Large pellets and ghost eating~~
-* **Levels**
+* ~~Levels~~
+* 
 * Items spawns/cherries
 * High-scores/scoreboard
 ## BUGS:
-* WHY IS BOTH GHOSTS GETTING EATEN WHAT IS HAPPENING11!!1!!1!!1/!?!/?1/?!/?1/

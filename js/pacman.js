@@ -158,7 +158,7 @@ class pacman_c extends pac_manager {
         begun = false;
         this.dead = true;
         this.hp--;
-        MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(()=>restart(false)));
+        MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(()=>{if(pacman.hp < 0)history.go(0);else restart(false)}));
     }
     constructor() {
         super();

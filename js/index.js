@@ -1,7 +1,5 @@
 async function restart(from=true) {
     endedlevelt = 60*3;
-    if(pacman.hp < 0)
-        history.go(0);
     if(from){
         MUS_INTRO.pause();
         MUS_INTRO.currentTime = 0;
@@ -157,9 +155,9 @@ function draw() {
     else    
         ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
     ctx.fillStyle = "#ffffff";
-    ctx.fillText(pacman.score,10,CELL_SIZE*2);
+    ctx.fillText(pacman.score,290-(String(pacman.score).length*35),CELL_SIZE*2);
     if(pacman.hp&&time.secrettick%40<20)
-        ctx.fillText("1UP",400,CELL_SIZE);
+        ctx.fillText("1UP",280,CELL_SIZE);
     ctx.fillStyle = "#ffff00";
     ctx.font = "bold 35px pixel-face";
     if(!(begun||pacman.dead||String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""))
@@ -193,7 +191,12 @@ function draw() {
             ctx.fillStyle = "#ffa500"
             ctx.fillRect(ghostmanager.CLYDE.x+OFFSET[1],ghostmanager.CLYDE.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
         }else{
-            ghostmanager.BLINKY.draw();
+            if(begun||pacman.dead||String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))==="")
+                ghostmanager.BLINKY.draw();
+            else{
+                ctx.fillStyle = "#ffff00";
+                ctx.fillText(`LEVEL ${level}`,canvas.width/2-(`LEVEL ${level}`.length*17.5),canvas.height/2-CELL_SIZE*3.45)
+            }
             ghostmanager.PINKY.draw();
             ghostmanager.INKY.draw();
             ghostmanager.CLYDE.draw();
@@ -203,6 +206,8 @@ function draw() {
 
 //main loop
 async function update() {
+    if(pacman.hp<0)
+        return;
     if(String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""){
         if(endedlevelt){
             begun = false;

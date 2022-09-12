@@ -37,6 +37,10 @@ class power_pellet extends object {
         ghostmanager.BLINKY.flip();
         ghostmanager.PINKY.flip();
         ghostmanager.CLYDE.flip();
+        for(const i of Object.keys(ghostmanager)){
+            ghostmanager[i].x = Math.round(ghostmanager[i].x / CELL_SIZE) * CELL_SIZE;
+            ghostmanager[i].y = Math.round(ghostmanager[i].y / CELL_SIZE) * CELL_SIZE;
+        }
         Object.keys(ghostmanager).forEach(i=>ghostmanager[i].scared = 60 * getAt(AI.asdfasdfhajklhajkl,level));
         return true;
     }
@@ -82,11 +86,3 @@ objectmanager.update = function () {
         if(this.objects[i].behavior())
             this.objects.splice(i,1);
 }
-for(i in TILEMAP)
-    for(j in TILEMAP[i])
-        if(TILEMAP[i][j] === 0)
-            objectmanager.objects.push(new pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2)));
-        else if(TILEMAP[i][j] === 3)
-            objectmanager.objects.push(new medium_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));
-        else if(TILEMAP[i][j] === 4)
-            objectmanager.objects.push(new power_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));

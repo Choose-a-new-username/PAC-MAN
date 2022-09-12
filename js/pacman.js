@@ -116,18 +116,32 @@ class pacman_c extends pac_manager {
             this.anim++;
     }
     draw() {
-        ctx.drawImag(
-            PACMAN_SPRITE,
-            OFFSET[1]+this.x-DRAW_OFFSET,
-            OFFSET[0]+(PACMAN_HEIGHT+this.y)-DRAW_OFFSET,
-            PACMAN_WIDTH+DRAW_OFFSET*2-4,
-            PACMAN_HEIGHT+DRAW_OFFSET*2-4,
-            this.anim*PACMAN_ANIMATION_WIDTH+2,
-            0,
-            PACMAN_ANIMATION_WIDTH-1,
-            PACMAN_ANIMATION_HEIGHT-1,
-            ((this.dir - 1) * 90)*(Math.PI/180)
-        );
+        if(String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))==="")
+            ctx.drawImag(
+                PACMAN_SPRITE,
+                OFFSET[1]+this.x-DRAW_OFFSET,
+                OFFSET[0]+(PACMAN_HEIGHT+this.y)-DRAW_OFFSET,
+                PACMAN_WIDTH+DRAW_OFFSET*2-4,
+                PACMAN_HEIGHT+DRAW_OFFSET*2-4,
+                2*PACMAN_ANIMATION_WIDTH+2,
+                0,
+                PACMAN_ANIMATION_WIDTH-1,
+                PACMAN_ANIMATION_HEIGHT-1,
+                0
+            );
+        else
+            ctx.drawImag(
+                PACMAN_SPRITE,
+                OFFSET[1]+this.x-DRAW_OFFSET,
+                OFFSET[0]+(PACMAN_HEIGHT+this.y)-DRAW_OFFSET,
+                PACMAN_WIDTH+DRAW_OFFSET*2-4,
+                PACMAN_HEIGHT+DRAW_OFFSET*2-4,
+                this.anim*PACMAN_ANIMATION_WIDTH+2,
+                0,
+                PACMAN_ANIMATION_WIDTH-1,
+                PACMAN_ANIMATION_HEIGHT-1,
+                ((this.dir - 1) * 90)*(Math.PI/180)
+            );
     }
     reset() {
         this.ate   = false;
@@ -143,12 +157,13 @@ class pacman_c extends pac_manager {
         MUS_DEATH.pla();
         begun = false;
         this.dead = true;
+        this.hp--;
         MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(()=>restart(false)));
     }
     constructor() {
         super();
         this.score  = 0;
-        this.hp     = 4;
+        this.hp     = 3;
         this.max_hp = 3;
         this.dead   = false;
         this.reset();

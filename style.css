@@ -1,6 +1,6 @@
 @font-face {
-    font-family: 'pixel-face';
-    src: url('assets/emulogic.ttf') format("truetype");
+    font-family: "pixel-face";
+    src: url("assets/emulogic.ttf") format("truetype");
 }
 html, body {
     margin:0;

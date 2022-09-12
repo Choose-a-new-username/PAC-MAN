@@ -4,7 +4,7 @@ let time = {
     wait: secs => {return new Promise(resolve => setTimeout(resolve,secs));},
     waitbool: b => 
         new Promise(r =>
-            (function isbool(){
+            (async function isbool(){
                 if(eval(b))
                     r();
                 else

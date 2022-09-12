@@ -1,24 +1,29 @@
 async function restart(from=true) {
+    endedlevelt = 60*3;
+    if(pacman.hp < 0)
+        history.go(0);
     if(from){
         MUS_INTRO.pause();
         MUS_INTRO.currentTime = 0;
         MUS_INTRO.play();
     }
     time.tick=0;
-    pacman.hp--;
-    if(pacman.hp < 0){
-        history.go(0);
-        return;
-    }
     begun = false;
     pacman.dead = false;
     ghoststate = "scatter";
-    pacman.reset();
-    ghostmanager.BLINKY.reset();
-    ghostmanager.PINKY.reset();
-    ghostmanager.INKY.reset();
-    ghostmanager.CLYDE.reset();
+    ["pacman","ghostmanager.BLINKY","ghostmanager.PINKY","ghostmanager.INKY","ghostmanager.CLYDE"].forEach(i=>eval(i+".reset()"));
     if(!from){begun=true;return;}
+}
+async function resetpellets(){
+    objectmanager.objects = [];
+    for(i in TILEMAP)
+        for(j in TILEMAP[i])
+            if(TILEMAP[i][j] === 0)
+                objectmanager.objects.push(new pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2)));
+            else if(TILEMAP[i][j] === 3)
+                objectmanager.objects.push(new medium_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));
+            else if(TILEMAP[i][j] === 4)
+                objectmanager.objects.push(new power_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));
 }
 var keys = {};
 var konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","Enter","Enter"];
@@ -27,10 +32,8 @@ var pressedsequence = [];
 var queued = "up";
 addEventListener("keydown",e=>{
     if((keys[e.key]===true)||(pacman.dead))return;
-    //konami section starts
-        pressedsequence.push(e.key);
-        if(!(e.key === konami[pressedsequence.length-1]))pressedsequence = [];
-    //konami section ends
+    pressedsequence.push(e.key);
+    if(!(e.key === konami[pressedsequence.length-1]))pressedsequence = [];
     keys[e.key]=true;
     if(!begun)return;
     switch(e.key) {
@@ -134,11 +137,10 @@ function queuedDo() {
             break;
     }
 }
-
 async function render() {
     if(ghostmanager.INKY.state==="dead"||ghostmanager.PINKY.state==="dead"||ghostmanager.BLINKY.state==="dead"||ghostmanager.CLYDE.state==="dead")
         MUS_GHOST_RETREAT.pla();
-    else if(ghostmanager.INKY.scared>0||ghostmanager.PINKY.scared>0||ghostmanager.BLINKY.scared>0||ghostmanager.CLYDE.scared>0)
+    else if(ghostmanager.INKY.scared||ghostmanager.PINKY.scared||ghostmanager.BLINKY.scared||ghostmanager.CLYDE.scared)
         MUS_GHOST_SCARED.pla();
     else
         MUS_GHOST_NORM.pla();
@@ -149,22 +151,16 @@ async function render() {
 
 //draw loop
 function draw() {
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    if(konamimode){
-        ctx.globalCompositeOperation = "source-in";
-        ctx.fillStyle = `hsla(${(time.secrettick*2+240)},100%,50%,0.8)`;
-    }
-    ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
-    if(konamimode){
-        ctx.fillRect(0,0, canvas.width, canvas.height);
-        ctx.globalCompositeOperation = "source-over";
-    }
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if(String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""&&endedlevelt<60*2)
+        ctx.drawImage(eval("MAP_SPRITE"+(time.secrettick%20>10?"_2":"")),OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
+    else    
+        ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
     ctx.fillStyle = "#ffffff";
     ctx.fillText(pacman.score,10,50);
     ctx.fillStyle = "#ffff00";
     ctx.font = "bold 35px pixel-face";
-    if(!begun&&!pacman.dead)
+    if(!(begun||pacman.dead||String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""))
         ctx.fillText("READY!",canvas.width/2-("READY!".length*17.5), canvas.height/2+CELL_SIZE*2.45)
     for(i in objectmanager.objects)
         objectmanager.objects[i].draw();
@@ -184,7 +180,7 @@ function draw() {
             pacman.draw();
     for(let i = 0; i < pacman.max_hp; i++)if(pacman.max_hp-i<=pacman.hp)
         ctx.drawImage(HP_SPRITE,(i*(CELL_SIZE*1.9))+5,CELL_SIZE*33.6,CELL_SIZE*1.8,CELL_SIZE*1.9);
-    if(!pacman.dead){
+    if(!(pacman.dead||String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""&&endedlevelt<60*2)){
         if(debug_mode){
             ctx.fillStyle = "#bb2222"
             ctx.fillRect(ghostmanager.BLINKY.x+OFFSET[1],ghostmanager.BLINKY.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
@@ -205,6 +201,17 @@ function draw() {
 
 //main loop
 async function update() {
+    if(String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""){
+        if(endedlevelt){
+            begun = false;
+            endedlevelt--;
+        }else{
+            begun = true;
+            level++;
+            restart();
+            resetpellets();
+        }
+    }
     if(begun && !pacman.dead)render(); else{MUS_GHOST_NORM.pause();MUS_MUNCH_1.pause();MUS_MUNCH_2.pause();if(!pacman.dead)time.tick = 0;}
     if(pacman.dead && ((time.tick%7)===0)){
         if(pacman.anim<14){
@@ -219,7 +226,6 @@ async function update() {
     time.secrettick++;
 }
 
-//setup
 requestAnimationFrame(()=>
     requestAnimationFrame(()=>{
         ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -232,6 +238,7 @@ var munch_b = false;
 (async function(){
     await time.waitbool("keys[\"Enter\"]");
     restart();
+    resetpellets();
     update();
     MUS_INTRO.addEventListener("ended",()=>{MUS_GHOST_NORM.play();begun=true;});
 })();

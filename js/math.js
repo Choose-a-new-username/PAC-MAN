@@ -18,3 +18,4 @@ Math.clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 function getAt(arr,index) {
     return arr[Math.clamp(index,0,arr.length-1)];
 }
+Object.filter = (obj, predicate) => Object.fromEntries(Object.entries(obj).filter(predicate));

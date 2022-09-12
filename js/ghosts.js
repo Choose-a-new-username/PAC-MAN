@@ -21,6 +21,7 @@ class ghost {
             ); 
     }
     die(){
+        console.log(this.name);
         this.x = Math.round(this.x / CELL_SIZE) * CELL_SIZE;
         this.y = Math.round(this.y / CELL_SIZE) * CELL_SIZE;
         this.scared = 0;
@@ -29,14 +30,16 @@ class ghost {
         MUS_EAT_GHOST.currentTime = 0;
         MUS_EAT_GHOST.pause();
         MUS_EAT_GHOST.play();
-        MUS_EAT_GHOST.addEventListener("ended",()=>{pacman.ate=false;this.state="dead";this.eaten=false;});
+        eval(`MUS_EAT_GHOST.addEventListener("ended",()=>{pacman.ate=false;${["ghostmanager.BLINKY","ghostmanager.PINKY","ghostmanager.INKY","ghostmanager.CLYDE",][this.name]}.state="dead";this.eaten=false;});`)
     }
     move() {
-        if(pacman.ate && this.state !== "dead")
+        if(pacman.ate)
             return;
         if(this.scared){
             this.scared--;
             if(!this.scared){
+                this.x = Math.round(this.x / CELL_SIZE) * CELL_SIZE;
+                this.y = Math.round(this.y / CELL_SIZE) * CELL_SIZE;
                 pacman.x = Math.round(pacman.x / CELL_SIZE) * CELL_SIZE;
                 pacman.y = Math.round(pacman.y / CELL_SIZE) * CELL_SIZE;
             }
@@ -142,6 +145,8 @@ class BLINKY extends ghost {
         this.dir = 1;
         this.state = "norm";
         this.exittimer = 0;
+        this.name = 0;
+        this.scared = 0;
     }
     constructor() {
         super();
@@ -162,7 +167,9 @@ class PINKY extends ghost {
         this.y = CELL_SIZE*15;
         this.dir = 1;
         this.state = "trapped";
-        this.exittimer = 7 * 60;
+        this.exittimer = getAt(getAt(AI.lt2,level),0) * 60;
+        this.name = 1;
+        this.scared = 0;
     }
     constructor() {
         super();
@@ -187,7 +194,9 @@ class INKY extends ghost {
         this.y = CELL_SIZE*15;
         this.dir = 1;
         this.state = "trapped";
-        this.exittimer = 27 * 60;
+        this.exittimer = getAt(getAt(AI.lt2,level),1) * 60;
+        this.name = 2;
+        this.scared = 0;
     }
     constructor() {
         super();
@@ -208,7 +217,9 @@ class CLYDE extends ghost {
         this.y = CELL_SIZE*15;
         this.dir = 1;
         this.state = "trapped";
-        this.exittimer = 34 * 60;
+        this.exittimer = getAt(getAt(AI.lt2,level),2) * 60;
+        this.name = 3;
+        this.scared = 0;
     }
     constructor() {
         super();
@@ -225,39 +236,23 @@ ghostmanager.update = function() {
     if(!pacman.ate)
         if (AI.collision2(this.BLINKY.x,this.BLINKY.y,this.BLINKY.w,this.BLINKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
             this.BLINKY.checkDie();
-        else if (AI.collision2(this.PINKY.x,this.PINKY.y,this.PINKY.w,this.PINKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
+        if (AI.collision2(this.PINKY.x,this.PINKY.y,this.PINKY.w,this.PINKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
             this.PINKY.checkDie();
-        else if (AI.collision2(this.INKY.x,this.INKY.y,this.INKY.w,this.INKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
+        if (AI.collision2(this.INKY.x,this.INKY.y,this.INKY.w,this.INKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
             this.INKY.checkDie();
-        else if (AI.collision2(this.CLYDE.x,this.CLYDE.y,this.CLYDE.w,this.CLYDE.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
+        if (AI.collision2(this.CLYDE.x,this.CLYDE.y,this.CLYDE.w,this.CLYDE.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
             this.CLYDE.checkDie();
-    switch (level) {
-        case 1:
-            switch (Math.floor((time.tick)/60)) {
-                case 7:
-                case 34:
-                case 41:
-                case 66:
-                    if(ghoststate==="chase")
-                        break;
-                    ghoststate = "chase";
-                    this.INKY.flip();
-                    this.BLINKY.flip();
-                    this.PINKY.flip();
-                    this.CLYDE.flip();
-                    break;
-                case 27:
-                case 54:
-                case 61:
-                    if(ghoststate==="scatter")
-                        break;
-                    ghoststate = "scatter";
-                    this.INKY.flip();
-                    this.BLINKY.flip();
-                    this.PINKY.flip();
-                    this.CLYDE.flip();
-                    break;
-            }
-            break;
+    if(getAt(AI.lt,level)[0].includes(Math.floor((time.tick)/60))&&ghoststate!=="chase"){
+        ghoststate = "chase";
+        this.INKY.flip();
+        this.BLINKY.flip();
+        this.PINKY.flip();
+        this.CLYDE.flip();
+    }else if(getAt(AI.lt,level)[1].includes(Math.floor((time.tick)/60))&&ghoststate!=="scatter"){
+        ghoststate = "scatter";
+        this.INKY.flip();
+        this.BLINKY.flip();
+        this.PINKY.flip();
+        this.CLYDE.flip();
     }
 }

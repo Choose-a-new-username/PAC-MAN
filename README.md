@@ -4,7 +4,7 @@ The classic 1980s arcade game now reimagined wth HTML and javascript!
 Arrow keys to move.
 ## INFO
 Game is still a work-in-progress, more features will be added in the future.<br/>
-This is a school project so dont expect high quality.
+(This _is_ a school project, so don't expect high quality.)
 ## TODO LIST:
 * ~~Pacman~~
 * ~~Maze collisions~~
@@ -25,7 +25,9 @@ This is a school project so dont expect high quality.
 * ~~Death/death screen~~
 * ~~Multiple lives~~
 * ~~REFACTOR WITH OOP~~
-* **Large pellets and ghost eating**
-* Levels
+* ~~Large pellets and ghost eating~~
+* **Levels**
 * Items spawns/cherries
 * High-scores/scoreboard
+## BUGS:
+* WHY IS BOTH GHOSTS GETTING EATEN WHAT IS HAPPENING11!!1!!1!!1/!?!/?1/?!/?1/

@@ -1,6 +1,5 @@
-"use strict";
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d')
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d")
 ctx.font = "bold 30px pixel-face";
 ctx.imageSmoothingEnabled = false;
 
@@ -34,6 +33,7 @@ const PACMAN_SPRITE                  = document.getElementById("pacman"),
       GHOST_SPRITE                   = document.getElementById("ghosts"),
       THE_SPRITE_WE_USE_FOR_THE_DOTS = document.getElementById("dots"),
       MAP_SPRITE                     = document.getElementById("map"),
+      MAP_SPRITE_2                   = document.getElementById("map2"),
       HP_SPRITE                      = document.getElementById("health"),
       MUS_INTRO                      = document.getElementById("intro"),
       MUS_MUNCH_1                    = document.getElementById("munch_1"),

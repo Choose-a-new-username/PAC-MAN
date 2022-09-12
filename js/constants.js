@@ -1,4 +1,3 @@
-const BOARD_SIZE              = [TILEMAP[0].length-1,TILEMAP.length];
 const CELL_SIZE               = 40;
 const PELLET_SIZE             = 10;
 const OFFSET                  = [CELL_SIZE*1.5,0];

@@ -157,7 +157,9 @@ function draw() {
     else    
         ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
     ctx.fillStyle = "#ffffff";
-    ctx.fillText(pacman.score,10,50);
+    ctx.fillText(pacman.score,10,CELL_SIZE*2);
+    if(pacman.hp&&time.secrettick%40<20)
+        ctx.fillText("1UP",400,CELL_SIZE);
     ctx.fillStyle = "#ffff00";
     ctx.font = "bold 35px pixel-face";
     if(!(begun||pacman.dead||String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""))

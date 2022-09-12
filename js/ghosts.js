@@ -3,8 +3,9 @@ class ghost {
     checkDie() {
         if(this.scared)
             this.die();
-        else if(!(this.state === "dead"))
+        else if(!(this.state === "dead")){
             pacman.die();
+        }
     }
     drawself(y){
         if(!this.eaten)
@@ -21,16 +22,16 @@ class ghost {
             ); 
     }
     die(){
-        console.log(this.name);
-        this.x = Math.round(this.x / CELL_SIZE) * CELL_SIZE;
-        this.y = Math.round(this.y / CELL_SIZE) * CELL_SIZE;
+        this.x = this.x.rnd(CELL_SIZE);
+        this.y = this.y.rnd(CELL_SIZE);
         this.scared = 0;
         pacman.ate = true;
         this.eaten = true;
         MUS_EAT_GHOST.currentTime = 0;
         MUS_EAT_GHOST.pause();
         MUS_EAT_GHOST.play();
-        eval(`MUS_EAT_GHOST.addEventListener("ended",()=>{pacman.ate=false;${["ghostmanager.BLINKY","ghostmanager.PINKY","ghostmanager.INKY","ghostmanager.CLYDE",][this.name]}.state="dead";this.eaten=false;});`)
+        this.state = "dead";
+        eval(`MUS_EAT_GHOST.addEventListener("ended",()=>{pacman.ate=false;console.log(${this.name});this.eaten=false;});`)
     }
     move() {
         if(pacman.ate)
@@ -38,10 +39,10 @@ class ghost {
         if(this.scared){
             this.scared--;
             if(!this.scared){
-                this.x = Math.round(this.x / CELL_SIZE) * CELL_SIZE;
-                this.y = Math.round(this.y / CELL_SIZE) * CELL_SIZE;
-                pacman.x = Math.round(pacman.x / CELL_SIZE) * CELL_SIZE;
-                pacman.y = Math.round(pacman.y / CELL_SIZE) * CELL_SIZE;
+                this.x = this.x.rnd(CELL_SIZE);
+                this.y = this.y.rnd(CELL_SIZE);
+                pacman.x = pacman.x.rnd(CELL_SIZE);
+                pacman.y = pacman.y.rnd(CELL_SIZE);
             }
         }
         if(this.exittimer)

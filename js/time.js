@@ -11,12 +11,13 @@ let time = {
                     requestAnimationFrame(isbool);
             })()
         ),
+    times: [],
     calcfps: () => {
         const now = performance.now();
-        while (times.length > 0 && times[0] <= now - 1000) {
-            times.shift();
+        while (time.times.length > 0 && time.times[0] <= now - 1000) {
+            time.times.shift();
         }
-        times.push(now);
-        return times.length;
+        time.times.push(now);
+        return time.times.length;
     }
 }

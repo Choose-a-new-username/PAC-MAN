@@ -28,82 +28,8 @@ var konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRigh
 var konamimode = false;
 var pressedsequence = [];
 var queued = "up";
-addEventListener("keydown",e=>{
-    if((keys[e.key]===true)||(pacman.dead))return;
-    pressedsequence.push(e.key);
-    if(!(e.key === konami[pressedsequence.length-1]))pressedsequence = [];
-    keys[e.key]=true;
-    if(!begun)return;
-    switch(e.key) {
-        case "r":
-        case "s":
-        case "t":
-        case "R":
-        case "S":
-        case "T":
-            if((keys["r"]||keys["R"])&&(keys["s"]||keys["S"])&&(keys["t"]||keys["T"])&&begun){
-                restart(false);
-            }
-            break;
-        case "h":
-        case "p":
-        case "=":
-        case "H":
-        case "P":
-        case "+":
-            if((keys["h"]||keys["H"])&&(keys["p"]||keys["P"])&&(keys["="]||keys["+"])){
-                pacman.hp += 1;
-                pacman.max_hp = pacman.hp>3?pacman.hp:3;
-            }
-            break;
-        case "h":
-        case "p":
-        case "-":
-        case "H":
-        case "P":
-        case "_":
-            if((keys["h"]||keys["H"])&&(keys["p"]||keys["P"])&&(keys["-"]||keys["_"])){
-                pacman.hp -= 1;
-                pacman.max_hp = pacman.hp>3?pacman.hp:3;
-                if(pacman.hp < 0){
-                    history.go(0);
-                }
-            }
-            break;
-        case "d":
-        case "b":
-        case "g":
-        case "D":
-        case "B":
-        case "G":
-            if((keys["d"]||keys["D"])&&(keys["b"]||keys["B"])&&(keys["g"]||keys["G"]))
-                debug_mode =! debug_mode
-            break;
-        case "ArrowUp":
-            queued = "up";
-            if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(Math.round(pacman.x/CELL_SIZE))!==1)
-                pacman.dir = 0;
-            break;
-        case "ArrowRight":
-            queued = "right";
-            if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3))
-                pacman.dir = 1;
-            break;
-        case "ArrowDown":
-            queued = "down";
-            if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1))
-                pacman.dir = 2;
-            break;
-        case "ArrowLeft":
-            queued = "left";
-            if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1))===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3)
-                pacman.dir = 3;
-            break;
-        default:
-            break;
-    }
-});
-addEventListener("keyup",e=>{keys[e.key]=false;});
+addEventListener("keydown",e=>keys.keydown(e));
+addEventListener("keyup",e=>{keys.keyup(e);});
 
 function queuedDo() {
     switch (queued) {

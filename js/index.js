@@ -208,14 +208,6 @@ function draw() {
         }
     }
 }
-function calcfps() {
-    const now = performance.now();
-    while (times.length > 0 && times[0] <= now - 1000) {
-        times.shift();
-    }
-    times.push(now);
-    return times.length;
-}
 //main loop
 async function update() {
     if(pacman.hp<0)
@@ -243,7 +235,7 @@ async function update() {
         }
     }
     draw();
-    document.getElementById("fps").innerHTML = "FPS: "+calcfps();
+    document.getElementById("fps").innerHTML = "FPS: "+time.calcfps();
     requestAnimationFrame(update);
 }
 

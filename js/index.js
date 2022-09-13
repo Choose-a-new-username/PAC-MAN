@@ -23,11 +23,6 @@ async function resetpellets(){
             else if(TILEMAP[i][j] === 4)
                 objectmanager.objects.push(new power_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));
 }
-var keys = {};
-var konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","Enter","Enter"];
-var konamimode = false;
-var pressedsequence = [];
-var queued = "up";
 addEventListener("keydown",e=>keys.keydown(e));
 addEventListener("keyup",e=>{keys.keyup(e);});
 

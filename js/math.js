@@ -15,6 +15,7 @@ Math.countDecimals = num => {
     return str.split("-")[1] || 0;
 }
 Math.clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+Math.roundp = (num, precision) => Math.round(num * (10**precision)) / (10**precision);
 function getAt(arr,index) {
     return arr[Math.clamp(index,0,arr.length-1)];
 }

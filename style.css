@@ -22,3 +22,9 @@ canvas {
     display: grid;
     place-content: center;    
 }
+#fps {
+    font-family: "pixel-face";
+    position: fixed;
+    left: 5px;
+    top: 5px;
+}

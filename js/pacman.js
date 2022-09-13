@@ -87,11 +87,11 @@ class pacman_c extends pac_manager {
     }
     move() {
         let animate = true;
-        const add = 1 / (10 ** Math.countDecimals(this.speed));
-        const iter = this.speed / add;
+        const add = 0.001;
+        const iter = Math.round(this.speed / add);
         for(let i = 0; i < iter; i++){
             this.x += AI.ddS[this.dir][3]*add;
-            this.x = Math.round(this.x * 100) / 100;
+            this.x = Math.round(this.x * 1000) / 1000;
             if(this.tget.map(this.round.y.z1.z1(),this.round.x.z1.z1())===1){
                 animate = false;
                 this.x = this.roundb.x.z1.z1();
@@ -99,7 +99,7 @@ class pacman_c extends pac_manager {
                 break;
             }
             this.y += AI.ddS[this.dir][4]*add;
-            this.y = Math.round(this.y * 100) / 100;
+            this.y = Math.round(this.y * 1000) / 1000;
             if(this.tget.map(this.round.y.z1.z1(),this.round.x.z1.z1())===1){
                 animate = false;
                 this.y = this.roundb.y.z1.z1();

@@ -1,5 +1,5 @@
 async function restart(from=true) {
-    endedlevelt = 60*3;
+    endedlevelt = 60*2.5;
     if(from){
         MUS_INTRO.pause();
         MUS_INTRO.currentTime = 0;
@@ -136,7 +136,7 @@ function queuedDo() {
     }
 }
 async function render() {
-    if(ghostmanager.INKY.state==="dead"||ghostmanager.PINKY.state==="dead"||ghostmanager.BLINKY.state==="dead"||ghostmanager.CLYDE.state==="dead")
+    if(ghostmanager.INKY.isdead()||ghostmanager.PINKY.isdead()||ghostmanager.BLINKY.isdead()||ghostmanager.CLYDE.isdead())
         MUS_GHOST_RETREAT.pla();
     else if(ghostmanager.INKY.scared||ghostmanager.PINKY.scared||ghostmanager.BLINKY.scared||ghostmanager.CLYDE.scared)
         MUS_GHOST_SCARED.pla();
@@ -150,18 +150,28 @@ async function render() {
 //draw loop
 function draw() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.save();
+    if(konamimode)
+        ctx.shadowOffsetX = Math.cos(time.secrettick/48)*2,
+        ctx.shadowOffsetY = Math.sin(time.secrettick/48)*2,
+        ctx.shadowColor = "#ff0000";
     if(String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""&&endedlevelt<60*2)
         ctx.drawImage(eval("MAP_SPRITE"+(time.secrettick%20>10?"_2":"")),OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
     else    
         ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
+    ctx.restore();
     ctx.fillStyle = "#ffffff";
     ctx.fillText(pacman.score,290-(String(pacman.score).length*35),CELL_SIZE*2);
     if(pacman.hp&&time.secrettick%40<20)
         ctx.fillText("1UP",280,CELL_SIZE);
     ctx.fillStyle = "#ffff00";
     ctx.font = "bold 35px pixel-face";
-    if(!(begun||pacman.dead||String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""))
-        ctx.fillText("READY!",canvas.width/2-("READY!".length*17.5), canvas.height/2+CELL_SIZE*2.45)
+    if(!(begun||pacman.dead||String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))==="")){
+        if(MUS_INTRO.currentTime > 3)            
+            ctx.fillText("READY!",canvas.width/2-("READY!".length*17.5), canvas.height/2+CELL_SIZE*2.45);
+        else
+            ctx.fillText(`LEVEL ${level}`,canvas.width/2-(`LEVEL ${level}`.length*17.5),canvas.height/2+CELL_SIZE*2.45)
+    }
     for(i in objectmanager.objects)
         objectmanager.objects[i].draw();
     ctx.fillStyle = "#2222bb"
@@ -191,27 +201,32 @@ function draw() {
             ctx.fillStyle = "#ffa500"
             ctx.fillRect(ghostmanager.CLYDE.x+OFFSET[1],ghostmanager.CLYDE.y+OFFSET[0],CELL_SIZE,CELL_SIZE);
         }else{
-            if(begun||pacman.dead||String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))==="")
-                ghostmanager.BLINKY.draw();
-            else{
-                ctx.fillStyle = "#ffff00";
-                ctx.fillText(`LEVEL ${level}`,canvas.width/2-(`LEVEL ${level}`.length*17.5),canvas.height/2-CELL_SIZE*3.45)
-            }
+            ghostmanager.BLINKY.draw();
             ghostmanager.PINKY.draw();
             ghostmanager.INKY.draw();
             ghostmanager.CLYDE.draw();
         }
     }
 }
-
+function calcfps() {
+    const now = performance.now();
+    while (times.length > 0 && times[0] <= now - 1000) {
+        times.shift();
+    }
+    times.push(now);
+    return times.length;
+}
 //main loop
 async function update() {
     if(pacman.hp<0)
         return;
+    time.tick++;
+    time.secrettick++;
     if(String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""){
         if(endedlevelt){
             begun = false;
             endedlevelt--;
+            document.querySelectorAll("audio[loop]").forEach(i=>{i.pause();i.currentTime=0;})
         }else{
             begun = true;
             level++;
@@ -228,13 +243,13 @@ async function update() {
         }
     }
     draw();
+    document.getElementById("fps").innerHTML = "FPS: "+calcfps();
     requestAnimationFrame(update);
-    time.tick++;
-    time.secrettick++;
 }
 
 requestAnimationFrame(()=>
     requestAnimationFrame(()=>{
+        document.getElementById("fps").innerHTML = "FPS: "+calcfps();
         ctx.fillRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = "white";
         ctx.fillText("PRESS ENTER TO START",canvas.width/2-("PRESS ENTER TO START".length*15), canvas.height/2);

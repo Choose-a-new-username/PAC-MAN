@@ -31,7 +31,10 @@ class ghost {
         MUS_EAT_GHOST.pause();
         MUS_EAT_GHOST.play();
         this.state = "dead";
-        eval(`MUS_EAT_GHOST.addEventListener("ended",()=>{pacman.ate=false;console.log(${this.name});this.eaten=false;});`)
+        eval(`MUS_EAT_GHOST.addEventListener("ended",()=>{pacman.ate=false;this.eaten=false;});`)
+    }
+    isdead(){
+        return this.state === "dead" && !this.eaten; 
     }
     move() {
         if(pacman.ate)
@@ -55,16 +58,16 @@ class ghost {
             this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gp,level);
         else
             this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gn,level);
-        const add = 1 / (10 ** Math.countDecimals(this.speed));
-        const iter = this.speed / add;
+        const add = 0.001;
+        const iter = Math.round(this.speed / add);
         for(let i = 0; i < iter; i++){
             if(Math.round(this.x/CELL_SIZE)*CELL_SIZE === this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE === this.y){
                 this.ithingy2();
             }
             this.x+=AI.ddS[this.dir][3] * add;
-            this.x = Math.round(this.x * 100) / 100;
+            this.x = Math.round(this.x * 1000) / 1000;
             this.y+=AI.ddS[this.dir][4] * add;
-            this.y = Math.round(this.y * 100) / 100;
+            this.y = Math.round(this.y * 1000) / 1000;
             if(this.state === "exit" && Math.fround(this.x / CELL_SIZE) === 13.5)
                 if(this.y / CELL_SIZE === 12){
                     this.dir   = 1;

@@ -2,6 +2,8 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d")
 ctx.font = "bold 30px pixel-face";
 ctx.imageSmoothingEnabled = false;
+ctx.shadowOffsetX = 5;
+ctx.shadowOffsetY = 5;
 
 CanvasRenderingContext2D.prototype.drawImag = function
 (

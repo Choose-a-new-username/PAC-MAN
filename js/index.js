@@ -162,7 +162,6 @@ async function update() {
 
 requestAnimationFrame(()=>
     requestAnimationFrame(()=>{
-        document.getElementById("fps").innerHTML = "FPS: "+calcfps();
         ctx.fillRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = "white";
         ctx.fillText("PRESS ENTER TO START",canvas.width/2-("PRESS ENTER TO START".length*15), canvas.height/2);

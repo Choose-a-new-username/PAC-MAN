@@ -19,9 +19,8 @@ var keys = {
             case "R":
             case "S":
             case "T":
-                if((this.keyspressed["r"]||this.keyspressed["R"])&&(this.keyspressed["s"]||this.keyspressed["S"])&&(this.keyspressed["t"]||this.keyspressed["T"])&&begun){
+                if((this.keyspressed["r"]||this.keyspressed["R"])&&(this.keyspressed["s"]||this.keyspressed["S"])&&(this.keyspressed["t"]||this.keyspressed["T"])&&begun)
                     restart(false);
-                }
                 break;
             case "h":
             case "p":
@@ -43,9 +42,8 @@ var keys = {
                 if((this.keyspressed["h"]||this.keyspressed["H"])&&(this.keyspressed["p"]||this.keyspressed["P"])&&(this.keyspressed["-"]||this.keyspressed["_"])){
                     pacman.hp -= 1;
                     pacman.max_hp = pacman.hp>3?pacman.hp:3;
-                    if(pacman.hp < 0){
-                          history.go(0);
-                    }
+                    if(pacman.hp < 0)
+                        history.go(0);
                 }
                 break;
             case "d":
@@ -56,6 +54,15 @@ var keys = {
             case "G":
                 if((this.keyspressed["d"]||this.keyspressed["D"])&&(this.keyspressed["b"]||this.keyspressed["B"])&&(this.keyspressed["g"]||this.keyspressed["G"]))
                     debug_mode =! debug_mode
+                break;
+            case "f":
+            case "p":
+            case "s":
+            case "F":
+            case "P":
+            case "S":
+                if((this.keyspressed["f"]||this.keyspressed["F"])&&(this.keyspressed["p"]||this.keyspressed["P"])&&(this.keyspressed["s"]||this.keyspressed["S"]))
+                    document.getElementById("fps").style.display = document.getElementById("fps").style.display==="none"?"block":"none";
                 break;
             case "ArrowUp":
             case "w":

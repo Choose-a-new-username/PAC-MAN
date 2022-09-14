@@ -24,33 +24,33 @@ async function resetpellets(){
                 objectmanager.objects.push(new power_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));
 }
 addEventListener("keydown",e=>keys.keydown(e));
-addEventListener("keyup",e=>{keys.keyup(e);});
+addEventListener("keyup",e=>keys.keyup(e));
 
 function queuedDo() {
-    switch (queued) {
+    switch (keys.queued) {
         case "up":
             if(pacman.x !== Math.round(pacman.x / CELL_SIZE)*CELL_SIZE){break;}
             if(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(Math.round(pacman.x/CELL_SIZE))===1){break;}
             pacman.dir = 0;
-            queued = "";
+            keys.queued = "";
             break;
         case "right":
             if(pacman.y !== Math.round(pacman.y / CELL_SIZE)*CELL_SIZE){break;}
             if(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===1){break;}
             pacman.dir = 1;
-            queued = "";
+            keys.queued = "";
             break;
         case "down":
             if(pacman.x !== Math.round(pacman.x / CELL_SIZE)*CELL_SIZE){break;}
             if(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1){break;}
             pacman.dir = 2;
-            queued = "";
+            keys.queued = "";
             break;
         case "left":
             if(pacman.y !== Math.round(pacman.y / CELL_SIZE)*CELL_SIZE){break;}
             if(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1)===1){break;}
             pacman.dir = 3;
-            queued = "";
+            keys.queued = "";
             break;
         default:
             break;
@@ -72,7 +72,7 @@ async function render() {
 function draw() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.save();
-    if(konamimode)
+    if(keys.konamimode)
         ctx.shadowOffsetX = Math.cos(time.secrettick/48)*2,
         ctx.shadowOffsetY = Math.sin(time.secrettick/48)*2,
         ctx.shadowColor = "#ff0000";
@@ -103,7 +103,7 @@ function draw() {
                     ctx.fillRect(i*CELL_SIZE+OFFSET[1],j*CELL_SIZE+CELL_SIZE+OFFSET[0],CELL_SIZE,CELL_SIZE);
         ctx.fillStyle = "#ffff00"
     }
-    if(pressedsequence.length === konami.length){konamimode =! konamimode; pressedsequence = []}
+    if(pressedsequence.length === konami.length){keys.konamimode =! keys.konamimode; pressedsequence = []}
     if(!pacman.ate)
         if(debug_mode)
             ctx.fillRect(pacman.x+OFFSET[1],pacman.y+CELL_SIZE+OFFSET[0]+pacman.dead*(CELL_SIZE/2),CELL_SIZE,CELL_SIZE-pacman.dead*(CELL_SIZE/2));

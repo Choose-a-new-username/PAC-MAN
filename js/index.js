@@ -171,7 +171,7 @@ requestAnimationFrame(()=>
 var begun = false;
 var munch_b = false;
 (async function(){
-    await time.waitbool("keys[\"Enter\"]");
+    await time.waitbool("keys.keyspressed[\"Enter\"]");
     restart();
     resetpellets();
     update();

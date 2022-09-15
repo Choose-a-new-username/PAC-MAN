@@ -21,5 +21,6 @@ function updateHighScore(){
 function getHighestScore(){
     const a = getLocalStorage("highscores");
     const b = Math.getMax(a,1);
+    alert(a,b);
     return b;
 }

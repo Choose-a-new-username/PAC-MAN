@@ -4,12 +4,13 @@ let time = {
     times: [],
     fps: 0,
     wait: secs => {return new Promise(resolve => setTimeout(resolve,secs));},
-    waitbool: b => 
+    waitbool: (b, b2=()=>{}) => 
         new Promise(r =>
             (async function isbool(){
                 if(eval(b))
                     r();
                 else
+                    b2(),
                     requestAnimationFrame(isbool);
             })()
         ),

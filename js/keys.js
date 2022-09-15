@@ -5,6 +5,12 @@ var keys = {
     konamimode: false,
     queued: "up",
     keydown: function (e) {
+        if(!game_begun){
+            if(e.key === "Backspace")
+                username = username.slice(0,-1);
+            else if(!["Enter","Shift"].includes(e.key))
+                username += e.key;
+        }
         if((this.keyspressed[e.code]===true)||(pacman.dead))
             return;
         this.pressedsequence.push(e.code);
@@ -15,7 +21,7 @@ var keys = {
             case "KeyR":
             case "KeyS":
             case "KeyT":
-                if(this.keyspressed["KeyR"]&&this.keyspressed["KeyS"]&&this.keyspressed["KeyT"]&&begun)
+                if(this.keyspressed["KeyR"]&&this.keyspressed["KeyS"]&&this.keyspressed["KeyT"])
                     restart(false);
                 break;
             case "KeyH":
@@ -39,6 +45,11 @@ var keys = {
                 if(this.keyspressed["KeyD"]&&this.keyspressed["KeyB"]&&this.keyspressed["KeyG"])
                     debug_mode =! debug_mode
                 break;
+            case "KeyQ":
+            case "KeyU":
+                if(this.keyspressed["KeyQ"]&&this.keyspressed["KeyU"]&&begun)
+                    game_quit = true;
+                break;
             case "KeyF":
             case "KeyX":
                 if(this.keyspressed["KeyF"]&&this.keyspressed["KeyX"])
@@ -46,7 +57,6 @@ var keys = {
                 break;
             case "ArrowUp":
             case "KeyW":
-                localStorage.clear();
                 this.queued = "up";
                 if(pacman.x === AI.ddS[pacman.dir][6](pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1][Math.round(pacman.x/CELL_SIZE)]===1))
                     pacman.dir = 0;

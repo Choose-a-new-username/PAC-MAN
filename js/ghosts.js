@@ -41,12 +41,6 @@ class ghost {
             return;
         if(this.scared){
             this.scared--;
-            //if(!this.scared){
-            //    this.x = this.x.rnd(CELL_SIZE);
-            //    this.y = this.y.rnd(CELL_SIZE);
-            //    pacman.x = pacman.x.rnd(CELL_SIZE);
-            //    pacman.y = pacman.y.rnd(CELL_SIZE);
-            //}
         }
         if(this.exittimer)
             this.exittimer--;
@@ -55,9 +49,9 @@ class ghost {
         if(this.state==="dead")
             this.speed = UNIVERSAL_SPEED*2;
         else if(this.scared && this.state != "trapped")
-            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gp,level);
+            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gp,level-1);
         else
-            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gn,level);
+            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gn,level-1);
         const iter = Math.round(this.speed / 0.001);
         for(let i = 0; i < iter; i++){
             if(Math.round(this.x/CELL_SIZE)*CELL_SIZE === this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE === this.y){
@@ -110,11 +104,13 @@ class ghost {
                     this.dir = AI.normal(CELL_SIZE*14,CELL_SIZE*15,this.dir,this.x,this.y,this.state);
                     break;
                 case "dead":
-                    this.dir = AI.normal(CELL_SIZE*13,CELL_SIZE*12,this.dir,this.x,this.y,this.state);
-                    if([12,13].includes(this.x / CELL_SIZE) && this.y / CELL_SIZE === 12)
+                    this.dir = AI.normal(CELL_SIZE*14,CELL_SIZE*11,this.dir,this.x,this.y,this.state);
+                    if(([12,13].includes(this.x / CELL_SIZE) && this.y / CELL_SIZE === 12)||(this.x / CELL_SIZE === 17 && this.y / CELL_SIZE === 6 && this.dir === 3))
                         this.dir = 1;
-                    else if([14,15].includes(this.x / CELL_SIZE) && this.y / CELL_SIZE === 12)
+                    else if(([14,15].includes(this.x / CELL_SIZE) && this.y / CELL_SIZE === 12)||(this.x / CELL_SIZE === 12 && this.y / CELL_SIZE === 6 && this.dir === 1))
                         this.dir = 3;
+                    else if([10,19].includes(this.x / CELL_SIZE) && this.y / CELL_SIZE === 6)
+                        this.dir = 2;
                     break;
             }
         }
@@ -170,7 +166,7 @@ class PINKY extends ghost {
         this.y = CELL_SIZE*15;
         this.dir = 1;
         this.state = "trapped";
-        this.exittimer = getAt(getAt(AI.lt2,level),0)*60;
+        this.exittimer = getAt(getAt(AI.lt2,level-1),0)*60;
         this.name = 1;
         this.scared = 0;
     }
@@ -197,7 +193,7 @@ class INKY extends ghost {
         this.y = CELL_SIZE*15;
         this.dir = 1;
         this.state = "trapped";
-        this.exittimer = getAt(getAt(AI.lt2,level),1)*60;
+        this.exittimer = getAt(getAt(AI.lt2,level-1),1)*60;
         this.name = 2;
         this.scared = 0;
     }
@@ -220,7 +216,7 @@ class CLYDE extends ghost {
         this.y = CELL_SIZE*15;
         this.dir = 1;
         this.state = "trapped";
-        this.exittimer = getAt(getAt(AI.lt2,level),2)*60;
+        this.exittimer = getAt(getAt(AI.lt2,level-1),2)*60;
         this.name = 3;
         this.scared = 0;
     }
@@ -245,13 +241,13 @@ ghostmanager.update = function() {
             this.INKY.checkDie();
         if (AI.collision2(this.CLYDE.x,this.CLYDE.y,this.CLYDE.w,this.CLYDE.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
             this.CLYDE.checkDie();
-    if(getAt(AI.lt,level)[0].includes(Math.floor((time.tick)/60))&&ghoststate!=="chase"){
+    if(getAt(AI.lt,level-1)[0].includes(Math.floor((time.tick)/60))&&ghoststate!=="chase"){
         ghoststate = "chase";
         this.INKY.flip();
         this.BLINKY.flip();
         this.PINKY.flip();
         this.CLYDE.flip();
-    }else if(getAt(AI.lt,level)[1].includes(Math.floor((time.tick)/60))&&ghoststate!=="scatter"){
+    }else if(getAt(AI.lt,level-1)[1].includes(Math.floor((time.tick)/60))&&ghoststate!=="scatter"){
         ghoststate = "scatter";
         this.INKY.flip();
         this.BLINKY.flip();

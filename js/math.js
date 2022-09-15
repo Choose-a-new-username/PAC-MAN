@@ -17,7 +17,9 @@ Math.countDecimals = num => {
 Math.clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 Math.roundp = (num, precision) => Math.round(num * (10**precision)) / (10**precision);
 Math.diff = (num,num2) => Math.abs(num - num2);
+Number.prototype.rnd = function(p1){
+    return Math.round(this / p1) * p1;
+}
 function getAt(arr,index) {
     return arr[Math.clamp(index,0,arr.length-1)];
 }
-Object.filter = (obj, predicate) => Object.fromEntries(Object.entries(obj).filter(predicate));

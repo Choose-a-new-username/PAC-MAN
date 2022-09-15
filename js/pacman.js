@@ -79,10 +79,11 @@ class pacman_c extends pac_manager {
             return;
         if(this.anim === PACMAN_ANIMATION_FRAMES)
             this.anim = 0;
+        console.log((getAt(AI.speed.pn,level-1)).toPrecision(3));
         if(ghostmanager.BLINKY.scared||ghostmanager.PINKY.scared||ghostmanager.INKY.scared||ghostmanager.CLYDE.scared)
-            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.pp,level);
+            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.pp,level-1);
         else
-            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.pn,level);
+            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.pn,level-1);
         this.move();
     }
     move() {

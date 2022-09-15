@@ -5,96 +5,73 @@ var keys = {
     konamimode: false,
     queued: "up",
     keydown: function (e) {
-        if((this[e.key]===true)||(pacman.dead))
+        if((this.keyspressed[e.code]===true)||(pacman.dead))
             return;
-        this.pressedsequence.push(e.key);
-        if(!(e.key === this.konami[this.pressedsequence.length-1]))
+        this.pressedsequence.push(e.code);
+        if(!(e.code === this.konami[this.pressedsequence.length-1]))
             this.pressedsequence = [];
-        this[e.key]=true;
-        if(!begun)return;
-        switch(e.key) {
-            case "r":
-            case "s":
-            case "t":
-            case "R":
-            case "S":
-            case "T":
-                if((this.keyspressed["r"]||this.keyspressed["R"])&&(this.keyspressed["s"]||this.keyspressed["S"])&&(this.keyspressed["t"]||this.keyspressed["T"])&&begun)
+        this.keyspressed[e.code]=true;
+        switch(e.code) {
+            case "KeyR":
+            case "KeyS":
+            case "KeyT":
+                if(this.keyspressed["KeyR"]&&this.keyspressed["KeyS"]&&this.keyspressed["KeyT"]&&begun)
                     restart(false);
                 break;
-            case "h":
-            case "p":
-            case "=":
-            case "H":
-            case "P":
-            case "+":
-                if((this.keyspressed["h"]||this.keyspressed["H"])&&(this.keyspressed["p"]||this.keyspressed["P"])&&(this.keyspressed["="]||this.keyspressed["+"])){
+            case "KeyH":
+            case "KeyP":
+            case "Equal":
+            case "Minus":
+                if(this.keyspressed["KeyH"]&&this.keyspressed["KeyP"]&&this.keyspressed["Equal"]){
                     pacman.hp += 1;
                     pacman.max_hp = pacman.hp>3?pacman.hp:3;
                 }
-                break;
-            case "h":
-            case "p":
-            case "-":
-            case "H":
-            case "P":
-            case "_":
-                if((this.keyspressed["h"]||this.keyspressed["H"])&&(this.keyspressed["p"]||this.keyspressed["P"])&&(this.keyspressed["-"]||this.keyspressed["_"])){
+                else if(this.keyspressed["KeyH"]&&this.keyspressed["KeyP"]&&this.keyspressed["Minus"]){
                     pacman.hp -= 1;
                     pacman.max_hp = pacman.hp>3?pacman.hp:3;
                     if(pacman.hp < 0)
                         history.go(0);
                 }
                 break;
-            case "d":
-            case "b":
-            case "g":
-            case "D":
-            case "B":
-            case "G":
-                if((this.keyspressed["d"]||this.keyspressed["D"])&&(this.keyspressed["b"]||this.keyspressed["B"])&&(this.keyspressed["g"]||this.keyspressed["G"]))
+            case "KeyD":
+            case "KeyB":
+            case "KeyG":
+                if(this.keyspressed["KeyD"]&&this.keyspressed["KeyB"]&&this.keyspressed["KeyG"])
                     debug_mode =! debug_mode
                 break;
-            case "f":
-            case "p":
-            case "s":
-            case "F":
-            case "P":
-            case "S":
-                if((this.keyspressed["f"]||this.keyspressed["F"])&&(this.keyspressed["p"]||this.keyspressed["P"])&&(this.keyspressed["s"]||this.keyspressed["S"]))
-                    document.getElementById("fps").style.display = document.getElementById("fps").style.display==="none"?"block":"none";
+            case "KeyF":
+            case "KeyX":
+                if(this.keyspressed["KeyF"]&&this.keyspressed["KeyX"])
+                    document.getElementById("fps").style.display = document.getElementById("fps").style.display==="block"?"none":"block";
                 break;
             case "ArrowUp":
-            case "w":
-            case "W":          
+            case "KeyW":
+                localStorage.clear();
                 this.queued = "up";
-                if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(Math.round(pacman.x/CELL_SIZE))!==1)
+                if(pacman.x === AI.ddS[pacman.dir][6](pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1][Math.round(pacman.x/CELL_SIZE)]===1))
                     pacman.dir = 0;
                 break;
             case "ArrowRight":
-            case "d":
-            case "D":
+            case "KeyD":
                 this.queued = "right";
-                if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3))
+                if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)][Math.floor(pacman.x/CELL_SIZE)+1]===1))
                     pacman.dir = 1;
                 break;
             case "ArrowDown":
-            case "s":
-            case "S":
+            case "KeyS":
                 this.queued = "down";
-                if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1))
+                if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1][Math.round(pacman.x/CELL_SIZE)]===1))
                     pacman.dir = 2;
                 break;
             case "ArrowLeft":
-            case "a":
-            case "A":
+            case "KeyA":
                 this.queued = "left";
-                if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1))===1||TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===3)
+                if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)][Math.ceil(pacman.x/CELL_SIZE)-1]===1))
                     pacman.dir = 3;
                 break;
             default:
                 break;
         }
     },
-    keyup: function(e){this[e.key]=false;}
+    keyup: function(e){this.keyspressed[e.code]=false;}
 }

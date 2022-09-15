@@ -87,10 +87,9 @@ class pacman_c extends pac_manager {
     }
     move() {
         let animate = true;
-        const add = 0.001;
-        const iter = Math.round(this.speed / add);
+        const iter = Math.round(this.speed / 0.001);
         for(let i = 0; i < iter; i++){
-            this.x += AI.ddS[this.dir][3]*add;
+            this.x += AI.ddS[this.dir][3]*0.001;
             this.x = Math.round(this.x * 1000) / 1000;
             if(this.tget.map(this.round.y.z1.z1(),this.round.x.z1.z1())===1){
                 animate = false;
@@ -98,7 +97,7 @@ class pacman_c extends pac_manager {
                 queuedDo();
                 break;
             }
-            this.y += AI.ddS[this.dir][4]*add;
+            this.y += AI.ddS[this.dir][4]*0.001;
             this.y = Math.round(this.y * 1000) / 1000;
             if(this.tget.map(this.round.y.z1.z1(),this.round.x.z1.z1())===1){
                 animate = false;

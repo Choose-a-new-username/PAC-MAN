@@ -41,12 +41,12 @@ class ghost {
             return;
         if(this.scared){
             this.scared--;
-            if(!this.scared){
-                this.x = this.x.rnd(CELL_SIZE);
-                this.y = this.y.rnd(CELL_SIZE);
-                pacman.x = pacman.x.rnd(CELL_SIZE);
-                pacman.y = pacman.y.rnd(CELL_SIZE);
-            }
+            //if(!this.scared){
+            //    this.x = this.x.rnd(CELL_SIZE);
+            //    this.y = this.y.rnd(CELL_SIZE);
+            //    pacman.x = pacman.x.rnd(CELL_SIZE);
+            //    pacman.y = pacman.y.rnd(CELL_SIZE);
+            //}
         }
         if(this.exittimer)
             this.exittimer--;
@@ -58,15 +58,14 @@ class ghost {
             this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gp,level);
         else
             this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gn,level);
-        const add = 0.001;
-        const iter = Math.round(this.speed / add);
+        const iter = Math.round(this.speed / 0.001);
         for(let i = 0; i < iter; i++){
             if(Math.round(this.x/CELL_SIZE)*CELL_SIZE === this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE === this.y){
                 this.ithingy2();
             }
-            this.x+=AI.ddS[this.dir][3] * add;
+            this.x+=AI.ddS[this.dir][3]*0.001;
             this.x = Math.round(this.x * 1000) / 1000;
-            this.y+=AI.ddS[this.dir][4] * add;
+            this.y+=AI.ddS[this.dir][4]*0.001;
             this.y = Math.round(this.y * 1000) / 1000;
             if(this.state === "exit" && Math.fround(this.x / CELL_SIZE) === 13.5)
                 if(this.y / CELL_SIZE === 12){
@@ -171,7 +170,7 @@ class PINKY extends ghost {
         this.y = CELL_SIZE*15;
         this.dir = 1;
         this.state = "trapped";
-        this.exittimer = getAt(getAt(AI.lt2,level),0) * 60;
+        this.exittimer = getAt(getAt(AI.lt2,level),0)*time.fps;
         this.name = 1;
         this.scared = 0;
     }
@@ -184,11 +183,11 @@ ghostmanager.PINKY = new PINKY();
 
 class INKY extends ghost {
     ithingy2() {
-        var xx = pacman.x+AI.ddS[pacman.dir][1]*2;
-        var yy = pacman.y+PACMAN_HEIGHT+AI.ddS[pacman.dir][2]*2;
-        var INKYTARGETX = Math.abs(ghostmanager.BLINKY.x-xx)>xx?xx-Math.abs(ghostmanager.BLINKY.x-xx):xx+Math.abs(ghostmanager.BLINKY.x-xx);
-        var INKYTARGETY = Math.abs(ghostmanager.BLINKY.y-yy)>yy?yy-Math.abs(ghostmanager.BLINKY.y-yy):yy+Math.abs(ghostmanager.BLINKY.y-yy);
-        this.behavior(INKYTARGETX,INKYTARGETY,CELL_SIZE*27,CELL_SIZE*31);
+        const xx = pacman.x+AI.ddS[pacman.dir][1]*2;
+        const yy = pacman.y+PACMAN_HEIGHT+AI.ddS[pacman.dir][2]*2;
+        const x2 = Math.diff(ghostmanager.BLINKY.x,xx);
+        const y2 = Math.diff(ghostmanager.BLINKY.y,yy);
+        this.behavior(x2>xx?xx-x2:xx+x2,y2>yy?yy-y2:yy+y2,CELL_SIZE*27,CELL_SIZE*31);
     }
     draw() {
         this.drawself(32);
@@ -198,7 +197,7 @@ class INKY extends ghost {
         this.y = CELL_SIZE*15;
         this.dir = 1;
         this.state = "trapped";
-        this.exittimer = getAt(getAt(AI.lt2,level),1) * 60;
+        this.exittimer = getAt(getAt(AI.lt2,level),1)*time.fps;
         this.name = 2;
         this.scared = 0;
     }
@@ -221,7 +220,7 @@ class CLYDE extends ghost {
         this.y = CELL_SIZE*15;
         this.dir = 1;
         this.state = "trapped";
-        this.exittimer = getAt(getAt(AI.lt2,level),2) * 60;
+        this.exittimer = getAt(getAt(AI.lt2,level),2)*time.fps;
         this.name = 3;
         this.scared = 0;
     }

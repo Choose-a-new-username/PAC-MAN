@@ -16,6 +16,7 @@ Math.countDecimals = num => {
 }
 Math.clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 Math.roundp = (num, precision) => Math.round(num * (10**precision)) / (10**precision);
+Math.diff = (num,num2) => Math.abs(num - num2);
 function getAt(arr,index) {
     return arr[Math.clamp(index,0,arr.length-1)];
 }

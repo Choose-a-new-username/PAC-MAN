@@ -30,25 +30,25 @@ function queuedDo() {
     switch (keys.queued) {
         case "up":
             if(pacman.x !== Math.round(pacman.x / CELL_SIZE)*CELL_SIZE){break;}
-            if(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1].at(Math.round(pacman.x/CELL_SIZE))===1){break;}
+            if(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1][Math.round(pacman.x/CELL_SIZE)]===1){break;}
             pacman.dir = 0;
             keys.queued = "";
             break;
         case "right":
             if(pacman.y !== Math.round(pacman.y / CELL_SIZE)*CELL_SIZE){break;}
-            if(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.floor(pacman.x/CELL_SIZE)+1)===1){break;}
+            if(TILEMAP[Math.round(pacman.y/CELL_SIZE)][Math.floor(pacman.x/CELL_SIZE)+1]===1){break;}
             pacman.dir = 1;
             keys.queued = "";
             break;
         case "down":
             if(pacman.x !== Math.round(pacman.x / CELL_SIZE)*CELL_SIZE){break;}
-            if(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1].at(Math.round(pacman.x/CELL_SIZE))===1){break;}
+            if(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1][Math.round(pacman.x/CELL_SIZE)]===1){break;}
             pacman.dir = 2;
             keys.queued = "";
             break;
         case "left":
             if(pacman.y !== Math.round(pacman.y / CELL_SIZE)*CELL_SIZE){break;}
-            if(TILEMAP[Math.round(pacman.y/CELL_SIZE)].at(Math.ceil(pacman.x/CELL_SIZE)-1)===1){break;}
+            if(TILEMAP[Math.round(pacman.y/CELL_SIZE)][Math.ceil(pacman.x/CELL_SIZE)-1]===1){break;}
             pacman.dir = 3;
             keys.queued = "";
             break;
@@ -103,7 +103,7 @@ function draw() {
                     ctx.fillRect(i*CELL_SIZE+OFFSET[1],j*CELL_SIZE+CELL_SIZE+OFFSET[0],CELL_SIZE,CELL_SIZE);
         ctx.fillStyle = "#ffff00"
     }
-    if(pressedsequence.length === konami.length){keys.konamimode =! keys.konamimode; pressedsequence = []}
+    if(keys.pressedsequence.length === keys.konami.length){keys.konamimode =! keys.konamimode; keys.pressedsequence = []}
     if(!pacman.ate)
         if(debug_mode)
             ctx.fillRect(pacman.x+OFFSET[1],pacman.y+CELL_SIZE+OFFSET[0]+pacman.dead*(CELL_SIZE/2),CELL_SIZE,CELL_SIZE-pacman.dead*(CELL_SIZE/2));
@@ -135,6 +135,7 @@ async function update() {
         return;
     time.tick++;
     time.secrettick++;
+    time.fps = time.calcfps();
     if(String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""){
         if(endedlevelt){
             begun = false;
@@ -155,8 +156,8 @@ async function update() {
             pacman.anim++;
         }
     }
+    document.getElementById("fps").innerHTML = `fps: ${time.fps}`;
     draw();
-    document.getElementById("fps").innerHTML = "FPS: "+time.calcfps();
     requestAnimationFrame(update);
 }
 

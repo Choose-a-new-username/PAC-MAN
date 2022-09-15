@@ -30,6 +30,12 @@ HTMLAudioElement.prototype.pla = function() {
     document.querySelectorAll("audio[loop]").forEach(i=>{i.pause();if(i.currentTime === i.duration)i.currentTime = 0;});
     this.play();
 }
+HTMLElement.prototype.hide = function() {
+    this.style.display = "none";
+}
+HTMLElement.prototype.show = function() {
+    this.style.display = "block";
+}
 
 const PACMAN_SPRITE                  = document.getElementById("pacman"),
       GHOST_SPRITE                   = document.getElementById("ghosts"),

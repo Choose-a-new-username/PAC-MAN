@@ -85,7 +85,7 @@ function draw() {
     ctx.fillText(pacman.score,190-(String(pacman.score).length*35),CELL_SIZE*2);
     if(pacman.hp&&time.secrettick%40<20)
         ctx.fillText("1UP",180,CELL_SIZE);
-    ctx.fillText(`HI: ${getHighestScore()[1]}`,220,CELL_SIZE*2);
+    //ctx.fillText(`HI: ${getHighestScore()[1]}`,220,CELL_SIZE*2);
     ctx.fillStyle = "#ffff00";
     ctx.font = "bold 35px pixel-face";
     if(!(begun||pacman.dead||String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))==="")){

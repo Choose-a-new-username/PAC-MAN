@@ -156,7 +156,7 @@ async function update() {
             pacman.anim++;
         }
     }
-    document.getElementById("fps").innerHTML = `fps: ${time.fps}`;
+    document.getElementById("fps").innerHTML = `FPS: ${time.fps}` + String.fromCharCode(0);
     draw();
     requestAnimationFrame(update);
 }

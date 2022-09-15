@@ -170,7 +170,7 @@ class PINKY extends ghost {
         this.y = CELL_SIZE*15;
         this.dir = 1;
         this.state = "trapped";
-        this.exittimer = getAt(getAt(AI.lt2,level),0)*time.fps;
+        this.exittimer = getAt(getAt(AI.lt2,level),0)*60;
         this.name = 1;
         this.scared = 0;
     }
@@ -197,7 +197,7 @@ class INKY extends ghost {
         this.y = CELL_SIZE*15;
         this.dir = 1;
         this.state = "trapped";
-        this.exittimer = getAt(getAt(AI.lt2,level),1)*time.fps;
+        this.exittimer = getAt(getAt(AI.lt2,level),1)*60;
         this.name = 2;
         this.scared = 0;
     }
@@ -220,7 +220,7 @@ class CLYDE extends ghost {
         this.y = CELL_SIZE*15;
         this.dir = 1;
         this.state = "trapped";
-        this.exittimer = getAt(getAt(AI.lt2,level),2)*time.fps;
+        this.exittimer = getAt(getAt(AI.lt2,level),2)*60;
         this.name = 3;
         this.scared = 0;
     }

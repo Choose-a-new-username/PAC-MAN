@@ -18,3 +18,8 @@ function updateHighScore(){
     a[username] = pacman.score;
     setLocalStorage("highscores",a);
 }
+function getHighestScore(){
+    const a = getLocalStorage("highscores");
+    const b = Math.getMax(a,1)[0];
+    return [b,a[b]];
+}

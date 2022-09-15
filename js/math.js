@@ -3,6 +3,9 @@ Math.getMin = object => {
         return Object.keys(object)[0];
     return Object.keys(object).filter(x => {return object[x] === Math.min.apply(null,Object.values(object))});
 };
+Math.getMax = (object,amount) => {
+    Object.entries(object).sort(([, a],[, b]) => b-a).slice(0,amount).map(([n])=> n);
+}
 Math.countDecimals = num => {
     if (Math.floor(num.valueOf()) === num.valueOf())
         return 0;
@@ -17,6 +20,7 @@ Math.countDecimals = num => {
 Math.clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 Math.roundp = (num, precision) => Math.round(num * (10**precision)) / (10**precision);
 Math.diff = (num,num2) => Math.abs(num - num2);
+
 Number.prototype.rnd = function(p1){
     return Math.round(this / p1) * p1;
 }

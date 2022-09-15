@@ -82,9 +82,10 @@ function draw() {
         ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
     ctx.restore();
     ctx.fillStyle = "#ffffff";
-    ctx.fillText(pacman.score,290-(String(pacman.score).length*35),CELL_SIZE*2);
+    ctx.fillText(pacman.score,190-(String(pacman.score).length*35),CELL_SIZE*2);
     if(pacman.hp&&time.secrettick%40<20)
-        ctx.fillText("1UP",280,CELL_SIZE);
+        ctx.fillText("1UP",180,CELL_SIZE);
+    ctx.fillText(`HI: ${getHighestScore()[1]}`,220,CELL_SIZE*2);
     ctx.fillStyle = "#ffff00";
     ctx.font = "bold 35px pixel-face";
     if(!(begun||pacman.dead||String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))==="")){

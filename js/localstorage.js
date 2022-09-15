@@ -20,6 +20,6 @@ function updateHighScore(){
 }
 function getHighestScore(){
     const a = getLocalStorage("highscores");
-    const b = Math.getMax(a,1)[0];
-    return [b,a[b]];
+    const b = Math.getMax(a,1);
+    return b;
 }

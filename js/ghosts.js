@@ -48,6 +48,8 @@ class ghost {
             this.state = "exit";
         if(this.state==="dead")
             this.speed = UNIVERSAL_SPEED*2;
+        else if((this.x / CELL_SIZE > 21 || this.x / CELL_SIZE < 5) && this.y / CELL_SIZE === 15)
+            this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gt,level-1)
         else if(this.scared && this.state != "trapped")
             this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gp,level-1);
         else

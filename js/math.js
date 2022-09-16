@@ -3,9 +3,6 @@ Math.getMin = object => {
         return Object.keys(object)[0];
     return Object.keys(object).filter(x => {return object[x] === Math.min.apply(null,Object.values(object))});
 };
-Math.getMax = (object,amount) => {
-    Object.values(object).sort((a,b) => b-a).slice(0,amount);
-}
 Math.countDecimals = num => {
     if (Math.floor(num.valueOf()) === num.valueOf())
         return 0;

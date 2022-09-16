@@ -146,9 +146,11 @@ async function update() {
             ctx.fillText(i.join(": "),0,(i2+2)*40);
             await time.wait(500);
         });
-        await time.waitbool("!keys.keypressed[\"Enter\"]")
-        await time.waitbool("keys.keypressed[\"Enter\"]")
-        await time.waitbool("!keys.keypressed[\"Enter\"]")
+        document.querySelectorAll("audio").forEach(i=>i.pause())
+        document.querySelectorAll("audio[loop]").forEach(i=>i.pause())
+        await time.waitbool("!keys.keyspressed[\"Enter\"]")
+        await time.waitbool("keys.keyspressed[\"Enter\"]")
+        await time.waitbool("!keys.keyspressed[\"Enter\"]")
         history.go(0);
         return;
     }

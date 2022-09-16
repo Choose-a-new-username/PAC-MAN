@@ -27,7 +27,6 @@ Game is still a work-in-progress, more features will be added in the future.<br/
 * ~~REFACTOR WITH OOP~~
 * ~~Large pellets and ghost eating~~
 * ~~Levels~~
-* ~~Items spawns/cherries~~
-* High-scores/scoreboard
+* ~~High-scores/scoreboard~~
+* **Items spawns/cherries**
 ## BUGS:
-* power pellets not working

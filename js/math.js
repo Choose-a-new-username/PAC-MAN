@@ -4,7 +4,7 @@ Math.getMin = object => {
     return Object.keys(object).filter(x => {return object[x] === Math.min.apply(null,Object.values(object))});
 };
 Math.getMax = (object,amount) => {
-    Object.entries(object).sort(([, a],[, b]) => b-a).slice(0,amount).map(([n])=> n);
+    Object.values(object).sort((a,b) => b-a).slice(0,amount);
 }
 Math.countDecimals = num => {
     if (Math.floor(num.valueOf()) === num.valueOf())

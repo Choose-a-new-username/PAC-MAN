@@ -1,8 +1,26 @@
 Math.getMin = object => {
     if(Object.keys(object).length==1)
-        return Object.keys(object)[0];
+        return Object.keys(object);
     return Object.keys(object).filter(x => {return object[x] === Math.min.apply(null,Object.values(object))});
 };
+Math.getMaxAmountK = object => {
+    if(Object.keys(object).length==1)
+        return Object.keys(object);
+    return Object.keys(object).sort((a,b) => object[b] - object[a]);
+};
+Math.getMaxAmountV = object => {
+    if(Object.values(object).length==1)
+        return Object.values(object)[0];
+    return Object.values(object).sort((a,b) => b - a);
+};
+Math.getTopOf = (ar,am) => {
+    return ar.splice(0,am);
+};
+Math.sortl = object => {
+    if(Object.keys(object).length==1)
+        return Object.keys(object)[0];
+    return Object.keys(object).sort((a,b) => b.length - a.length);
+}
 Math.countDecimals = num => {
     if (Math.floor(num.valueOf()) === num.valueOf())
         return 0;

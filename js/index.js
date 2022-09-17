@@ -21,7 +21,7 @@ async function resetpellets(){
             else if(TILEMAP[i][j] === 3)
                 objectmanager.objects.push(new medium_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));
             else if(TILEMAP[i][j] === 4)
-                objectmanager.objects.push(new power_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));
+                objectmanager.objects.push(new power_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE*2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE*2)));
 }
 addEventListener("keydown",e=>keys.keydown(e));
 addEventListener("keyup",e=>keys.keyup(e));
@@ -82,11 +82,12 @@ function draw() {
         ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
     ctx.restore();
     ctx.fillStyle = "#ffffff";
-    ctx.fillText(pacman.score,190-(String(pacman.score).length*35),CELL_SIZE*2);
+    ctx.fillText(pacman.score,220-(String(pacman.score).length*35),CELL_SIZE*2);
     if(pacman.hp&&time.secrettick%40<20)
-        ctx.fillText("1UP",180,CELL_SIZE);
+        ctx.fillText("1UP",230,CELL_SIZE);
+    ctx.fillText("HI",430,CELL_SIZE);
+    ctx.fillText(Math.getMaxAmountV(getLocalStorage("highscores"))[0],430-String(Math.getMaxAmountV(getLocalStorage("highscores"))[0]).length*35/2,CELL_SIZE*2)
     ctx.fillStyle = "#ffff00";
-    ctx.font = "bold 35px pixel-face";
     if(!(begun||pacman.dead||String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))==="")){
         if(MUS_INTRO.currentTime > 3)            
             ctx.fillText("READY!",canvas.width/2-("READY!".length*17.5), canvas.height/2+CELL_SIZE*2.45);
@@ -132,8 +133,8 @@ function draw() {
 }
 //main loop
 async function update() {
-    if(pacman.hp<0)
-        return;
+    if(end_game)
+        return pacman.dieend();
     if(game_quit){
         ctx.fillStyle = "black";
         ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -141,18 +142,17 @@ async function update() {
         ctx.fillStyle = "white";
         let a = getLocalStorage("highscores"); 
         ctx.fillText("SCORES:",0,40);
+        document.querySelectorAll("audio").forEach(i=>i.pause());
+        document.querySelectorAll("audio[loop]").forEach(i=>i.pause());
         await time.wait(1000);
-        Object.entries(a).forEach(async(i,i2)=>{
-            ctx.fillText(i.join(": "),0,(i2+2)*40);
-            await time.wait(500);
-        });
-        document.querySelectorAll("audio").forEach(i=>i.pause())
-        document.querySelectorAll("audio[loop]").forEach(i=>i.pause())
-        await time.waitbool("!keys.keyspressed[\"Enter\"]")
-        await time.waitbool("keys.keyspressed[\"Enter\"]")
-        await time.waitbool("!keys.keyspressed[\"Enter\"]")
-        history.go(0);
-        return;
+        Math.getMaxAmountK(a).forEach((i,i2)=>
+            ctx.fillText(`${i2+1}.${" ".repeat(String(Object.keys(a).length).length-String(i2+1).length+1)}${i}:${" ".repeat(Object.keys(a).length===1?1:Math.sortl(a)[0].length-i.length+1)}${a[i]}`,0,(i2+2)*40)
+        );
+        await time.waitbool("!keys.keyspressed[\"Enter\"]");
+        await time.waitbool("keys.keyspressed[\"Enter\"]");
+        await time.waitbool("!keys.keyspressed[\"Enter\"]");
+        end_game = false;
+        return reset();
     }
     time.tick++;
     time.secrettick++;
@@ -189,18 +189,23 @@ async function update() {
     draw();
     requestAnimationFrame(update);
 }
-
 requestAnimationFrame(()=>
-    requestAnimationFrame(()=>{
+    requestAnimationFrame(async ()=>{
         ctx.fillStyle = "black"
         ctx.fillRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = "white";
-        ctx.fillText("PRESS ENTER TO START",canvas.width/2-("PRESS ENTER TO START".length*15), canvas.height/2);
+        ctx.drawImage(LOGO_SPRITE,canvas.width/2-400,canvas.height/2-200,800,175);
+        ctx.fillText("PLEASE WAIT FOR CASHIER",canvas.width/2-("PLEASE WAIT FOR CASHIER".length*35/2),canvas.height/2+40);
+        ctx.fillText("TO START THE GAME",canvas.width/2-("TO START THE GAME".length*35/2),canvas.height/2+80);
     })
 );
 var begun = false;
 var munch_b = false;
-(async function(){
+async function reset(){
+    document.querySelectorAll("audio").forEach(i=>i.pause());
+    document.querySelectorAll("audio[loop]").forEach(i=>i.pause());
+    begun = game_begun = false;
+    level = 1;
     await time.waitbool("keys.keyspressed[\"Enter\"]");
     username = "";
     await time.waitbool("!keys.keyspressed[\"Enter\"]");
@@ -208,13 +213,14 @@ var munch_b = false;
         ctx.fillStyle = "black"
         ctx.fillRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = "white";
-        ctx.fillText("PLEASE TELL CASHIER TO",canvas.width/2-("PLEASE TELL CASHIER TO".length*15),canvas.height/2-120)
-        ctx.fillText("ENTER YOUR NAME",canvas.width/2-("ENTER YOUR NAME".length*15),canvas.height/2-80)
-        ctx.fillText(username,canvas.width/2-(username.length*15),canvas.height/2);
+        ctx.fillText("PLEASE TELL THE CASHIER",canvas.width/2-("PLEASE TELL THE CASHIER".length*35)/2,canvas.height/2-120)
+        ctx.fillText("YOUR NAME.",canvas.width/2-("YOUR NAME.".length*35)/2,canvas.height/2-80)
+        ctx.fillText(username,canvas.width/2-(username.length*35)/2,canvas.height/2);
     });
-    restart();
+    game_begun=true;
+    restart()
     resetpellets();
     update();
-    game_begun=true;
     MUS_INTRO.addEventListener("ended",()=>{MUS_GHOST_NORM.play();begun=true;});
-})();
+}
+reset();

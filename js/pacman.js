@@ -79,7 +79,6 @@ class pacman_c extends pac_manager {
             return;
         if(this.anim === PACMAN_ANIMATION_FRAMES)
             this.anim = 0;
-        console.log((getAt(AI.speed.pn,level-1)).toPrecision(3));
         if(ghostmanager.BLINKY.scared||ghostmanager.PINKY.scared||ghostmanager.INKY.scared||ghostmanager.CLYDE.scared)
             this.speed = UNIVERSAL_SPEED*getAt(AI.speed.pp,level-1);
         else
@@ -158,14 +157,35 @@ class pacman_c extends pac_manager {
         begun = false;
         this.dead = true;
         this.hp--;
-        MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(()=>{if(pacman.hp < 0)history.go(0);else restart(false)}));
+        MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(()=>{if(pacman.hp < 0)end_game=true;else restart(false)}));
     }
-    constructor() {
-        super();
+    async dieend(){
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText("PLEASE WAIT FOR CASHIER TO",canvas.width/2-("PLEASE WAIT FOR CASHIER TO".length*35/2),canvas.height/2-40);
+        ctx.fillText("RESTART THE GAME.",canvas.width/2-("RESTART THE GAME.".length*35/2),canvas.height/2);
+        ctx.font = "bold 15px pixel-face";
+        ctx.fillText("hey kid! psst. over here.",canvas.width/2-("key kid! psst. over here.".length*15/2),canvas.height/2+30);
+        ctx.fillText("why not try out the nintendo games next door?",canvas.width/2-("why not try out the nintendo games next door?".length*15/2),canvas.height/2+50);
+        ctx.fillText("we can never have too many \"monkeys on nintendo",canvas.width/2-("we can never have too many monkeys on nintendo".length*15/2),canvas.height/2+70);
+        ctx.fillText("games\", after all!",canvas.width/2-("games, after all!".length*15/2),canvas.height/2+90);
+        ctx.font = "bold 35px pixel-face";
+        this.truereset();
+        await time.waitbool("keys.keyspressed[\"Enter\"]");
+        await time.waitbool("!keys.keyspressed[\"Enter\"]");
+        end_game = false;
+        reset();
+    }
+    truereset(){
         this.score  = 0;
         this.hp     = 3;
         this.max_hp = 3;
-        this.dead   = false;
+        this.dead   = false;  
+    }
+    constructor() {
+        super();
+        this.truereset();
         this.reset();
     }
 }

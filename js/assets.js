@@ -1,6 +1,6 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d")
-ctx.font = "bold 30px pixel-face";
+ctx.font = "bold 35px pixel-face";
 ctx.imageSmoothingEnabled = false;
 ctx.shadowOffsetX = 5;
 ctx.shadowOffsetY = 5;
@@ -43,6 +43,7 @@ const PACMAN_SPRITE                  = document.getElementById("pacman"),
       MAP_SPRITE                     = document.getElementById("map"),
       MAP_SPRITE_2                   = document.getElementById("map2"),
       HP_SPRITE                      = document.getElementById("health"),
+      LOGO_SPRITE                    = document.getElementById("logo"),
       MUS_INTRO                      = document.getElementById("intro"),
       MUS_MUNCH_1                    = document.getElementById("munch_1"),
       MUS_MUNCH_2                    = document.getElementById("munch_2"),

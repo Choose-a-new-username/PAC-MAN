@@ -19,9 +19,8 @@ var keys = {
         this.keyspressed[e.code]=true;
         switch(e.code) {
             case "KeyR":
-            case "KeyS":
             case "KeyT":
-                if(this.keyspressed["KeyR"]&&this.keyspressed["KeyS"]&&this.keyspressed["KeyT"])
+                if(this.keyspressed["KeyR"]&&this.keyspressed["KeyT"])
                     restart(false);
                 break;
             case "KeyH":
@@ -36,10 +35,9 @@ var keys = {
                     pacman.hp -= 1;
                     pacman.max_hp = pacman.hp>3?pacman.hp:3;
                     if(pacman.hp < 0)
-                        history.go(0);
+                        pacman.dieend();
                 }
                 break;
-            case "KeyD":
             case "KeyB":
             case "KeyG":
                 if(this.keyspressed["KeyD"]&&this.keyspressed["KeyB"]&&this.keyspressed["KeyG"])

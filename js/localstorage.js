@@ -9,7 +9,7 @@ function getLocalStorage(ii=""){
     return ii==""?JSON.parse(localStorage.getItem("items")):JSON.parse(localStorage.getItem("items"))[ii];
 }
 function setLocalStorage(a,b){
-    let c = getLocalStorage("");
+    let c = getLocalStorage();
     c[a] = b;
     localStorage.setItem("items",JSON.stringify(c));
 }

@@ -43,14 +43,14 @@ class power_pellet extends object {
     }
     draw() {
         if(time.secrettick%30<15)
-            ctx.drawImag(THE_SPRITE_WE_USE_FOR_THE_DOTS,(Math.floor(this.x/CELL_SIZE))*CELL_SIZE+OFFSET[1],Math.ceil(this.y/CELL_SIZE-1)*CELL_SIZE+OFFSET[0],CELL_SIZE,CELL_SIZE,16,0,8,8)
+            ctx.drawImag(THE_SPRITE_WE_USE_FOR_THE_DOTS,(Math.floor(this.x/CELL_SIZE))*CELL_SIZE+OFFSET[1],Math.ceil(this.y/CELL_SIZE)*CELL_SIZE+OFFSET[0],CELL_SIZE,CELL_SIZE,16,0,8,8)
     }
     constructor(x,y) {
         super(
             x,
             y,
-            PELLET_SIZE/0.5,
-            PELLET_SIZE/0.5,
+            PELLET_SIZE*2,
+            PELLET_SIZE*2,
             "power_pellet"
         );
     }

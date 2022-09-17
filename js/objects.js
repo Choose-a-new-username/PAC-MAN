@@ -30,7 +30,7 @@ class pellet extends object {
 }
 class power_pellet extends object {
     behavior() {
-        if(!AI.collision2(this.x+(this.w/2),this.y+(this.w/2),1,1,pacman.x,pacman.y+PACMAN_HEIGHT,PACMAN_WIDTH,PACMAN_HEIGHT))
+        if(!AI.collision2(this.x,this.y,this.w,this.h,pacman.x,pacman.y+PACMAN_HEIGHT,PACMAN_WIDTH,PACMAN_HEIGHT))
             return false;
         pacman.score += 50;
         Object.keys(ghostmanager).forEach(i=>ghostmanager[i].scared = time.times.length * getAt(AI.asdfasdfhajklhajkl,level-1));
@@ -47,17 +47,17 @@ class power_pellet extends object {
     }
     constructor(x,y) {
         super(
-            x+PELLET_SIZE*2,
+            x,
             y,
-            PELLET_SIZE*8,
-            PELLET_SIZE*8,
+            CELL_SIZE,
+            CELL_SIZE,
             "power_pellet"
         );
     }
 }
 class medium_pellet extends object {
     behavior() {
-        if(!AI.collision2(this.x+(this.w/2),this.y+(this.w/2),1,1,pacman.x,pacman.y+PACMAN_HEIGHT,PACMAN_WIDTH,PACMAN_HEIGHT))
+        if(!AI.collision2(this.x,this.y,this.w,this.h,pacman.x,pacman.y+PACMAN_HEIGHT,PACMAN_WIDTH,PACMAN_HEIGHT))
             return false;
         pacman.score += 25;
         if(munch_b){MUS_MUNCH_1.currentTime = 0;MUS_MUNCH_2.pause();MUS_MUNCH_1.play();munch_b=false;}else{MUS_MUNCH_2.currentTime = 0;MUS_MUNCH_1.pause();MUS_MUNCH_2.play();munch_b=true;}
@@ -82,4 +82,15 @@ objectmanager.update = function () {
     for(i in this.objects)
         if(this.objects[i].behavior())
             this.objects.splice(i,1);
+}
+objectmanager.resetpellets = function () {
+    objectmanager.objects = [];
+    for(i in TILEMAP)
+        for(j in TILEMAP[i])
+            if(TILEMAP[i][j] === 0)
+                objectmanager.objects.push(new pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2)));
+            else if(TILEMAP[i][j] === 3)
+                objectmanager.objects.push(new medium_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));
+            else if(TILEMAP[i][j] === 4)
+                objectmanager.objects.push(new power_pellet(j*CELL_SIZE,i*CELL_SIZE+CELL_SIZE));
 }

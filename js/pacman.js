@@ -160,19 +160,19 @@ class pacman_c extends pac_manager {
         MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(()=>{if(pacman.hp < 0)end_game=true;else restart(false)}));
     }
     async dieend(){
+        document.querySelectorAll("audio").forEach(i=>i.pause());
+        document.querySelectorAll("audio[loop]").forEach(i=>i.pause());
         ctx.fillStyle = "#000000";
         ctx.fillRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 60px pixel-face";
-        ctx.fillText("YOU DIED!",canvas.width/2-("YOU DIED!".length*60/2),canvas.height/2-90);
+        ctx.font = "bold 80px pixel-face";
+        ctx.drawImag(PACMAN_SPRITE,canvas.width/2-60,canvas.height/2-140,100,100)
+        ctx.fillText("YOU DIED!",canvas.width/2-("YOU DIED!".length*80/2),canvas.height/2-90);
         ctx.font = "bold 35px pixel-face";
-        ctx.fillText("PLEASE WAIT FOR CASHIER TO",canvas.width/2-("PLEASE WAIT FOR CASHIER TO".length*35/2),canvas.height/2-40);
-        ctx.fillText("RESTART THE GAME.",canvas.width/2-("RESTART THE GAME.".length*35/2),canvas.height/2);
-        ctx.font = "bold 15px pixel-face";
-        ctx.fillText("want a new challenge?",canvas.width/2-("want anew challenge?".length*15/2),canvas.height/2+30);
-        ctx.fillText("try the nintendo games stall!",canvas.width/2-("try the nintendo games stall?".length*15/2),canvas.height/2+50);
-        ctx.fillText("happy market day!",canvas.width/2-("happy market day!".length*15/2),canvas.height/2+70);
-        ctx.font = "bold 35px pixel-face";
+        ctx.fillText("PLEASE PAY 1 TICKET TO",canvas.width/2-("PLEASE PAY 1 TICKET TO".length*35/2),canvas.height/2-40);
+        ctx.fillText("TRY AGAIN.",canvas.width/2-("PLAY AGAIN.".length*35/2),canvas.height/2);
+        ctx.fillText("(WANT A NEW CHALLENGE?",canvas.width/2-("(WANT A NEW CHALLENGE?".length*35/2),canvas.height/2+60);
+        ctx.fillText("TRY THE NINTENDO GAMES STALL!)",canvas.width/2-("TRY THE NINTENDO GAMES STALL!)".length*35/2),canvas.height/2+100);
         this.truereset();
         await time.waitbool("keys.keyspressed[\"Enter\"]");
         await time.waitbool("!keys.keyspressed[\"Enter\"]");

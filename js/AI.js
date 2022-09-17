@@ -172,3 +172,4 @@ const AI = {
     corner4: function (a,b,c,d,e,f,g,h) { return this.corner(a,b,e,f,g,h) || this.corner(a+c,b,e,f,g,h) || this.corner(a,b+d,e,f,g,h) || this.corner(a+c,b+d,e,f,g,h); },
     collision2: function (a,b,c,d,e,f,g,h) { return this.corner4(a,b,c,d,e,f,g,h) || this.corner4(e,f,g,h,a,b,c,d); },
 }
+let geaten = 0;

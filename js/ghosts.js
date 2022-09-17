@@ -3,12 +3,23 @@ class ghost {
     checkDie() {
         if(this.scared)
             this.die();
-        else if(!(this.state === "dead")){
+        else if(!(this.state === "dead"))
             pacman.die();
-        }
     }
     drawself(y){
-        if(!this.eaten)
+        if(this.eaten)
+            ctx.drawImag(
+                SCORE_SPRITE,
+                this.x+OFFSET[1]-DRAW_OFFSET,
+                this.y+OFFSET[0]-DRAW_OFFSET,
+                CELL_SIZE+DRAW_OFFSET*2,
+                31+DRAW_OFFSET*2,
+                (Math.clamp(geaten-1,0,4))*18,
+                0,
+                18,
+                14,
+            );
+        else
             ctx.drawImag(
                 GHOST_SPRITE,
                 this.x+OFFSET[1]-DRAW_OFFSET,
@@ -22,8 +33,6 @@ class ghost {
             ); 
     }
     die(){
-        this.x = this.x.rnd(CELL_SIZE);
-        this.y = this.y.rnd(CELL_SIZE);
         this.scared = 0;
         pacman.ate = true;
         this.eaten = true;
@@ -31,7 +40,9 @@ class ghost {
         MUS_EAT_GHOST.pause();
         MUS_EAT_GHOST.play();
         this.state = "dead";
-        eval(`MUS_EAT_GHOST.addEventListener("ended",()=>{pacman.ate=false;this.eaten=false;});`)
+        if(geaten<4)
+            geaten++;
+        eval(`MUS_EAT_GHOST.addEventListener("ended",()=>{pacman.ate=false;this.eaten=false;pacman.score+=100*2**${geaten};},{once: true});`)
     }
     isdead(){
         return this.state === "dead" && !this.eaten; 
@@ -41,6 +52,8 @@ class ghost {
             return;
         if(this.scared){
             this.scared--;
+            if(!this.scared)
+                geaten = 0;
         }
         if(this.exittimer)
             this.exittimer--;

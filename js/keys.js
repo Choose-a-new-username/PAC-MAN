@@ -35,7 +35,7 @@ var keys = {
                     pacman.hp -= 1;
                     pacman.max_hp = pacman.hp>3?pacman.hp:3;
                     if(pacman.hp < 0)
-                        pacman.dieend();
+                        end_game = true;
                 }
                 break;
             case "KeyB":

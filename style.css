@@ -16,8 +16,9 @@ canvas {
     padding: 0;
     margin: auto;
     display: block;
-    height: 90%;
     aspect-ratio: 0.78;
+    width: auto;
+    height: 90%;
     position: absolute;
     top: 0;
     bottom: 0;

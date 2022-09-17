@@ -12,17 +12,6 @@ async function restart(from=true) {
     pacman.dead = false;
     ["pacman","ghostmanager.BLINKY","ghostmanager.PINKY","ghostmanager.INKY","ghostmanager.CLYDE"].forEach(i=>eval(i+".reset()"));
 }
-async function resetpellets(){
-    objectmanager.objects = [];
-    for(i in TILEMAP)
-        for(j in TILEMAP[i])
-            if(TILEMAP[i][j] === 0)
-                objectmanager.objects.push(new pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2)));
-            else if(TILEMAP[i][j] === 3)
-                objectmanager.objects.push(new medium_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));
-            else if(TILEMAP[i][j] === 4)
-                objectmanager.objects.push(new power_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE*4),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE*4)));
-}
 addEventListener("keydown",e=>keys.keydown(e));
 addEventListener("keyup",e=>keys.keyup(e));
 
@@ -175,7 +164,7 @@ async function update() {
             begun = true,
             level++,
             restart(),
-            resetpellets();
+            objectmanager.resetpellets();
     if(begun && !pacman.dead)
         render();
     else {
@@ -230,7 +219,7 @@ async function reset(){
         pacman.score = getLocalStorage("highscores")[username];
     game_begun=true;
     restart()
-    resetpellets();
+    objectmanager.resetpellets();
     update();
     MUS_INTRO.addEventListener("ended",()=>{MUS_GHOST_NORM.play();begun=true;});
 }

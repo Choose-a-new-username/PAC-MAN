@@ -1,1 +1,4 @@
-/electron
+/main.js
+/package-lock.json
+/package.json
+/config.json

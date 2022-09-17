@@ -17,7 +17,7 @@ WIP
 * ~~Pacman~~
 * ~~Maze collisions~~
 * ~~Smart movement and no wall-bumping~~
-* ~~Add coins~~ 
+* ~~Add pellets~~ 
 * ~~Score~~
 * ~~Map~~
 * ~~Collision detection w ghosts~~
@@ -33,7 +33,7 @@ WIP
 * ~~Death/death screen~~
 * ~~Multiple lives~~
 * ~~REFACTOR WITH OOP~~
-* ~~Large pellets and ghost eating~~
+* ~~Power pellets and ghost eating~~
 * ~~Levels~~
 * ~~High-scores/scoreboard~~
 * **Items spawns/cherries**

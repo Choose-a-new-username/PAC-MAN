@@ -2,3 +2,5 @@
 /package-lock.json
 /package.json
 /config.json
+/dist
+/node_modules

@@ -47,10 +47,10 @@ class power_pellet extends object {
     }
     constructor(x,y) {
         super(
-            x,
+            x+PELLET_SIZE*2,
             y,
-            PELLET_SIZE*2,
-            PELLET_SIZE*2,
+            PELLET_SIZE*8,
+            PELLET_SIZE*8,
             "power_pellet"
         );
     }

@@ -10,7 +10,7 @@ Math.getMaxAmountK = object => {
 };
 Math.getMaxAmountV = object => {
     if(Object.values(object).length==1)
-        return Object.values(object)[0];
+        return Object.values(object);
     return Object.values(object).sort((a,b) => b - a);
 };
 Math.getTopOf = (ar,am) => {

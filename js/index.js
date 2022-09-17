@@ -21,7 +21,7 @@ async function resetpellets(){
             else if(TILEMAP[i][j] === 3)
                 objectmanager.objects.push(new medium_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));
             else if(TILEMAP[i][j] === 4)
-                objectmanager.objects.push(new power_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE*2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE*2)));
+                objectmanager.objects.push(new power_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE*4),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE*4)));
 }
 addEventListener("keydown",e=>keys.keydown(e));
 addEventListener("keyup",e=>keys.keyup(e));
@@ -82,11 +82,14 @@ function draw() {
         ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
     ctx.restore();
     ctx.fillStyle = "#ffffff";
-    ctx.fillText(pacman.score,220-(String(pacman.score).length*35),CELL_SIZE*2);
+    ctx.fillText(pacman.score||"00",330-(String(pacman.score||"00").length*35),CELL_SIZE*2);
     if(pacman.hp&&time.secrettick%40<20)
-        ctx.fillText("1UP",230,CELL_SIZE);
-    ctx.fillText("HI",430,CELL_SIZE);
-    ctx.fillText(Math.getMaxAmountV(getLocalStorage("highscores"))[0],430-String(Math.getMaxAmountV(getLocalStorage("highscores"))[0]).length*35/2,CELL_SIZE*2)
+        ctx.fillText("1UP",190,CELL_SIZE);
+    if(pacman.score===Math.getMaxAmountV(getLocalStorage("highscores"))[0])
+        ctx.fillStyle = "#ffff00";
+    ctx.fillText("HIGH SCORE",430,CELL_SIZE);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(Math.getMaxAmountV(getLocalStorage("highscores"))[0]||"00",715-String(Math.getMaxAmountV(getLocalStorage("highscores"))[0]||"00").length*35,CELL_SIZE*2)
     ctx.fillStyle = "#ffff00";
     if(!(begun||pacman.dead||String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))==="")){
         if(MUS_INTRO.currentTime > 3)            
@@ -132,6 +135,7 @@ function draw() {
     }
 }
 //main loop
+let aa;
 async function update() {
     if(end_game)
         return pacman.dieend();
@@ -144,17 +148,22 @@ async function update() {
         ctx.fillText("SCORES:",0,40);
         document.querySelectorAll("audio").forEach(i=>i.pause());
         document.querySelectorAll("audio[loop]").forEach(i=>i.pause());
-        await time.wait(1000);
-        Math.getMaxAmountK(a).forEach((i,i2)=>
-            ctx.fillText(`${i2+1}.${" ".repeat(String(Object.keys(a).length).length-String(i2+1).length+1)}${i}:${" ".repeat(Object.keys(a).length===1?1:Math.sortl(a)[0].length-i.length+1)}${a[i]}`,0,(i2+2)*40)
-        );
+        aa = false;
+        setTimeout(()=>aa=true,1000)
+        await time.waitbool("aa||keys.keyspressed[\"Enter\"]");
+        clearTimeout();
+        let i2 = 0;
+        for(i of Math.getMaxAmountK(a))
+            ctx.fillText(`${i2+1}.${" ".repeat(String(Object.keys(a).length).length-String(i2+1).length+1)}${i}:${" ".repeat(Object.keys(a).length===1?1:Math.sortl(a)[0].length-i.length+1)}${a[i]}`,0,(i2+2)*40),
+            i2++,
+            await time.wait(250);
         await time.waitbool("!keys.keyspressed[\"Enter\"]");
         await time.waitbool("keys.keyspressed[\"Enter\"]");
-        await time.waitbool("!keys.keyspressed[\"Enter\"]");
         end_game = false;
         return reset();
     }
-    time.tick++;
+    if(!pacman.ate)
+        time.tick++;
     time.secrettick++;
     time.fps = time.calcfps();
     if(String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))==="")
@@ -204,7 +213,7 @@ var munch_b = false;
 async function reset(){
     document.querySelectorAll("audio").forEach(i=>i.pause());
     document.querySelectorAll("audio[loop]").forEach(i=>i.pause());
-    begun = game_begun = false;
+    begun = game_begun = game_quit = false;
     level = 1;
     await time.waitbool("keys.keyspressed[\"Enter\"]");
     username = "";
@@ -217,6 +226,8 @@ async function reset(){
         ctx.fillText("YOUR NAME.",canvas.width/2-("YOUR NAME.".length*35)/2,canvas.height/2-80)
         ctx.fillText(username,canvas.width/2-(username.length*35)/2,canvas.height/2);
     });
+    if(getLocalStorage("highscores").hasOwnProperty(username))
+        pacman.score = getLocalStorage("highscores")[username];
     game_begun=true;
     restart()
     resetpellets();

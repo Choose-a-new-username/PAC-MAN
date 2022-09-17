@@ -1,9 +1,9 @@
 let username = "";
 if (localStorage.length === 0)
     localStorage.setItem("items","{}"),
-    setLocalStorage("highscores",{});
+    setLocalStorage("highscores",{"john doe": 1000});
 function usernameNaughty(){
-    return ["","69","420"].includes(username.trim());
+    return ["","69","420","john doe","69420","34"].includes(username.trim());
 }
 function getLocalStorage(ii=""){
     return ii==""?JSON.parse(localStorage.getItem("items")):JSON.parse(localStorage.getItem("items"))[ii];

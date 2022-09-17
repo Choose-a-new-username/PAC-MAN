@@ -1,23 +1,42 @@
+const gamepads = {};
+let gamepadconnected = false;
+function gamepadHandler(event, connecting) {
+    const gamepad = event.gamepad;
+    if (connecting) {
+        gamepads[gamepad.index] = gamepad;
+    } else {
+        delete gamepads[gamepad.index];
+    }
+    gamepadconnected = Object.keys(gamepads).length>0;
+}
+window.addEventListener("gamepadconnected", (e) => { gamepadHandler(e, true);}, false);
+window.addEventListener("gamepaddisconnected", (e) => { gamepadHandler(e, false); }, false);
+
+function buttonPressed(b) {
+    if (typeof b === "object") {
+      return b.pressed;
+    }
+    return b === 1.0;
+}
 var keys = {
     keyspressed: {},
-    pressedsequence: [],
-    konami: ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","Enter","Enter"],
-    konamimode: false,
     queued: "up",
-    keydown: function (e) {
+    keydown: function (e,e2) {
+        if(!gamepadconnected)
+            return;        
         if(!game_begun){
-            if(e.key === "Backspace")
+            if(e2 === "Backspace")
                 username = username.slice(0,-1);
-            else if(!["Enter","Shift"].includes(e.key))
-                username += e.key;
+            else if(!["Enter","Shift"].includes(e2))
+                username += e2;
         }
-        if((this.keyspressed[e.code]===true)||(pacman.dead))
+        if((this.keyspressed[e]===true)||(pacman.dead))
             return;
-        this.pressedsequence.push(e.code);
-        if(!(e.code === this.konami[this.pressedsequence.length-1]))
-            this.pressedsequence = [];
-        this.keyspressed[e.code]=true;
-        switch(e.code) {
+        this.keyspressed[e]=true;
+        switch(e) {
+            case "Enter":
+                console.log('a');
+                break;
             case "KeyR":
             case "KeyT":
                 if(this.keyspressed["KeyR"]&&this.keyspressed["KeyT"])
@@ -81,5 +100,13 @@ var keys = {
                 break;
         }
     },
-    keyup: function(e){this.keyspressed[e.code]=false;}
+    keyup: function(e){this.keyspressed[e]=false;}
 }
+function addGamepadKeyMap(key,map,bool){
+    if(map(navigator.getGamepads()[0])&&!eval(bool))
+        keys.keydown(key,key);
+    else
+        keys.keyup(key);
+}
+addEventListener("keydown",e=>keys.keydown(e.code,e.key));
+addEventListener("keyup",e=>keys.keyup(e.code,e.key));

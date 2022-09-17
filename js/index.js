@@ -12,8 +12,6 @@ async function restart(from=true) {
     pacman.dead = false;
     ["pacman","ghostmanager.BLINKY","ghostmanager.PINKY","ghostmanager.INKY","ghostmanager.CLYDE"].forEach(i=>eval(i+".reset()"));
 }
-addEventListener("keydown",e=>keys.keydown(e));
-addEventListener("keyup",e=>keys.keyup(e));
 
 function queuedDo() {
     switch (keys.queued) {
@@ -60,16 +58,10 @@ async function render() {
 //draw loop
 function draw() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.save();
-    if(keys.konamimode)
-        ctx.shadowOffsetX = Math.cos(time.secrettick/48)*2,
-        ctx.shadowOffsetY = Math.sin(time.secrettick/48)*2,
-        ctx.shadowColor = "#ff0000";
-    if(String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""&&endedlevelt<60*1.5)
+   if(String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))===""&&endedlevelt<60*1.5)
         ctx.drawImage(eval("MAP_SPRITE"+(time.secrettick%20>10?"_2":"")),OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
     else    
         ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
-    ctx.restore();
     ctx.fillStyle = "#ffffff";
     ctx.fillText(pacman.score||"00",330-(String(pacman.score||"00").length*35),CELL_SIZE*2);
     if(pacman.hp&&time.secrettick%40<20)
@@ -96,7 +88,6 @@ function draw() {
                     ctx.fillRect(i*CELL_SIZE+OFFSET[1],j*CELL_SIZE+CELL_SIZE+OFFSET[0],CELL_SIZE,CELL_SIZE);
         ctx.fillStyle = "#ffff00"
     }
-    if(keys.pressedsequence.length === keys.konami.length){keys.konamimode =! keys.konamimode; keys.pressedsequence = []}
     if(!pacman.ate)
         if(debug_mode)
             ctx.fillRect(pacman.x+OFFSET[1],pacman.y+CELL_SIZE+OFFSET[0]+pacman.dead*(CELL_SIZE/2),CELL_SIZE,CELL_SIZE-pacman.dead*(CELL_SIZE/2));
@@ -126,6 +117,15 @@ function draw() {
 //main loop
 let aa;
 async function update() {
+    await time.waitbool("gamepadconnected",()=>{
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillText("PLEASE CONNECT CONTROLLER",canvas.width/2-("PLEASE CONNECT CONTROLLER".length*35/2),canvas.height/2);
+    });
+    addGamepadKeyMap("ArrowUp",   e=>Math.round(e.axes[1])===-1,"pacman.dir===0");
+    addGamepadKeyMap("ArrowDown", e=>Math.round(e.axes[1])===1,"pacman.dir===2");
+    addGamepadKeyMap("ArrowLeft", e=>Math.round(e.axes[0])===-1,"pacman.dir===3");
+    addGamepadKeyMap("ArrowRight",e=>Math.round(e.axes[0])===1,"pacman.dir===1");
+    addGamepadKeyMap("Enter",     e=>buttonPressed(e.buttons[0]),"false");
     if(end_game)
         return pacman.dieend();
     if(game_quit){
@@ -187,19 +187,28 @@ async function update() {
     draw();
     requestAnimationFrame(update);
 }
-requestAnimationFrame(()=>
-    requestAnimationFrame(async ()=>{
-        ctx.fillStyle = "black"
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = "white";
-        ctx.drawImage(LOGO_SPRITE,canvas.width/2-400,canvas.height/2-200,800,175);
-        ctx.fillText("PLEASE WAIT FOR CASHIER",canvas.width/2-("PLEASE WAIT FOR CASHIER".length*35/2),canvas.height/2+40);
-        ctx.fillText("TO START THE GAME",canvas.width/2-("TO START THE GAME".length*35/2),canvas.height/2+80);
-    })
-);
 var begun = false;
 var munch_b = false;
 async function reset(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillText("PLEASE CONNECT CONTROLLER",canvas.width/2-("PLEASE CONNECT CONTROLLER".length*35/2),canvas.height/2);
+    await time.waitbool("gamepadconnected",()=>{
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.fillText("PLEASE CONNECT CONTROLLER",canvas.width/2-("PLEASE CONNECT CONTROLLER".length*35/2),canvas.height/2);
+        ctx.restore();
+    });
+    requestAnimationFrame(()=>
+        requestAnimationFrame(async ()=>{
+            ctx.fillStyle = "black"
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "white";
+            ctx.drawImage(LOGO_SPRITE,canvas.width/2-400,canvas.height/2-200,800,175);
+            ctx.fillText("PLEASE WAIT FOR CASHIER",canvas.width/2-("PLEASE WAIT FOR CASHIER".length*35/2),canvas.height/2+40);
+            ctx.fillText("TO START THE GAME",canvas.width/2-("TO START THE GAME".length*35/2),canvas.height/2+80);
+        })
+    );
     document.querySelectorAll("audio").forEach(i=>i.pause());
     document.querySelectorAll("audio[loop]").forEach(i=>i.pause());
     begun = game_begun = game_quit = false;

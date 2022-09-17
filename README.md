@@ -5,6 +5,14 @@ Arrow keys to move.
 ## INFO
 Game is still a work-in-progress, more features will be added in the future.<br/>
 (This _is_ a school project, so don't expect high quality.)
+## HOW TO USE
+### LINUX/PC/MAC
+1. click "code" then "download as zip"
+2. go into files
+3. extract zip
+4. double-click on index.html
+### CHROMEBOOK
+WIP
 ## TODO LIST:
 * ~~Pacman~~
 * ~~Maze collisions~~

@@ -156,8 +156,18 @@ class pacman_c extends pac_manager {
         MUS_DEATH.pla();
         begun = false;
         this.dead = true;
-        this.hp--;
-        MUS_DEATH.addEventListener("ended",()=>requestAnimationFrame(()=>{if(pacman.hp < 0)end_game=true;else restart(false)}));
+        MUS_DEATH.addEventListener("ended",()=>window.requestAnimationFrame(pacman.afterdie));
+    }
+    afterdie() {
+        MUS_DEATH.pause();
+        if(!pacman.dead)
+            return;
+        pacman.dead = false;
+        pacman.hp--;
+        if(pacman.hp < 0)
+            end_game=true;
+        else
+            restart(false)
     }
     async dieend(){
         document.querySelectorAll("audio").forEach(i=>i.pause());
@@ -184,10 +194,11 @@ class pacman_c extends pac_manager {
         this.score  = 0;
         this.hp     = 3;
         this.max_hp = 3;
-        this.dead   = false;  
+        this.dead   = false;
     }
     constructor() {
         super();
+        this.afterdie.bind(this);
         this.truereset();
         this.reset();
     }

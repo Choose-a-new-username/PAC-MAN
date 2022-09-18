@@ -4,12 +4,11 @@ async function restart(from=true) {
         MUS_INTRO.pause(),
         MUS_INTRO.currentTime = 0,
         MUS_INTRO.play(),
-        begun = false,
-        ghoststate = "scatter";
+        begun = false;
     else
         begun=true;
+    ghoststate = "scatter";
     time.tick=0;
-    pacman.dead = false;
     ["pacman","ghostmanager.BLINKY","ghostmanager.PINKY","ghostmanager.INKY","ghostmanager.CLYDE"].forEach(i=>eval(i+".reset()"));
 }
 
@@ -64,7 +63,7 @@ function draw() {
         ctx.drawImage(MAP_SPRITE,OFFSET[1],-80+OFFSET[0],CELL_SIZE*28,CELL_SIZE*36);
     ctx.fillStyle = "#ffffff";
     ctx.fillText(pacman.score||"00",330-(String(pacman.score||"00").length*35),CELL_SIZE*2);
-    if(pacman.hp&&time.secrettick%40<20)
+    if((pacman.hp>0)&&(time.secrettick%40<20))
         ctx.fillText("1UP",190,CELL_SIZE);
     if(pacman.score===Math.getMaxAmountV(getLocalStorage("highscores"))[0])
         ctx.fillStyle = "#ffff00";
@@ -115,17 +114,16 @@ function draw() {
     }
 }
 //main loop
-let aa;
 async function update() {
-    await time.waitbool("gamepadconnected",()=>{
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.fillText("PLEASE CONNECT CONTROLLER",canvas.width/2-("PLEASE CONNECT CONTROLLER".length*35/2),canvas.height/2);
-    });
+    if(!(gamepadconnected&&navigator.getGamepads()))
+        await time.waitbool("gamepadconnected&&navigator.getGamepads()",()=>{
+            ctx.fillStyle = "white";
+            ctx.fillText("PLEASE CONNECT CONTROLLER",canvas.width/2-("PLEASE CONNECT CONTROLLER".length*35/2),canvas.height/2);
+        });
     addGamepadKeyMap("ArrowUp",   e=>{return Math.round(e.axes[7])===-1||Math.round(e.axes[1])===-1;},"pacman.dir===0");
     addGamepadKeyMap("ArrowDown", e=>{return Math.round(e.axes[7])===1||Math.round(e.axes[1])===1},"pacman.dir===2");
     addGamepadKeyMap("ArrowLeft", e=>{return Math.round(e.axes[6])===-1||Math.round(e.axes[0])===-1},"pacman.dir===3");
     addGamepadKeyMap("ArrowRight",e=>{return Math.round(e.axes[6])===1||Math.round(e.axes[0])===1},"pacman.dir===1");
-    addGamepadKeyMap("Enter",     e=>buttonPressed(e.buttons[0]),"false");
     if(end_game)
         return pacman.dieend();
     if(game_quit){
@@ -137,8 +135,8 @@ async function update() {
         ctx.fillText("SCORES:",0,40);
         document.querySelectorAll("audio").forEach(i=>i.pause());
         document.querySelectorAll("audio[loop]").forEach(i=>i.pause());
-        aa = false;
-        setTimeout(()=>aa=true,1000)
+        let aa = false;
+        window.setTimeout(()=>aa=true,1000)
         await time.waitbool("aa||keys.keyspressed[\"Enter\"]");
         clearTimeout();
         let i2 = 0;
@@ -154,7 +152,6 @@ async function update() {
     if(!pacman.ate)
         time.tick++;
     time.secrettick++;
-    time.fps = time.calcfps();
     if(String(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}))==="")
         if(endedlevelt)
             begun = false,
@@ -182,25 +179,21 @@ async function update() {
                 time.tick = time.tick.rnd(5);
             pacman.anim++;
         }
-    document.getElementById("fps").innerHTML = `FPS: ${time.fps}` + String.fromCharCode(0);
     updateHighScore();
     draw();
-    requestAnimationFrame(update);
+    window.requestAnimationFrame(update);
 }
 var begun = false;
 var munch_b = false;
 async function reset(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.fillText("PLEASE CONNECT CONTROLLER",canvas.width/2-("PLEASE CONNECT CONTROLLER".length*35/2),canvas.height/2);
-    await time.waitbool("gamepadconnected",()=>{
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.save();
-        ctx.fillStyle = "white";
-        ctx.fillText("PLEASE CONNECT CONTROLLER",canvas.width/2-("PLEASE CONNECT CONTROLLER".length*35/2),canvas.height/2);
-        ctx.restore();
-    });
-    requestAnimationFrame(()=>
-        requestAnimationFrame(async ()=>{
+    if(!gamepadconnected)
+        await time.waitbool("gamepadconnected",()=>{
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "white";
+            ctx.fillText("PLEASE CONNECT CONTROLLER",canvas.width/2-("PLEASE CONNECT CONTROLLER".length*35/2),canvas.height/2);
+        });
+    window.requestAnimationFrame(()=>
+        window.requestAnimationFrame(async ()=>{
             ctx.fillStyle = "black"
             ctx.fillRect(0,0,canvas.width,canvas.height);
             ctx.fillStyle = "white";
@@ -232,4 +225,5 @@ async function reset(){
     update();
     MUS_INTRO.addEventListener("ended",()=>{MUS_GHOST_NORM.play();begun=true;});
 }
+time.calcfps();
 reset();

@@ -1,16 +1,6 @@
-const gamepads = {};
 let gamepadconnected = false;
-function gamepadHandler(event, connecting) {
-    const gamepad = event.gamepad;
-    if (connecting) {
-        gamepads[gamepad.index] = gamepad;
-    } else {
-        delete gamepads[gamepad.index];
-    }
-    gamepadconnected = Object.keys(gamepads).length>0;
-}
-window.addEventListener("gamepadconnected", (e) => { gamepadHandler(e, true);}, false);
-window.addEventListener("gamepaddisconnected", (e) => { gamepadHandler(e, false); }, false);
+window.addEventListener("gamepadconnected", () => gamepadconnected = true, false);
+window.addEventListener("gamepaddisconnected", () => gamepadconnected = false, false);
 
 function buttonPressed(b) {
     if (typeof b === "object") {
@@ -27,16 +17,13 @@ var keys = {
         if(!game_begun){
             if(e2 === "Backspace")
                 username = username.slice(0,-1);
-            else if(!["Enter","Shift"].includes(e2))
+            else if(!(["Enter","Shift"].includes(e2)||username.length==10))
                 username += e2;
         }
         if((this.keyspressed[e]===true)||(pacman.dead))
             return;
         this.keyspressed[e]=true;
         switch(e) {
-            case "Enter":
-                console.log('a');
-                break;
             case "KeyR":
             case "KeyT":
                 if(this.keyspressed["KeyR"]&&this.keyspressed["KeyT"])

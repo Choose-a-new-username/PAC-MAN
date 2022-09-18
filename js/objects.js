@@ -28,6 +28,7 @@ class pellet extends object {
         );
     }
 }
+
 class power_pellet extends object {
     behavior() {
         if(!AI.collision2(this.x,this.y,this.w,this.h,pacman.x,pacman.y+PACMAN_HEIGHT,PACMAN_WIDTH,PACMAN_HEIGHT))
@@ -55,6 +56,7 @@ class power_pellet extends object {
         );
     }
 }
+
 class medium_pellet extends object {
     behavior() {
         if(!AI.collision2(this.x,this.y,this.w,this.h,pacman.x,pacman.y+PACMAN_HEIGHT,PACMAN_WIDTH,PACMAN_HEIGHT))
@@ -73,8 +75,34 @@ class medium_pellet extends object {
             y,
             PELLET_SIZE/0.5,
             PELLET_SIZE/0.5,
-            "power_pellet"
+            "medium_pellet"
         );
+    }
+}
+
+class fruit extends object {
+    behavior() {
+        if(!AI.collision2(this.x+0.25,this.y+0.25,this.w-0.5,this.h-0.5,pacman.x,pacman.y+PACMAN_HEIGHT,PACMAN_WIDTH,PACMAN_HEIGHT))
+            return false;
+        pacman.score += this.score;
+        MUS_EAT_FRUIT.pause();
+        MUS_EAT_FRUIT.currentTime = 0;
+        MUS_EAT_FRUIT.play();
+        return true;
+    }
+    draw() {
+        ctx.drawImag(FRUIT_SPRITE,this.x+OFFSET[1],this.y+OFFSET[0],CELL_SIZE*2,CELL_SIZE*2,getAt(AI.leveli,level-1)*16,0,16,16)
+    }
+    constructor(x,y,seconds) {
+        super(
+            x+0.25,
+            y+0.25,
+            CELL_SIZE*0.5,
+            CELL_SIZE*0.5,
+            "fruit"
+        );
+        this.score = getAt(AI.levelsc,getAt(AI.leveli,level-1));
+        this.timer = 60 * seconds;
     }
 }
 var objectmanager = {objects:[]};
@@ -84,13 +112,14 @@ objectmanager.update = function () {
             this.objects.splice(i,1);
 }
 objectmanager.resetpellets = function () {
-    objectmanager.objects = [];
+    this.objects = [];
     for(i in TILEMAP)
         for(j in TILEMAP[i])
             if(TILEMAP[i][j] === 0)
-                objectmanager.objects.push(new pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2)));
+                this.objects.push(new pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE/2)));
             else if(TILEMAP[i][j] === 3)
-                objectmanager.objects.push(new medium_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));
+                this.objects.push(new medium_pellet(j*CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE),i*CELL_SIZE+CELL_SIZE+(CELL_SIZE/2)-(PELLET_SIZE)));
             else if(TILEMAP[i][j] === 4)
-                objectmanager.objects.push(new power_pellet(j*CELL_SIZE,i*CELL_SIZE+CELL_SIZE));
+                this.objects.push(new power_pellet(j*CELL_SIZE,i*CELL_SIZE+CELL_SIZE));
+    this.objects.push(new fruit(13*CELL_SIZE,17.5*CELL_SIZE,100))
 }

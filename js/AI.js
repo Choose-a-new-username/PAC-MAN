@@ -6,6 +6,32 @@ const AI = {
         [32,-CELL_SIZE,0,-1,0,Math.ceil,Math.round,Math.glast,Math.gfirst],
         [0,0,0,0,0,Math.round,Math.round,0,0]
     ],
+    levelsc: [
+        100,
+        300,
+        500,
+        500,
+        700,
+        1000,
+        2000,
+        3000,
+        5000
+    ],
+    leveli: [
+        0,
+        1,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        5,
+        5,
+        6,
+        6,
+        7
+    ],
     ppL: [
         20,
         30,

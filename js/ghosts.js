@@ -1,9 +1,11 @@
 var ghostmanager = {};
 class ghost {
     checkDie() {
+        if(this.state === "dead")
+            return;
         if(this.scared)
             this.die();
-        else if(!(this.state === "dead"))
+        else
             pacman.die();
     }
     drawself(y){
@@ -145,7 +147,7 @@ var ghoststate = "scatter";
 
 class BLINKY extends ghost {
     ithingy2() {
-        if(objectmanager.objects.reduce((a, v) => (v.name === "pellet" ? a + 1 : a), 0) >= AI.ppL[Math.clamp(level,0,18)])
+        if(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}).length >= AI.ppL[Math.clamp(level,0,18)])
             this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT,CELL_SIZE*27,-CELL_SIZE);
         else
             this.behavior(pacman.x,pacman.y+PACMAN_HEIGHT);
@@ -250,11 +252,11 @@ ghostmanager.update = function() {
     if(!pacman.ate)
         if (AI.collision2(this.BLINKY.x,this.BLINKY.y,this.BLINKY.w,this.BLINKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
             this.BLINKY.checkDie();
-        if (AI.collision2(this.PINKY.x,this.PINKY.y,this.PINKY.w,this.PINKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
+        else if (AI.collision2(this.PINKY.x,this.PINKY.y,this.PINKY.w,this.PINKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
             this.PINKY.checkDie();
-        if (AI.collision2(this.INKY.x,this.INKY.y,this.INKY.w,this.INKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
+        else if (AI.collision2(this.INKY.x,this.INKY.y,this.INKY.w,this.INKY.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
             this.INKY.checkDie();
-        if (AI.collision2(this.CLYDE.x,this.CLYDE.y,this.CLYDE.w,this.CLYDE.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
+        else if (AI.collision2(this.CLYDE.x,this.CLYDE.y,this.CLYDE.w,this.CLYDE.h,pacman.x+4,pacman.y+PACMAN_HEIGHT+4,PACMAN_WIDTH-12,PACMAN_HEIGHT-12))
             this.CLYDE.checkDie();
     if(getAt(AI.lt,level-1)[0].includes(Math.floor((time.tick)/60))&&ghoststate!=="chase"){
         ghoststate = "chase";

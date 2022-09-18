@@ -121,10 +121,10 @@ async function update() {
         ctx.clearRect(0,0,canvas.width,canvas.height);
         ctx.fillText("PLEASE CONNECT CONTROLLER",canvas.width/2-("PLEASE CONNECT CONTROLLER".length*35/2),canvas.height/2);
     });
-    addGamepadKeyMap("ArrowUp",   e=>Math.round(e.axes[1])===-1,"pacman.dir===0");
-    addGamepadKeyMap("ArrowDown", e=>Math.round(e.axes[1])===1,"pacman.dir===2");
-    addGamepadKeyMap("ArrowLeft", e=>Math.round(e.axes[0])===-1,"pacman.dir===3");
-    addGamepadKeyMap("ArrowRight",e=>Math.round(e.axes[0])===1,"pacman.dir===1");
+    addGamepadKeyMap("ArrowUp",   e=>{return Math.round(e.axes[7])===-1||Math.round(e.axes[1])===-1;},"pacman.dir===0");
+    addGamepadKeyMap("ArrowDown", e=>{return Math.round(e.axes[7])===1||Math.round(e.axes[1])===1},"pacman.dir===2");
+    addGamepadKeyMap("ArrowLeft", e=>{return Math.round(e.axes[6])===-1||Math.round(e.axes[0])===-1},"pacman.dir===3");
+    addGamepadKeyMap("ArrowRight",e=>{return Math.round(e.axes[6])===1||Math.round(e.axes[0])===1},"pacman.dir===1");
     addGamepadKeyMap("Enter",     e=>buttonPressed(e.buttons[0]),"false");
     if(end_game)
         return pacman.dieend();

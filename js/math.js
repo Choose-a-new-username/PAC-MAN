@@ -20,7 +20,13 @@ Math.sortl = object => {
     if(Object.keys(object).length==1)
         return Object.keys(object)[0];
     return Object.keys(object).sort((a,b) => b.length - a.length);
-}
+};
+Math.gfirst = (num,num2) => {
+    return num > num2;
+};
+Math.glast = (num,num2) => {
+    return num < num2;
+};
 Math.countDecimals = num => {
     if (Math.floor(num.valueOf()) === num.valueOf())
         return 0;

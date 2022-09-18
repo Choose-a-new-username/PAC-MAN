@@ -1,10 +1,10 @@
 const AI = {
     ddS: [
-        [64,-CELL_SIZE,-CELL_SIZE,0,-1,Math.round,Math.ceil],
-        [0,CELL_SIZE,0,1,0,Math.floor,Math.round],
-        [96,0,CELL_SIZE,0,1,Math.round,Math.floor],
-        [32,-CELL_SIZE,0,-1,0,Math.ceil,Math.round],
-        [0,0,0,0,0,Math.round,Math.round]
+        [64,-CELL_SIZE,-CELL_SIZE,0,-1,Math.round,Math.ceil,Math.glast,Math.gfirst],
+        [0,CELL_SIZE,0,1,0,Math.floor,Math.round,Math.gfirst,Math.glast],
+        [96,0,CELL_SIZE,0,1,Math.round,Math.floor,Math.gfirst,Math.glast],
+        [32,-CELL_SIZE,0,-1,0,Math.ceil,Math.round,Math.glast,Math.gfirst],
+        [0,0,0,0,0,Math.round,Math.round,0,0]
     ],
     ppL: [
         20,

@@ -172,7 +172,8 @@ class pacman_c extends pac_manager {
         ctx.fillText("PLEASE PAY 1 TICKET TO",canvas.width/2-("PLEASE PAY 1 TICKET TO".length*35/2),canvas.height/2-40);
         ctx.fillText("TRY AGAIN.",canvas.width/2-("PLAY AGAIN.".length*35/2),canvas.height/2);
         ctx.fillText("(WANT A NEW CHALLENGE?",canvas.width/2-("(WANT A NEW CHALLENGE?".length*35/2),canvas.height/2+60);
-        ctx.fillText("TRY THE NINTENDO GAMES STALL!)",canvas.width/2-("TRY THE NINTENDO GAMES STALL!)".length*35/2),canvas.height/2+100);
+        ctx.fillText("TRY THE MONKEY ON",canvas.width/2-("TRY THE MONKEY ON".length*35/2),canvas.height/2+100);
+        ctx.fillText("NINTENDO GAMES STALL!)",canvas.width/2-("NINTENDO GAMES STALL!)".length*35/2),canvas.height/2+140);
         this.truereset();
         await time.waitbool("keys.keyspressed[\"Enter\"]");
         await time.waitbool("!keys.keyspressed[\"Enter\"]");

@@ -24,10 +24,10 @@ class ghost {
         else
             ctx.drawImag(
                 GHOST_SPRITE,
-                this.x+OFFSET[1]-DRAW_OFFSET,
-                this.y+OFFSET[0]-DRAW_OFFSET,
-                CELL_SIZE+DRAW_OFFSET*2,
-                CELL_SIZE+DRAW_OFFSET*2,
+                this.x+OFFSET[1]-DRAW_OFFSET*1.125,
+                this.y+OFFSET[0]-DRAW_OFFSET*1.125,
+                CELL_SIZE+DRAW_OFFSET*2.25,
+                CELL_SIZE+DRAW_OFFSET*2.25,
                 (AI.ddS[this.scared?(this.scared < 180 ? (time.tick%40<20?1:3) : 1):this.dir][0])+((time.tick%10>5)*16),
                 this.state === "dead" ? 82 : this.scared > 0 ? 64 : y,
                 16,
@@ -71,8 +71,20 @@ class ghost {
             this.speed = UNIVERSAL_SPEED*getAt(AI.speed.gn,level-1);
         const iter = Math.round(this.speed / 0.001);
         for(let i = 0; i < iter; i++){
-            if(Math.round(this.x/CELL_SIZE)*CELL_SIZE === this.x && Math.round(this.y/CELL_SIZE)*CELL_SIZE === this.y){
+            if(this.x%CELL_SIZE === 0 && this.y%CELL_SIZE === 0){
                 this.ithingy2();
+            }else if(this.state==="trapped"){
+                if(Math.fround(this.y/CELL_SIZE)===14.5)
+                    this.dir=2;
+                else if(Math.fround(this.y/CELL_SIZE)===15.5)
+                    this.dir=0;
+            }else if(this.state==="exit"){
+                if(this.y%CELL_SIZE!==0){
+                    if(Math.fround(this.y/CELL_SIZE)<=14.5)
+                        this.dir=(Math.fround(this.x/CELL_SIZE)>13.5?3:Math.fround(this.x/CELL_SIZE)<13.5?1:0);
+                    else
+                        this.dir=0;
+                }
             }
             this.x+=AI.ddS[this.dir][3]*0.001;
             this.x = Math.round(this.x * 1000) / 1000;
@@ -179,9 +191,9 @@ class PINKY extends ghost {
         this.drawself(16);
     }
     reset() {
-        this.x = CELL_SIZE*15;
+        this.x = CELL_SIZE*13.5;
         this.y = CELL_SIZE*15;
-        this.dir = 1;
+        this.dir = 2;
         this.state = "trapped";
         this.exittimer = getAt(getAt(AI.lt2,level-1),0)*60;
         this.name = 1;
@@ -206,9 +218,9 @@ class INKY extends ghost {
         this.drawself(32);
     }
     reset() {
-        this.x = CELL_SIZE*13.5;
+        this.x = CELL_SIZE*15.5;
         this.y = CELL_SIZE*15;
-        this.dir = 1;
+        this.dir = 0;
         this.state = "trapped";
         this.exittimer = getAt(getAt(AI.lt2,level-1),1)*60;
         this.name = 2;
@@ -229,9 +241,9 @@ class CLYDE extends ghost {
         this.drawself(48);
     }
     reset() {
-        this.x = CELL_SIZE*12;
+        this.x = CELL_SIZE*11.5;
         this.y = CELL_SIZE*15;
-        this.dir = 1;
+        this.dir = 0;
         this.state = "trapped";
         this.exittimer = getAt(getAt(AI.lt2,level-1),2)*60;
         this.name = 3;

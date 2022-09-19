@@ -1,4 +1,5 @@
 async function restart(from=true) {
+    objectmanager.cherryeaten = 0;
     endedlevelt = 60*3;
     if(from)
         MUS_INTRO.pause(),

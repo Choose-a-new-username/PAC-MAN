@@ -44,7 +44,7 @@ class power_pellet extends object {
             ghostmanager.PINKY.flip(),
             ghostmanager.CLYDE.flip();
         if(objectmanager.objects.filter(a=>{return["pellet","power_pellet"].includes(a.name)}).length<=174)
-            objectmanager.objects.push(new fruit(CELL_SIZE*13,CELL_SIZE*17.5,1));
+            objectmanager.objects.push(new fruit(CELL_SIZE*13,CELL_SIZE*18,1));
         return true;
     }
     draw() {

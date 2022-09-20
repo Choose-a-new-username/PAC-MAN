@@ -133,14 +133,17 @@ class pacman_c extends pac_manager {
                 PACMAN_SPRITE,
                 OFFSET[1]+this.x-DRAW_OFFSET,
                 OFFSET[0]+(PACMAN_HEIGHT+this.y)-DRAW_OFFSET,
-                PACMAN_WIDTH+DRAW_OFFSET*2-4,
-                PACMAN_HEIGHT+DRAW_OFFSET*2-4,
+                PACMAN_WIDTH+DRAW_OFFSET*2,
+                PACMAN_HEIGHT+DRAW_OFFSET*2,
                 this.anim*PACMAN_ANIMATION_WIDTH+2,
                 0,
                 PACMAN_ANIMATION_WIDTH-1,
                 PACMAN_ANIMATION_HEIGHT-1,
                 ((this.dir - 1) * 90)*(Math.PI/180)
             );
+    }
+    isatedgetunnel(){
+        return (Math.round(this.x / CELL_SIZE) >= 21 || Math.round(this.x / CELL_SIZE) <= 5) && Math.round((this.y+PACMAN_HEIGHT) / CELL_SIZE) === 15;
     }
     reset() {
         this.ate   = false;

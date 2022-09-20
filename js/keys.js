@@ -61,10 +61,11 @@ var keys = {
                 break;
             case "ArrowUp":
             case "KeyW":
+                console.log(pacman.isatedgetunnel());
                 this.queued = "up";
                 if(pacman.x === AI.ddS[pacman.dir][6](pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1][Math.round(pacman.x/CELL_SIZE)]===1))
                     pacman.dir = 0;
-                else if(!(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1][AI.ddS[pacman.dir][5](pacman.x/CELL_SIZE)+AI.ddS[pacman.dir][3]]===1)){
+                else if(!((TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1][AI.ddS[pacman.dir][5](pacman.x/CELL_SIZE)+AI.ddS[pacman.dir][3]]===1)||pacman.isatedgetunnel())&&Math.diff(pacman.x,(AI.ddS[pacman.dir][5](pacman.y/CELL_SIZE)+AI.ddS[pacman.dir][3])*CELL_SIZE)<=(CELL_SIZE/8*5)){
                     pacman.x = (AI.ddS[pacman.dir][5](pacman.x/CELL_SIZE)+AI.ddS[pacman.dir][3])*CELL_SIZE;
                     pacman.dir = 0;
                 }
@@ -74,20 +75,31 @@ var keys = {
                 this.queued = "right";
                 if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)][Math.floor(pacman.x/CELL_SIZE)+1]===1))
                     pacman.dir = 1;
+                else if(!((TILEMAP[AI.ddS[pacman.dir][6](pacman.y/CELL_SIZE)+AI.ddS[pacman.dir][4]][Math.floor(pacman.x/CELL_SIZE)+1]===1)||pacman.isatedgetunnel())&&Math.diff(pacman.y,(AI.ddS[pacman.dir][6](pacman.y/CELL_SIZE)+AI.ddS[pacman.dir][4])*CELL_SIZE)<=(CELL_SIZE/8*5)){
+                    pacman.y = (AI.ddS[pacman.dir][6](pacman.y/CELL_SIZE)+AI.ddS[pacman.dir][4])*CELL_SIZE;
+                    pacman.dir = 1;
+                }
                 break;
             case "ArrowDown":
             case "KeyS":
+                console.log(pacman.isatedgetunnel());
                 this.queued = "down";
                 if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1][Math.round(pacman.x/CELL_SIZE)]===1))
                     pacman.dir = 2;
+                else if(!((TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1][AI.ddS[pacman.dir][5](pacman.x/CELL_SIZE)+AI.ddS[pacman.dir][3]]===1)||pacman.isatedgetunnel())&&Math.diff(pacman.x,(AI.ddS[pacman.dir][5](pacman.x/CELL_SIZE)+AI.ddS[pacman.dir][3])*CELL_SIZE)<=(CELL_SIZE/8*5)){
+                    pacman.x = (AI.ddS[pacman.dir][5](pacman.x/CELL_SIZE)+AI.ddS[pacman.dir][3])*CELL_SIZE;
+                    pacman.dir = 2;
+                }
                 break;
             case "ArrowLeft":
             case "KeyA":
                 this.queued = "left";
                 if(pacman.y === Math.floor(pacman.y / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.round(pacman.y/CELL_SIZE)][Math.ceil(pacman.x/CELL_SIZE)-1]===1))
                     pacman.dir = 3;
-                break;
-            default:
+                else if(!((TILEMAP[AI.ddS[pacman.dir][6](pacman.y/CELL_SIZE)+AI.ddS[pacman.dir][4]][Math.ceil(pacman.x/CELL_SIZE)-1]===1)||pacman.isatedgetunnel())&&Math.diff(pacman.y,(AI.ddS[pacman.dir][6](pacman.y/CELL_SIZE)+AI.ddS[pacman.dir][4])*CELL_SIZE)<=(CELL_SIZE/8*5)){
+                    pacman.y = (AI.ddS[pacman.dir][6](pacman.y/CELL_SIZE)+AI.ddS[pacman.dir][4])*CELL_SIZE;
+                    pacman.dir = 3;
+                }
                 break;
         }
     },

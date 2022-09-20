@@ -14,6 +14,8 @@ function setLocalStorage(a,b){
     localStorage.setItem("items",JSON.stringify(c));
 }
 function updateHighScore(){
+    if(username==="nonc")
+        return;
     let a = getLocalStorage("highscores");
     a[username] = pacman.score;
     setLocalStorage("highscores",a);

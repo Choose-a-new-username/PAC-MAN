@@ -1,10 +1,10 @@
 async function restart(from=true) {
-    objectmanager.cherryeaten = 0;
     endedlevelt = 60*3;
     if(from)
         MUS_INTRO.pause(),
         MUS_INTRO.currentTime = 0,
         MUS_INTRO.play(),
+        objectmanager.cherryeaten = 0,
         begun = false;
     else
         begun=true;
@@ -38,8 +38,6 @@ function queuedDo() {
                 break;
             pacman.dir = 3;
             keys.queued = "";
-            break;
-        default:
             break;
     }
 }
@@ -115,6 +113,7 @@ function draw() {
     }
 }
 //main loop
+let aa = false;
 async function update() {
     if(!(gamepadconnected&&navigator.getGamepads()))
         await time.waitbool("gamepadconnected&&navigator.getGamepads()",()=>{
@@ -136,7 +135,7 @@ async function update() {
         ctx.fillText("SCORES:",0,40);
         document.querySelectorAll("audio").forEach(i=>i.pause());
         document.querySelectorAll("audio[loop]").forEach(i=>i.pause());
-        let aa = false;
+        aa = false;
         window.setTimeout(()=>aa=true,1000)
         await time.waitbool("aa||keys.keyspressed[\"Enter\"]");
         clearTimeout();
@@ -147,6 +146,7 @@ async function update() {
             await time.wait(250);
         await time.waitbool("!keys.keyspressed[\"Enter\"]");
         await time.waitbool("keys.keyspressed[\"Enter\"]");
+        await time.waitbool("!keys.keyspressed[\"Enter\"]");
         end_game = false;
         return reset();
     }
@@ -199,8 +199,8 @@ async function reset(){
             ctx.fillRect(0,0,canvas.width,canvas.height);
             ctx.fillStyle = "white";
             ctx.drawImage(LOGO_SPRITE,canvas.width/2-400,canvas.height/2-200,800,175);
-            ctx.fillText("PLEASE WAIT FOR CASHIER",canvas.width/2-("PLEASE WAIT FOR CASHIER".length*35/2),canvas.height/2+40);
-            ctx.fillText("TO START THE GAME",canvas.width/2-("TO START THE GAME".length*35/2),canvas.height/2+80);
+            ctx.fillText("PLEASE WAIT FOR CASHIER",canvas.width/2-("PLEASE WAIT FOR CASHIER".length*35/2),canvas.height/2+80);
+            ctx.fillText("TO START THE GAME",canvas.width/2-("TO START THE GAME".length*35/2),canvas.height/2+120);
         })
     );
     document.querySelectorAll("audio").forEach(i=>i.pause());

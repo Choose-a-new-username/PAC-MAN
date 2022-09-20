@@ -61,7 +61,6 @@ var keys = {
                 break;
             case "ArrowUp":
             case "KeyW":
-                console.log(pacman.isatedgetunnel());
                 this.queued = "up";
                 if(pacman.x === AI.ddS[pacman.dir][6](pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1][Math.round(pacman.x/CELL_SIZE)]===1))
                     pacman.dir = 0;
@@ -82,7 +81,6 @@ var keys = {
                 break;
             case "ArrowDown":
             case "KeyS":
-                console.log(pacman.isatedgetunnel());
                 this.queued = "down";
                 if(pacman.x === Math.floor(pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.floor(pacman.y/CELL_SIZE)+1][Math.round(pacman.x/CELL_SIZE)]===1))
                     pacman.dir = 2;

@@ -65,7 +65,7 @@ var keys = {
                 this.queued = "up";
                 if(pacman.x === AI.ddS[pacman.dir][6](pacman.x / CELL_SIZE)*CELL_SIZE && !(TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1][Math.round(pacman.x/CELL_SIZE)]===1))
                     pacman.dir = 0;
-                else if(!((TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1][AI.ddS[pacman.dir][5](pacman.x/CELL_SIZE)+AI.ddS[pacman.dir][3]]===1)||pacman.isatedgetunnel())&&Math.diff(pacman.x,(AI.ddS[pacman.dir][5](pacman.y/CELL_SIZE)+AI.ddS[pacman.dir][3])*CELL_SIZE)<=(CELL_SIZE/8*5)){
+                else if(!((TILEMAP[Math.ceil(pacman.y/CELL_SIZE)-1][AI.ddS[pacman.dir][5](pacman.x/CELL_SIZE)+AI.ddS[pacman.dir][3]]===1)||pacman.isatedgetunnel())&&Math.diff(pacman.x,(AI.ddS[pacman.dir][5](pacman.x/CELL_SIZE)+AI.ddS[pacman.dir][3])*CELL_SIZE)<=(CELL_SIZE/8*5)){
                     pacman.x = (AI.ddS[pacman.dir][5](pacman.x/CELL_SIZE)+AI.ddS[pacman.dir][3])*CELL_SIZE;
                     pacman.dir = 0;
                 }

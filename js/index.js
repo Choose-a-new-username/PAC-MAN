@@ -172,7 +172,7 @@ async function update() {
         if(!pacman.dead)
             time.tick = 0;
     }
-    if(pacman.dead && ((time.tick%7)===0))
+    if(pacman.dead && ((time.tick%8)===0))
         if(pacman.anim<14){
             pacman.dir = 1;
             if(pacman.anim<=2)

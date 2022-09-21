@@ -36,5 +36,5 @@ WIP
 * ~~Power pellets and ghost eating~~
 * ~~Levels~~
 * ~~High-scores/scoreboard~~
-* **Items spawns/cherries**
+* ~~Items spawns/cherries~~
 ## BUGS:

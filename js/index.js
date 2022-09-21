@@ -12,7 +12,6 @@ async function restart(from=true) {
     time.tick=0;
     ["pacman","ghostmanager.BLINKY","ghostmanager.PINKY","ghostmanager.INKY","ghostmanager.CLYDE"].forEach(i=>eval(i+".reset()"));
 }
-
 function queuedDo() {
     switch (keys.queued) {
         case "up":
@@ -218,8 +217,6 @@ async function reset(){
         ctx.fillText("YOUR NAME.",canvas.width/2-("YOUR NAME.".length*35)/2,canvas.height/2-80)
         ctx.fillText(username,canvas.width/2-(username.length*35)/2,canvas.height/2);
     });
-    if(getLocalStorage("highscores").hasOwnProperty(username))
-        pacman.score = getLocalStorage("highscores")[username];
     game_begun=true;
     restart()
     objectmanager.resetpellets();

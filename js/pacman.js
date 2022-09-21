@@ -182,8 +182,6 @@ class pacman_c extends pac_manager {
         ctx.drawImag(PACMAN_SPRITE,canvas.width/2-120,canvas.height/2-480,240,240,0,0,15,15,270*(Math.PI/180))
         ctx.fillText("YOU DIED!",canvas.width/2-("YOU DIED!".length*80/2),canvas.height/2-90);
         ctx.font = "bold 35px pixel-face";
-        ctx.fillText("PLEASE PAY 1 TICKET TO",canvas.width/2-("PLEASE PAY 1 TICKET TO".length*35/2),canvas.height/2-40);
-        ctx.fillText("TRY AGAIN.",canvas.width/2-("PLAY AGAIN.".length*35/2),canvas.height/2);
         ctx.fillText("(WANT A NEW CHALLENGE?",canvas.width/2-("(WANT A NEW CHALLENGE?".length*35/2),canvas.height/2+60);
         ctx.fillText("TRY THE MONKEY ON",canvas.width/2-("TRY THE MONKEY ON".length*35/2),canvas.height/2+100);
         ctx.fillText("NINTENDO GAMES STALL!)",canvas.width/2-("NINTENDO GAMES STALL!)".length*35/2),canvas.height/2+140);

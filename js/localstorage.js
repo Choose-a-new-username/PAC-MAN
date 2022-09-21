@@ -20,3 +20,4 @@ function updateHighScore(){
     a[username] = pacman.score;
     setLocalStorage("highscores",a);
 }
+pacman.score = 0;
